@@ -1,0 +1,232 @@
+{
+  "site": {
+    "tagline": "Platform photobooth oleh Frameless Creative.",
+    "whatsappNumber": "",
+    "supportEmail": ""
+  },
+  "sections": [
+    {
+      "key": "hero",
+      "data": {
+        "badge": "Platform photobooth untuk pemilik booth",
+        "titleLine1": "Kelola booth foto,",
+        "titleLine2": "tanpa ribet.",
+        "subtitle": "QRIS otomatis, template dari kreator, galeri cloud, dan dashboard real-time untuk semua booth Anda.",
+        "primaryCta": "Mulai Trial Gratis",
+        "secondaryCta": "Lihat Demo",
+        "bullets": [
+          {
+            "text": "Tanpa kartu kredit"
+          },
+          {
+            "text": "Setup 15 menit"
+          },
+          {
+            "text": "Windows 10/11"
+          }
+        ]
+      }
+    },
+    {
+      "key": "trust",
+      "data": {
+        "caption": "Dipercaya pemilik booth di [JUMLAH] kota",
+        "logos": [
+          {
+            "name": "[Logo 1]"
+          },
+          {
+            "name": "[Logo 2]"
+          },
+          {
+            "name": "[Logo 3]"
+          },
+          {
+            "name": "[Logo 4]"
+          },
+          {
+            "name": "[Logo 5]"
+          }
+        ]
+      }
+    },
+    {
+      "key": "features",
+      "data": {
+        "eyebrow": "Fitur",
+        "title": "Semua yang booth Anda butuhkan, dalam satu tempat.",
+        "items": [
+          {
+            "title": "QRIS otomatis",
+            "body": "Pelanggan bayar langsung dari layar kiosk, dana masuk otomatis."
+          },
+          {
+            "title": "Voucher promo",
+            "body": "Buat kode diskon dan pantau performanya per event."
+          },
+          {
+            "title": "Screen Builder",
+            "body": "Atur tampilan kiosk sesuai brand Anda tanpa coding."
+          },
+          {
+            "title": "Kontrol kamera live",
+            "body": "ISO, shutter, aperture, dan white balance dari dashboard."
+          },
+          {
+            "title": "Foto, GIF, dan video",
+            "body": "Galeri cloud dengan link share dan cetak tambahan."
+          },
+          {
+            "title": "Satu akun, banyak kiosk",
+            "body": "Pantau semua lokasi dan update otomatis dari satu dashboard."
+          }
+        ]
+      }
+    },
+    {
+      "key": "howItWorks",
+      "data": {
+        "eyebrow": "Cara kerja",
+        "title": "Empat langkah, booth Anda jalan.",
+        "steps": [
+          {
+            "title": "Daftar",
+            "body": "Isi form singkat, tim kami aktifkan akun tenant Anda."
+          },
+          {
+            "title": "Install",
+            "body": "Unduh aplikasi Windows, pasangkan dengan kunci kiosk."
+          },
+          {
+            "title": "Atur",
+            "body": "Pilih template, paket, harga, dan tampilan kiosk."
+          },
+          {
+            "title": "Jalan",
+            "body": "Terima pembayaran dan pantau omzet dari dashboard."
+          }
+        ]
+      }
+    },
+    {
+      "key": "templates",
+      "data": {
+        "eyebrow": "Marketplace template",
+        "title": "Frame dari kreator, siap pakai di booth Anda.",
+        "tags": [
+          {
+            "text": "Semua"
+          },
+          {
+            "text": "Wedding"
+          },
+          {
+            "text": "Ulang Tahun"
+          },
+          {
+            "text": "Korporat"
+          },
+          {
+            "text": "Wisuda"
+          },
+          {
+            "text": "Premium"
+          }
+        ]
+      }
+    },
+    {
+      "key": "pricing",
+      "data": {
+        "eyebrow": "Harga",
+        "title": "Bayar per kiosk, batal kapan saja."
+      }
+    },
+    {
+      "key": "community",
+      "data": {
+        "eyebrow": "Komunitas",
+        "title": "Tumbuh bareng sesama pemilik booth.",
+        "body": "Bagikan tips, tanya jawab, dan temukan pelanggan lewat peta booth publik. Kreator terbaik tampil di papan peringkat.",
+        "perks": [
+          {
+            "title": "Forum dan grup diskusi",
+            "body": "Tanya jawab teknis dan bisnis booth"
+          },
+          {
+            "title": "Peta booth STUDIODO",
+            "body": "Pelanggan menemukan booth di kotanya"
+          },
+          {
+            "title": "Pusat bantuan dan changelog",
+            "body": "Panduan, video, dan catatan rilis"
+          }
+        ]
+      }
+    },
+    {
+      "key": "testimonials",
+      "data": {
+        "title": "Kata pemilik booth.",
+        "items": [
+          {
+            "quote": "[Testimoni pelanggan nyata akan ditempatkan di sini.]",
+            "name": "[Nama]",
+            "business": "[Nama Booth]",
+            "city": "[Kota]"
+          },
+          {
+            "quote": "[Testimoni pelanggan nyata akan ditempatkan di sini.]",
+            "name": "[Nama]",
+            "business": "[Nama Booth]",
+            "city": "[Kota]"
+          },
+          {
+            "quote": "[Testimoni pelanggan nyata akan ditempatkan di sini.]",
+            "name": "[Nama]",
+            "business": "[Nama Booth]",
+            "city": "[Kota]"
+          }
+        ]
+      }
+    },
+    {
+      "key": "faq",
+      "data": {
+        "eyebrow": "FAQ",
+        "title": "Pertanyaan yang sering muncul.",
+        "items": [
+          {
+            "q": "Perangkat apa yang dibutuhkan?",
+            "a": "[Spesifikasi PC minimum, kamera dan printer yang didukung.]"
+          },
+          {
+            "q": "Apakah bisa dipakai tanpa internet?",
+            "a": "[Jawaban.]"
+          },
+          {
+            "q": "Bagaimana pembayaran QRIS masuk ke rekening saya?",
+            "a": "[Jawaban.]"
+          },
+          {
+            "q": "Bisa berhenti berlangganan kapan saja?",
+            "a": "[Jawaban.]"
+          },
+          {
+            "q": "Bagaimana cara menjadi kreator template?",
+            "a": "[Jawaban.]"
+          }
+        ]
+      }
+    },
+    {
+      "key": "cta",
+      "data": {
+        "title": "Siap buka booth berikutnya?",
+        "body": "Coba semua fitur gratis 7 hari. Tanpa kartu kredit.",
+        "primaryCta": "Mulai Trial Gratis",
+        "secondaryCta": "Konsultasi via WhatsApp"
+      }
+    }
+  ]
+}

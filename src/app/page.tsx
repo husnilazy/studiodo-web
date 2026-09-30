@@ -1,69 +1,56 @@
-import Image from "next/image";
+import type { ReactNode } from "react";
+import { Navbar } from "@/components/Navbar";
+import { Hero } from "@/components/Hero";
+import { Footer } from "@/components/Footer";
+import { Trust } from "@/components/sections/Trust";
+import { Features } from "@/components/sections/Features";
+import { HowItWorks } from "@/components/sections/HowItWorks";
+import { Templates } from "@/components/sections/Templates";
+import { Pricing } from "@/components/sections/Pricing";
+import { Community } from "@/components/sections/Community";
+import { Testimonials } from "@/components/sections/Testimonials";
+import { Faq } from "@/components/sections/Faq";
+import { Cta } from "@/components/sections/Cta";
+import { getSiteContent, type SiteData } from "@/lib/content";
 
-export default function Home() {
+// Section registry: the CMS decides which of these render and in what order;
+// each renderer just receives that section's data. An unknown key (e.g. a section
+// added on the server before the web is redeployed) is skipped, never a crash.
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type Renderer = (data: any, site: SiteData) => ReactNode;
+const registry: Record<string, Renderer> = {
+  hero: (d) => <Hero data={d} />,
+  trust: (d) => <Trust data={d} />,
+  features: (d) => <Features data={d} />,
+  howItWorks: (d) => <HowItWorks data={d} />,
+  templates: (d) => <Templates data={d} />,
+  pricing: (d) => <Pricing data={d} />,
+  community: (d) => <Community data={d} />,
+  testimonials: (d) => <Testimonials data={d} />,
+  faq: (d) => <Faq data={d} />,
+  cta: (d, site) => <Cta data={d} site={site} />,
+};
+
+export default async function Home() {
+  const { site, sections } = await getSiteContent();
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert h-5 w-[100px]"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the{" "}
-            <code className="rounded bg-black/[.06] px-1.5 py-0.5 font-mono text-[0.9em] dark:bg-white/[.08]">
-              page.tsx
-            </code>{" "}
-            file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert h-[14px] w-4"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
+    <div className="relative flex flex-1 flex-col overflow-hidden">
+      <div className="blob left-[55%] -top-20 h-[620px] w-[620px] bg-[#bfc6ff] opacity-75" />
+      <div className="blob left-[75%] top-[300px] h-[420px] w-[420px] bg-[#ffc8de] opacity-70" />
+      <div className="blob -left-40 top-[1150px] h-[520px] w-[520px] bg-[#b8f0e6] opacity-60" />
+      <div className="blob left-[70%] top-[2000px] h-[560px] w-[560px] bg-[#d5ccff] opacity-60" />
+      <div className="blob -left-32 top-[2900px] h-[500px] w-[500px] bg-[#ffe3b8] opacity-60" />
+      <div className="blob left-[62%] top-[3900px] h-[560px] w-[560px] bg-[#bfd8ff] opacity-65" />
+      <div className="blob -left-24 top-[4800px] h-[520px] w-[520px] bg-[#ffc8de] opacity-55" />
+      <div className="blob left-[48%] top-[5600px] h-[640px] w-[640px] bg-[#bfc6ff] opacity-70" />
+      <Navbar />
+      <main id="konten" className="flex-1">
+        {sections.map((s) => {
+          const render = registry[s.key];
+          return render ? <div key={s.key}>{render(s.data, site)}</div> : null;
+        })}
       </main>
+      <Footer />
     </div>
   );
 }
