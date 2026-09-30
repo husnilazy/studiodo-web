@@ -21,7 +21,7 @@ export function Hero({ data }: { data: HeroData }) {
           <Link href="/daftar" className="btn btn-primary px-8 py-4 text-base">
             {data.primaryCta}
           </Link>
-          <Link href="/#demo" className="btn glass rounded-full! px-7 py-4 text-base">
+          <Link href="/kontak" className="btn glass rounded-full! px-7 py-4 text-base">
             {data.secondaryCta}
           </Link>
         </div>

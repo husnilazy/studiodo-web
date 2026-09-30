@@ -11,6 +11,7 @@ export const metadata: Metadata = { title: "Dashboard", robots: { index: false, 
 const nav = [
   { href: "/portal", label: "Ringkasan" },
   { href: "/portal/tagihan", label: "Langganan & tagihan" },
+  { href: "/portal/akun", label: "Akun" },
   { href: "/unduh", label: "Unduh aplikasi" },
 ];
 
