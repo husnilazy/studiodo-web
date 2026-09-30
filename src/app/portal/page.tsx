@@ -7,8 +7,15 @@ export const dynamic = "force-dynamic";
 export default async function PortalHome() {
   const s = await getSummary();
   const days = daysUntil(s.tenant.subscriptionEndsAt);
-  const activeKiosks = s.kiosks.length;
+  const totalKeys = s.kiosks.length;
   const onlineKiosks = s.kiosks.filter((k) => k.online).length;
+  // Online first, then most recently active — old test keys sink to the bottom instead of burying live kiosks.
+  const sortedKiosks = [...s.kiosks].sort(
+    (a, b) => Number(b.online) - Number(a.online) || new Date(b.lastUsedAt ?? 0).getTime() - new Date(a.lastUsedAt ?? 0).getTime(),
+  );
+  const KIOSK_PREVIEW = 8;
+  const shownKiosks = sortedKiosks.slice(0, KIOSK_PREVIEW);
+  const hiddenKiosks = totalKeys - shownKiosks.length;
 
   let statusTone = "bg-[#dff7ec] text-[#0f6b45]";
   let statusText = "Aktif";
@@ -40,8 +47,8 @@ export default async function PortalHome() {
         <div className="glass p-7"><div className="text-sm text-muted">Sesi foto (30 hari)</div><div className="mt-2 font-display text-4xl tracking-tight">{s.last30Days.sessions}</div></div>
         <div className="glass p-7"><div className="text-sm text-muted">Pendapatan (30 hari)</div><div className="mt-2 font-display text-4xl tracking-tight">{formatRupiah(s.last30Days.revenue)}</div></div>
         <div className="glass p-7">
-          <div className="text-sm text-muted">Kiosk aktif</div>
-          <div className="mt-2 font-display text-4xl tracking-tight">{activeKiosks}{s.tenant.kioskLimit !== null && <span className="text-xl text-muted"> / {s.tenant.kioskLimit}</span>}</div>
+          <div className="text-sm text-muted">Kunci kiosk</div>
+          <div className="mt-2 font-display text-4xl tracking-tight">{totalKeys}{s.tenant.kioskLimit !== null && <span className="text-xl text-muted"> / {s.tenant.kioskLimit}</span>}</div>
           <div className="mt-1 text-[13px] text-muted">{onlineKiosks} online sekarang</div>
         </div>
       </div>
@@ -52,7 +59,7 @@ export default async function PortalHome() {
           <p className="text-[15px] text-muted">Belum ada kiosk. Buat kunci kiosk dari menu Admin di aplikasi STUDIODO, lalu pasangkan di PC booth.</p>
         ) : (
           <ul className="divide-y divide-foreground/[0.08]">
-            {s.kiosks.map((k) => (
+            {shownKiosks.map((k) => (
               <li key={k.id} className="flex flex-wrap items-center justify-between gap-3 py-3.5">
                 <div>
                   <div className="font-semibold">{k.label ?? "Kiosk tanpa nama"}</div>
@@ -67,6 +74,7 @@ export default async function PortalHome() {
             ))}
           </ul>
         )}
+        {hiddenKiosks > 0 && <p className="mt-3 text-[13px] text-muted">+{hiddenKiosks} kunci lainnya (kebanyakan tidak aktif). Kelola kunci di menu Admin aplikasi STUDIODO.</p>}
       </section>
 
       <section className="glass p-8">

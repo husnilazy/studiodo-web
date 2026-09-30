@@ -1,6 +1,8 @@
 @import "tailwindcss";
 
+/* The design is light-only — tell browsers not to force a dark rendering on it. */
 :root {
+  color-scheme: light;
   --background: #fafafd;
   --foreground: #0b1020;
   --muted: #5b6478;

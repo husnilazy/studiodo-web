@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Plus_Jakarta_Sans, Sora } from "next/font/google";
 import "./globals.css";
 import { SITE_NAME, SITE_URL } from "@/lib/site";
@@ -15,6 +15,8 @@ const sora = Sora({
 
 const description =
   "Software kiosk photobooth dengan QRIS otomatis, template kreator, galeri cloud, dan dashboard real-time.";
+
+export const viewport: Viewport = { colorScheme: "light" };
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
