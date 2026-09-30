@@ -4,7 +4,7 @@ import { getSite } from "@/lib/content";
 
 const columns = [
   { title: "Produk", links: [["Fitur", "/#fitur"], ["Harga", "/#harga"], ["Unduh", "/unduh"]] },
-  { title: "Komunitas", links: [["Template", "/#template"], ["Jadi Kreator", "/kreator"], ["Blog", "/blog"]] },
+  { title: "Komunitas", links: [["Template", "/template"], ["Jadi Kreator", "/kreator"], ["Blog", "/blog"]] },
   { title: "Perusahaan", links: [["Kontak", "/kontak"], ["Privasi", "/privasi"], ["Syarat", "/syarat"]] },
 ];
 

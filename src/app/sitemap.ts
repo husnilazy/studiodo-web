@@ -2,7 +2,7 @@ import type { MetadataRoute } from "next";
 import { SITE_URL } from "@/lib/site";
 import { fetchBlogPosts } from "@/lib/blog";
 
-const routes = ["", "/daftar", "/unduh", "/kontak", "/kreator", "/blog", "/privasi", "/syarat"];
+const routes = ["", "/template", "/daftar", "/unduh", "/kontak", "/kreator", "/blog", "/privasi", "/syarat"];
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const posts = (await fetchBlogPosts()) ?? [];
