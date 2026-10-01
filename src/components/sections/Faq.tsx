@@ -7,7 +7,7 @@ export function Faq({ data }: { data: FaqData }) {
   return (
     <section id="faq" className="relative z-10 mx-auto grid w-full max-w-[1312px] items-start gap-10 px-4 py-20 md:px-16 lg:grid-cols-[420px_1fr] lg:gap-16">
       <SectionHeading align="left" eyebrow={data.eyebrow} title={data.title} />
-      <div className="glass px-8 py-2">
+      <div data-reveal="right" className="glass px-6 py-2 sm:px-8">
         {faqs.map((f, i) => (
           <details key={`${f.q}-${i}`} open={i === 0} className={`group py-5 ${i < faqs.length - 1 ? "border-b border-foreground/[0.08]" : ""}`}>
             <summary className="flex cursor-pointer list-none items-center justify-between gap-4 font-display text-lg tracking-tight [&::-webkit-details-marker]:hidden">

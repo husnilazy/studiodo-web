@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { SiteLogo } from "./Logo";
-import { getSite } from "@/lib/content";
+import { Icon } from "./Icon";
+import { getSite, waDigits } from "@/lib/content";
 
 const columns = [
   { title: "Produk", links: [["Fitur", "/#fitur"], ["Harga", "/#harga"], ["Unduh", "/unduh"]] },
@@ -18,6 +19,16 @@ export async function Footer() {
           <p className="max-w-[280px] text-sm leading-relaxed text-muted">
             {site.tagline}
           </p>
+          {(site.whatsappNumber || site.supportEmail) && (
+            <ul className="mt-1 flex flex-col gap-2.5 text-sm">
+              {site.whatsappNumber && (
+                <li><a href={`https://wa.me/${waDigits(site.whatsappNumber)}`} className="flex items-center gap-2.5 text-muted transition-colors hover:text-foreground"><span className="flex h-8 w-8 items-center justify-center rounded-full bg-accent/12 text-accent"><Icon name="phone" className="h-4 w-4" /></span>WhatsApp</a></li>
+              )}
+              {site.supportEmail && (
+                <li><a href={`mailto:${site.supportEmail}`} className="flex items-center gap-2.5 text-muted transition-colors hover:text-foreground"><span className="flex h-8 w-8 items-center justify-center rounded-full bg-accent/12 text-accent"><Icon name="mail" className="h-4 w-4" /></span>{site.supportEmail}</a></li>
+              )}
+            </ul>
+          )}
         </div>
         {columns.map((c) => (
           <div key={c.title} className="flex flex-col gap-3 text-sm">

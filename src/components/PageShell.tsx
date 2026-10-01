@@ -16,9 +16,9 @@ export function PageShell({
   narrow?: boolean;
 }) {
   return (
-    <div className="relative flex flex-1 flex-col overflow-hidden">
-      <div className="blob left-[55%] -top-20 h-[560px] w-[560px] bg-[#bfc6ff] opacity-75" />
-      <div className="blob -left-32 top-[500px] h-[460px] w-[460px] bg-[#ffc8de] opacity-60" />
+    <div className="relative flex flex-1 flex-col overflow-clip">
+      <div data-parallax="0.1" className="blob left-[55%] -top-20 h-[560px] w-[560px] bg-[#bfc6ff] opacity-75" />
+      <div data-parallax="-0.08" className="blob -left-32 top-[500px] h-[460px] w-[460px] bg-[#ffc8de] opacity-60" />
       <Navbar />
       <main id="konten" className={`relative z-10 mx-auto w-full flex-1 px-4 pb-10 pt-14 md:px-16 md:pt-20 ${narrow ? "max-w-[820px]" : "max-w-[1312px]"}`}>
         <div className="mb-10 flex max-w-[720px] flex-col gap-4">

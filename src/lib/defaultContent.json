@@ -11,6 +11,14 @@
     {
       "key": "hero",
       "data": {
+        "visualImages": [],
+        "cameraLabel": "Preview kamera",
+        "startButton": "Mulai Foto",
+        "paymentLabel": "Pembayaran QRIS masuk",
+        "paymentValue": "Rp 35.000",
+        "boothLabel": "Booth aktif hari ini",
+        "boothValue": "",
+        "galleryLabel": "Galeri siap dibagikan",
         "badge": "Platform photobooth untuk pemilik booth",
         "titleLine1": "Kelola booth foto,",
         "titleLine2": "tanpa ribet.",
@@ -83,18 +91,22 @@
         "title": "Empat langkah, booth Anda jalan.",
         "steps": [
           {
+            "icon": "user-plus",
             "title": "Daftar",
             "body": "Isi form singkat, tim kami aktifkan akun tenant Anda."
           },
           {
+            "icon": "download",
             "title": "Install",
             "body": "Unduh aplikasi Windows, pasangkan dengan kunci kiosk."
           },
           {
+            "icon": "sliders",
             "title": "Atur",
             "body": "Pilih template, paket, harga, dan tampilan kiosk."
           },
           {
+            "icon": "rocket",
             "title": "Jalan",
             "body": "Terima pembayaran dan pantau omzet dari dashboard."
           }

@@ -13,7 +13,7 @@ export default async function DaftarPage({ searchParams }: PageProps<"/daftar">)
   const plan = typeof sp.paket === "string" ? sp.paket.slice(0, 60) : undefined;
 
   return (
-    <div className="relative flex flex-1 flex-col overflow-hidden">
+    <div className="relative flex flex-1 flex-col overflow-clip">
       <div className="blob left-[55%] -top-20 h-[560px] w-[560px] bg-[#bfc6ff] opacity-75" />
       <div className="blob -left-32 top-[500px] h-[460px] w-[460px] bg-[#ffc8de] opacity-60" />
       <Navbar />

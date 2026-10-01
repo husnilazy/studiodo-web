@@ -12,14 +12,15 @@ import { Testimonials } from "@/components/sections/Testimonials";
 import { Faq } from "@/components/sections/Faq";
 import { Cta } from "@/components/sections/Cta";
 import { getSiteContent, type SiteData } from "@/lib/content";
+import { fetchStats, type PlatformStats } from "@/lib/stats";
 
 // Section registry: the CMS decides which of these render and in what order;
 // each renderer just receives that section's data. An unknown key (e.g. a section
 // added on the server before the web is redeployed) is skipped, never a crash.
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-type Renderer = (data: any, site: SiteData) => ReactNode;
+type Renderer = (data: any, site: SiteData, stats: PlatformStats | null) => ReactNode;
 const registry: Record<string, Renderer> = {
-  hero: (d) => <Hero data={d} />,
+  hero: (d, _s, stats) => <Hero data={d} stats={stats} />,
   trust: (d) => <Trust data={d} />,
   features: (d) => <Features data={d} />,
   howItWorks: (d) => <HowItWorks data={d} />,
@@ -32,22 +33,22 @@ const registry: Record<string, Renderer> = {
 };
 
 export default async function Home() {
-  const { site, sections } = await getSiteContent();
+  const [{ site, sections }, stats] = await Promise.all([getSiteContent(), fetchStats()]);
   return (
-    <div className="relative flex flex-1 flex-col overflow-hidden">
-      <div className="blob left-[55%] -top-20 h-[620px] w-[620px] bg-[#bfc6ff] opacity-75" />
-      <div className="blob left-[75%] top-[300px] h-[420px] w-[420px] bg-[#ffc8de] opacity-70" />
-      <div className="blob -left-40 top-[1150px] h-[520px] w-[520px] bg-[#b8f0e6] opacity-60" />
-      <div className="blob left-[70%] top-[2000px] h-[560px] w-[560px] bg-[#d5ccff] opacity-60" />
-      <div className="blob -left-32 top-[2900px] h-[500px] w-[500px] bg-[#ffe3b8] opacity-60" />
-      <div className="blob left-[62%] top-[3900px] h-[560px] w-[560px] bg-[#bfd8ff] opacity-65" />
-      <div className="blob -left-24 top-[4800px] h-[520px] w-[520px] bg-[#ffc8de] opacity-55" />
-      <div className="blob left-[48%] top-[5600px] h-[640px] w-[640px] bg-[#bfc6ff] opacity-70" />
+    <div className="relative flex flex-1 flex-col overflow-clip">
+      <div data-parallax="0.10" className="blob left-[55%] -top-20 h-[620px] w-[620px] bg-[#bfc6ff] opacity-75" />
+      <div data-parallax="-0.08" className="blob left-[75%] top-[300px] h-[420px] w-[420px] bg-[#ffc8de] opacity-70" />
+      <div data-parallax="0.12" className="blob -left-40 top-[1150px] h-[520px] w-[520px] bg-[#b8f0e6] opacity-60" />
+      <div data-parallax="-0.10" className="blob left-[70%] top-[2000px] h-[560px] w-[560px] bg-[#d5ccff] opacity-60" />
+      <div data-parallax="0.09" className="blob -left-32 top-[2900px] h-[500px] w-[500px] bg-[#ffe3b8] opacity-60" />
+      <div data-parallax="-0.12" className="blob left-[62%] top-[3900px] h-[560px] w-[560px] bg-[#bfd8ff] opacity-65" />
+      <div data-parallax="0.10" className="blob -left-24 top-[4800px] h-[520px] w-[520px] bg-[#ffc8de] opacity-55" />
+      <div data-parallax="-0.08" className="blob left-[48%] top-[5600px] h-[640px] w-[640px] bg-[#bfc6ff] opacity-70" />
       <Navbar />
       <main id="konten" className="flex-1">
         {sections.map((s) => {
           const render = registry[s.key];
-          return render ? <div key={s.key}>{render(s.data, site)}</div> : null;
+          return render ? <div key={s.key}>{render(s.data, site, stats)}</div> : null;
         })}
       </main>
       <Footer />

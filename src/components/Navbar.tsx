@@ -12,7 +12,7 @@ const links = [
 
 export function Navbar() {
   return (
-    <header className="relative z-20 px-4 pt-4 md:px-16 md:pt-5">
+    <header className="sticky top-0 z-40 px-4 pt-3 md:px-16 md:pt-4">
       <div className="glass relative mx-auto flex h-14 max-w-[1312px] items-center justify-between rounded-full! pl-5 pr-2 md:h-16 md:pl-7">
         <Link href="/" aria-label="STUDIODO beranda">
           <SiteLogo />

@@ -5,10 +5,14 @@ import { API_URL } from "./api";
 // source of truth for fields; defaultContent.json is generated from it and is only
 // used when the API is unreachable, so the site never renders empty.
 export type Bullet = { text: string };
-export type HeroData = { badge: string; titleLine1: string; titleLine2: string; subtitle: string; primaryCta: string; secondaryCta: string; bullets: Bullet[] };
+export type HeroData = {
+  badge: string; titleLine1: string; titleLine2: string; subtitle: string; primaryCta: string; secondaryCta: string; bullets: Bullet[];
+  visualImages?: { image?: string }[]; cameraLabel?: string; startButton?: string; paymentLabel?: string; paymentValue?: string;
+  boothLabel?: string; boothValue?: string; galleryLabel?: string;
+};
 export type TrustData = { caption: string; logos: { name: string; image?: string }[] };
 export type FeaturesData = { eyebrow: string; title: string; items: { icon?: string; title: string; body: string }[] };
-export type HowData = { eyebrow: string; title: string; steps: { title: string; body: string }[] };
+export type HowData = { eyebrow: string; title: string; steps: { icon?: string; title: string; body: string }[] };
 export type TemplatesData = { eyebrow: string; title: string; tags: Bullet[] };
 export type PricingData = { eyebrow: string; title: string };
 export type CommunityData = { eyebrow: string; title: string; body: string; perks: { icon?: string; title: string; body: string }[] };

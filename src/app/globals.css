@@ -47,8 +47,9 @@ body {
   opacity: 0.7;
 }
 
+/* No CSS scroll-behavior: smooth here — MotionEffects animates same-page anchor jumps itself. A global smooth
+   scroll also animates every Next.js route change and fights the router's scroll restoration. */
 html {
-  scroll-behavior: smooth;
   scroll-padding-top: 96px;
 }
 
@@ -59,9 +60,6 @@ html {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  html {
-    scroll-behavior: auto;
-  }
   .btn {
     transition: none;
   }
@@ -162,4 +160,73 @@ html {
 }
 :root[data-theme="dark"] .logo-dark {
   display: inline-block;
+}
+
+
+/* ------------------------------------------------------------------------------------------------
+   Motion. Everything below is progressive enhancement: content is fully visible until the inline
+   script in layout.tsx adds `.js` to <html>, and every effect is switched off for
+   prefers-reduced-motion. Reveal uses `transform`; parallax and hover-lift use the independent
+   `translate` property so the three never overwrite each other.
+   ------------------------------------------------------------------------------------------------ */
+.js [data-reveal] {
+  opacity: 0;
+  transform: translate3d(0, 34px, 0);
+  transition: opacity 0.9s cubic-bezier(0.2, 0.7, 0.2, 1), transform 0.9s cubic-bezier(0.2, 0.7, 0.2, 1), translate 0.35s ease, box-shadow 0.35s ease;
+  transition-delay: var(--d, 0ms), var(--d, 0ms), 0ms, 0ms;
+  will-change: opacity, transform;
+}
+.js [data-reveal="left"] { transform: translate3d(-48px, 0, 0); }
+.js [data-reveal="right"] { transform: translate3d(48px, 0, 0); }
+.js [data-reveal="scale"] { transform: scale(0.92); }
+.js [data-reveal].in { opacity: 1; transform: none; will-change: auto; }
+
+.lift { transition: translate 0.35s ease, box-shadow 0.35s ease; }
+.lift:hover { translate: 0 -8px; box-shadow: 0 24px 60px rgba(60, 70, 140, 0.2); }
+.lift .icon-tile { transition: transform 0.4s cubic-bezier(0.3, 1.6, 0.5, 1); }
+.lift:hover .icon-tile { transform: rotate(-8deg) scale(1.12); }
+
+@keyframes float-a { 0%, 100% { transform: translate3d(0, 0, 0); } 50% { transform: translate3d(0, -14px, 0); } }
+@keyframes float-b { 0%, 100% { transform: translate3d(0, 0, 0) rotate(0deg); } 50% { transform: translate3d(0, 12px, 0) rotate(0.6deg); } }
+@keyframes float-c { 0%, 100% { transform: translate3d(0, 0, 0); } 50% { transform: translate3d(6px, -10px, 0); } }
+.float-a { animation: float-a 6.5s ease-in-out infinite; }
+.float-b { animation: float-b 8s ease-in-out infinite; animation-delay: -2s; }
+.float-c { animation: float-c 7s ease-in-out infinite; animation-delay: -4s; }
+
+@keyframes pop-in { 0% { transform: scale(0.4); opacity: 0; } 55% { transform: scale(1.18); opacity: 1; } 100% { transform: scale(1); opacity: 1; } }
+.pop-in { animation: pop-in 0.55s cubic-bezier(0.3, 1.4, 0.5, 1) both; }
+
+@keyframes flash { 0% { opacity: 0.95; } 100% { opacity: 0; } }
+.shutter-flash { animation: flash 0.45s ease-out both; }
+
+@keyframes ping-ring { 0% { transform: scale(0.8); opacity: 0.7; } 100% { transform: scale(2.2); opacity: 0; } }
+.ping-ring { animation: ping-ring 1.4s ease-out infinite; }
+
+@keyframes shimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
+.shimmer-text {
+  background: linear-gradient(100deg, var(--foreground) 35%, var(--accent) 50%, var(--foreground) 65%);
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: shimmer 6s linear infinite;
+}
+
+@keyframes draw-line { from { stroke-dashoffset: 100; } to { stroke-dashoffset: 0; } }
+.js .step-line { stroke-dasharray: 100; stroke-dashoffset: 100; }
+.js .in .step-line, .js .step-line.in { animation: draw-line 1.6s ease-out 0.3s forwards; }
+
+@keyframes orbit-spin { to { transform: rotate(360deg); } }
+.orbit-spin { animation: orbit-spin 38s linear infinite; }
+
+.scroll-progress {
+  position: fixed; inset: 0 0 auto 0; z-index: 60; height: 3px; transform-origin: 0 50%;
+  transform: scaleX(var(--sp, 0)); background: linear-gradient(90deg, var(--accent-soft), var(--accent)); pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .js [data-reveal] { opacity: 1 !important; transform: none !important; transition: none !important; }
+  .float-a, .float-b, .float-c, .orbit-spin, .ping-ring, .shimmer-text { animation: none !important; }
+  .js .step-line { stroke-dashoffset: 0; }
+  .lift:hover { translate: none; }
 }

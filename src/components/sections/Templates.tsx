@@ -39,7 +39,7 @@ export async function Templates({ data }: { data: TemplatesData }) {
         </>
       ) : (
         // No catalog yet (or the API is unreachable): an honest teaser instead of fake template cards.
-        <div className="glass flex flex-col items-start gap-4 p-10 md:flex-row md:items-center md:justify-between">
+        <div data-reveal="up" className="glass flex flex-col items-start gap-4 p-8 sm:p-10 md:flex-row md:items-center md:justify-between">
           <div className="flex max-w-[560px] flex-col gap-2">
             <h3 className="font-display text-2xl tracking-tight">Koleksi frame segera hadir</h3>
             <p className="text-[15px] leading-relaxed text-muted">Kami sedang menyiapkan frame pilihan untuk wedding, ulang tahun, dan acara korporat. Desainer bisa mendaftar untuk ikut mengisi katalog.</p>
