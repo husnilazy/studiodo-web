@@ -4,6 +4,28 @@ import { daysUntil, formatDate, formatDateTime, formatRupiah } from "@/lib/forma
 
 export const dynamic = "force-dynamic";
 
+function RevenueChart({ data }: { data: { date: string; sessions: number; revenue: number }[] }) {
+  const max = Math.max(...data.map((d) => d.revenue), 1);
+  const best = data.reduce((a, b) => (b.revenue > a.revenue ? b : a), data[0]);
+  const fmtDay = (d: string) => new Date(d).toLocaleDateString("id-ID", { day: "numeric", month: "short" });
+  return (
+    <section className="glass p-8">
+      <div className="mb-5 flex flex-wrap items-baseline justify-between gap-2">
+        <h2 className="font-display text-xl tracking-tight">Pendapatan harian</h2>
+        <span className="text-[13px] text-muted">{best.revenue > 0 ? `Tertinggi ${formatRupiah(best.revenue)} · ${fmtDay(best.date)}` : "Belum ada transaksi dalam 30 hari terakhir"}</span>
+      </div>
+      <div className="flex h-36 items-end gap-[3px]" role="img" aria-label="Grafik pendapatan 30 hari terakhir">
+        {data.map((d) => (
+          <div key={d.date} title={`${fmtDay(d.date)} — ${formatRupiah(d.revenue)} · ${d.sessions} sesi`} className="flex h-full flex-1 items-end">
+            <div className="w-full rounded-t-[3px] bg-accent/80" style={{ height: `${Math.max(d.revenue > 0 ? 4 : 1, (d.revenue / max) * 100)}%`, opacity: d.revenue > 0 ? 1 : 0.25 }} />
+          </div>
+        ))}
+      </div>
+      <div className="mt-2 flex justify-between text-[12px] text-muted"><span>{fmtDay(data[0].date)}</span><span>{fmtDay(data[data.length - 1].date)}</span></div>
+    </section>
+  );
+}
+
 export default async function PortalHome() {
   const s = await getSummary();
   const days = daysUntil(s.tenant.subscriptionEndsAt);
@@ -52,6 +74,8 @@ export default async function PortalHome() {
           <div className="mt-1 text-[13px] text-muted">{onlineKiosks} online sekarang</div>
         </div>
       </div>
+
+      {s.daily && s.daily.length > 0 && <RevenueChart data={s.daily} />}
 
       <section className="glass p-8">
         <h2 className="mb-4 font-display text-xl tracking-tight">Kiosk</h2>

@@ -27,6 +27,8 @@ export type PortalSummary = {
   };
   kiosks: { id: string; label: string | null; appVersion: string | null; paired: boolean; lastUsedAt: string | null; online: boolean }[];
   last30Days: { sessions: number; revenue: number };
+  /** Optional: absent until the API with daily series is deployed. */
+  daily?: { date: string; sessions: number; revenue: number }[];
   recentPayments: { id: string; planName: string | null; amount: number; method: string; periodDays: number; createdAt: string }[];
   onlinePaymentEnabled: boolean;
 };
