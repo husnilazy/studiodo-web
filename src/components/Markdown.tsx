@@ -49,6 +49,32 @@ export function Markdown({ source }: { source: string }) {
       continue;
     }
 
+    // Table: a header row of | cells |, then a |---|---| separator row, then body rows.
+    if (line.includes("|") && i + 1 < lines.length && /^\s*\|?\s*:?-{3,}:?\s*(\|\s*:?-{3,}:?\s*)*\|?\s*$/.test(lines[i + 1])) {
+      const cells = (row: string) => row.trim().replace(/^\|/, "").replace(/\|$/, "").split("|").map((c) => c.trim());
+      const head = cells(line);
+      i += 2;
+      const body: string[][] = [];
+      while (i < lines.length && lines[i].includes("|") && lines[i].trim() !== "") body.push(cells(lines[i++]));
+      out.push(
+        <div key={k++} className="overflow-x-auto rounded-2xl border border-foreground/10">
+          <table className="w-full min-w-[480px] border-collapse text-left text-[15px] leading-relaxed">
+            <thead className="bg-foreground/[0.04] text-foreground">
+              <tr>{head.map((c, n) => <th key={n} className="px-4 py-3 font-semibold">{inline(c, `th${k}-${n}`)}</th>)}</tr>
+            </thead>
+            <tbody>
+              {body.map((r, n) => (
+                <tr key={n} className="border-t border-foreground/10 align-top">
+                  {r.map((c, m) => <td key={m} className="px-4 py-3">{inline(c, `td${k}-${n}-${m}`)}</td>)}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>,
+      );
+      continue;
+    }
+
     const h = /^(#{1,3})\s+(.+)$/.exec(line);
     if (h) {
       const level = h[1].length;

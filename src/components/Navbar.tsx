@@ -6,7 +6,7 @@ const links = [
   { href: "/#template", label: "Template" },
   { href: "/#harga", label: "Harga" },
   { href: "/#komunitas", label: "Komunitas" },
-  { href: "/#faq", label: "Bantuan" },
+  { href: "/bantuan", label: "Bantuan" },
 ];
 
 export function Navbar() {
