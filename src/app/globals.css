@@ -230,3 +230,23 @@ html {
   .js .step-line { stroke-dashoffset: 0; }
   .lift:hover { translate: none; }
 }
+
+/* Sticky navbar: once the page scrolls, a full-width frosted band appears behind it and fades out at its lower edge,
+   so content passing underneath is softly blurred instead of showing through sharply. */
+.site-header::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 -26px 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.35s ease;
+  background: linear-gradient(to bottom, color-mix(in srgb, var(--background) 82%, transparent), color-mix(in srgb, var(--background) 0%, transparent));
+  -webkit-backdrop-filter: blur(20px) saturate(140%);
+  backdrop-filter: blur(20px) saturate(140%);
+  -webkit-mask-image: linear-gradient(to bottom, #000 62%, transparent);
+  mask-image: linear-gradient(to bottom, #000 62%, transparent);
+}
+.site-header[data-scrolled="true"]::before { opacity: 1; }
+.nav-pill { transition: background-color 0.35s ease, box-shadow 0.35s ease; }
+.site-header[data-scrolled="true"] .nav-pill { background-color: color-mix(in srgb, var(--panel) 72%, transparent); }

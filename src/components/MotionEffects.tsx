@@ -120,6 +120,7 @@ export function MotionEffects() {
         const max = document.documentElement.scrollHeight - window.innerHeight;
         barRef.current?.style.setProperty("--sp", max > 0 ? String(Math.min(1, window.scrollY / max)) : "0");
         setShowTop(window.scrollY > 900);
+        document.querySelector("header.site-header")?.setAttribute("data-scrolled", String(window.scrollY > 12));
       });
     };
     onScroll();
