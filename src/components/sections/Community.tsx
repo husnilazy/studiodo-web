@@ -1,15 +1,15 @@
+import Link from "next/link";
 import { SectionHeading } from "../SectionHeading";
+import { fetchDirectory } from "@/lib/directory";
 import type { CommunityData } from "@/lib/content";
 
 const tints = ["from-[#ffd3e4] to-[#fff0f6]", "from-[#b8f0e6] to-[#eafbf8]", "from-[#c7ceff] to-[#edefff]"];
-const avatars = [
-  "from-[#ffd3e4] to-[#c7ceff]",
-  "from-[#b8f0e6] to-[#bfd8ff]",
-  "from-[#ffe3b8] to-[#ffc8de]",
-  "from-[#d5ccff] to-[#bfc6ff]",
-];
 
-export function Community({ data }: { data: CommunityData }) {
+export async function Community({ data }: { data: CommunityData }) {
+  const dir = await fetchDirectory();
+  const listed = dir?.items.length ?? 0;
+  const cities = dir?.cities.length ?? 0;
+
   return (
     <section id="komunitas" className="relative z-10 mx-auto grid w-full max-w-[1312px] items-start gap-12 px-4 py-20 md:px-16 lg:grid-cols-2 lg:gap-16">
       <div className="flex flex-col gap-6">
@@ -27,22 +27,25 @@ export function Community({ data }: { data: CommunityData }) {
           ))}
         </ul>
       </div>
-      <div className="glass flex flex-col gap-1.5 p-8">
-        <div className="mb-2.5 flex items-center justify-between">
-          <h3 className="font-display text-2xl tracking-tight">Kreator teratas</h3>
-          <span className="text-[13px] text-muted">Bulan ini</span>
+
+      {/* Real, live community entry points — no invented leaderboard numbers. */}
+      <div className="flex flex-col gap-6">
+        <div className="glass-dark flex flex-col gap-4 p-9">
+          <div className="text-[13px] font-semibold uppercase tracking-[0.14em] text-[#c6cce0]">Direktori booth</div>
+          <h3 className="font-display text-3xl tracking-tight text-white">Cari photobooth di kotamu</h3>
+          <p className="text-[15px] leading-relaxed text-[#c6cce0]">
+            {listed > 0
+              ? `${listed} booth di ${cities} kota sudah terdaftar dan siap dihubungi untuk acara Anda.`
+              : "Pemilik booth bisa menampilkan booth-nya di sini agar mudah ditemukan calon pelanggan."}
+          </p>
+          <Link href="/booth" className="btn mt-2 self-start bg-white px-6 py-3 text-foreground">Lihat direktori</Link>
         </div>
-        {avatars.map((a, i) => (
-          <div key={i} className={`flex items-center gap-4 py-3.5 ${i < 3 ? "border-b border-foreground/[0.07]" : ""}`}>
-            <span className={`w-[30px] font-display text-[22px] ${i === 0 ? "text-accent" : "text-[#9aa1b2]"}`}>{i + 1}</span>
-            <div className={`h-11 w-11 rounded-full bg-gradient-to-br ${a}`} />
-            <div className="flex-1">
-              <div className="font-semibold">[Nama Kreator]</div>
-              <div className="text-[13px] text-muted">[N] template</div>
-            </div>
-            <span className="text-sm text-muted">[N] pakai</span>
-          </div>
-        ))}
+        <div className="glass flex flex-col gap-4 p-9">
+          <div className="text-[13px] font-semibold uppercase tracking-[0.14em] text-accent">Kreator</div>
+          <h3 className="font-display text-3xl tracking-tight">Rancang frame untuk booth lain</h3>
+          <p className="text-[15px] leading-relaxed text-muted">Desainer bisa mengirim portofolio dan menayangkan template di marketplace dengan kredit nama sendiri.</p>
+          <Link href="/kreator" className="btn btn-primary mt-2 self-start px-6 py-3">Jadi kreator</Link>
+        </div>
       </div>
     </section>
   );

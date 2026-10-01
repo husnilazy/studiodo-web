@@ -3,6 +3,7 @@ import type { FaqData } from "@/lib/content";
 
 export function Faq({ data }: { data: FaqData }) {
   const faqs = data.items;
+  if (faqs.length === 0) return null;
   return (
     <section id="faq" className="relative z-10 mx-auto grid w-full max-w-[1312px] items-start gap-10 px-4 py-20 md:px-16 lg:grid-cols-[420px_1fr] lg:gap-16">
       <SectionHeading align="left" eyebrow={data.eyebrow} title={data.title} />

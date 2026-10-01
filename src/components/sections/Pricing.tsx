@@ -40,23 +40,22 @@ function toCard(plan: PublicPlan, featured: boolean): Card {
   };
 }
 
-// Shown only when the API is unreachable (e.g. local dev without the server).
-const placeholders: Card[] = [
-  { key: "p1", name: "[Nama Paket 1]", price: "[Rp —]", period: "/bulan", description: "[Deskripsi singkat dari tabel plans]", features: ["[N] kiosk", "QRIS dan voucher", "Galeri cloud", "Update otomatis"], cta: "Pilih Paket", href: "/daftar", featured: false },
-  { key: "p2", name: "[Nama Paket 2]", price: "[Rp —]", period: "/bulan", description: "[Deskripsi singkat dari tabel plans]", features: ["[N] kiosk", "Semua fitur paket 1", "Screen Builder", "GIF dan video"], cta: "Coba Gratis 7 Hari", href: "/daftar", featured: true },
-  { key: "p3", name: "[Nama Paket 3]", price: "[Rp —]", period: "/bulan", description: "[Deskripsi singkat dari tabel plans]", features: ["Kiosk tak terbatas", "Semua fitur paket 2", "Dukungan prioritas"], cta: "Hubungi Kami", href: "/kontak", featured: false },
-];
-
 export async function Pricing({ data }: { data: PricingData }) {
   const plans = await fetchPublicPlans();
   // With 3+ plans the middle one is highlighted; with fewer, none is.
   const cards = plans
     ? plans.map((p, i) => toCard(p, plans.length >= 3 && i === Math.floor(plans.length / 2)))
-    : placeholders;
+    : [];
 
   return (
     <section id="harga" className="relative z-10 mx-auto flex w-full max-w-[1312px] flex-col items-center gap-12 px-4 py-20 md:px-16">
       <SectionHeading eyebrow={data.eyebrow} title={data.title} />
+      {cards.length === 0 && (
+        <div className="glass flex w-full max-w-[720px] flex-col items-start gap-4 p-10">
+          <p className="text-[15px] leading-relaxed text-muted">Daftar harga sedang tidak dapat dimuat. Hubungi tim kami untuk informasi paket dan harga terbaru.</p>
+          <Link href="/kontak" className="btn btn-primary px-7 py-3.5">Hubungi Kami</Link>
+        </div>
+      )}
       <div className="grid w-full gap-6 md:grid-cols-2 lg:grid-cols-3">
         {cards.map((p) => (
           <article

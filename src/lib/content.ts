@@ -20,7 +20,28 @@ export type SiteData = { tagline: string; whatsappNumber: string; supportEmail: 
 export type SectionKey = "hero" | "trust" | "features" | "howItWorks" | "templates" | "pricing" | "community" | "testimonials" | "faq" | "cta";
 export type SiteContent = { site: SiteData; sections: { key: string; data: Record<string, unknown> }[] };
 
-const fallback = defaults as unknown as SiteContent;
+
+// "[Nama Booth]"-style text is an authoring placeholder, never real copy. Whatever the source (CMS row,
+// server default, bundled fallback), a list item that is only a placeholder is dropped so visitors never
+// see one; sections that end up empty then hide themselves.
+const isPlaceholder = (v: unknown) => typeof v === "string" && /^\s*\[[^\]]*\]\s*$/.test(v);
+
+function scrub(content: SiteContent): SiteContent {
+  const dropPlaceholderItems = (items: unknown, key: string) =>
+    Array.isArray(items) ? items.filter((it) => !isPlaceholder((it as Record<string, unknown>)[key])) : items;
+  return {
+    ...content,
+    sections: content.sections.map((s) => {
+      const d = { ...s.data };
+      if (s.key === "trust") d.logos = dropPlaceholderItems(d.logos, "name");
+      if (s.key === "testimonials") d.items = dropPlaceholderItems(d.items, "quote");
+      if (s.key === "faq") d.items = dropPlaceholderItems(d.items, "a");
+      return { ...s, data: d };
+    }),
+  };
+}
+
+const fallback = scrub(defaults as unknown as SiteContent);
 
 /** Content from the CMS, or the built-in defaults when the API is unreachable. */
 export async function getSiteContent(): Promise<SiteContent> {
@@ -28,7 +49,7 @@ export async function getSiteContent(): Promise<SiteContent> {
     const res = await fetch(`${API_URL}/api/public/content`, { next: { revalidate: 60 } });
     if (!res.ok) return fallback;
     const data = (await res.json()) as SiteContent;
-    return Array.isArray(data?.sections) && data.site ? data : fallback;
+    return Array.isArray(data?.sections) && data.site ? scrub(data) : fallback;
   } catch {
     return fallback;
   }

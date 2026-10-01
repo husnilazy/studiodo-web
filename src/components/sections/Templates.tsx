@@ -4,14 +4,6 @@ import { TemplateCard } from "../TemplateCard";
 import { fetchMarketplace, type MarketItem } from "@/lib/marketplace";
 import type { TemplatesData } from "@/lib/content";
 
-const covers = [
-  "from-[#ffd3e4] to-[#c7ceff]",
-  "from-[#b8f0e6] to-[#bfd8ff]",
-  "from-[#ffe3b8] to-[#ffc8de]",
-  "from-[#d5ccff] to-[#bfc6ff]",
-  "from-[#2a3150] to-[#0b1020]",
-];
-
 export async function Templates({ data }: { data: TemplatesData }) {
   const market = await fetchMarketplace();
   const items: MarketItem[] = market?.items.slice(0, 5) ?? [];
@@ -27,30 +19,34 @@ export async function Templates({ data }: { data: TemplatesData }) {
           {hasReal ? "Lihat semua template" : "Jadi Kreator"}
         </Link>
       </div>
-      <ul className="flex flex-wrap gap-2.5 text-sm font-medium">
-        {data.tags.map((t, i) => {
-          const key = categoryKeyByLabel.get(t.text.toLowerCase());
-          const cls = i === 0 ? "btn bg-foreground px-5 py-2.5 text-white" : "btn glass rounded-full! px-5 py-2.5 text-muted";
-          return (
-            <li key={`${t.text}-${i}`}>
-              {hasReal ? <Link href={key ? `/template?kategori=${key}` : "/template"} className={cls}>{t.text}</Link> : <span className={cls}>{t.text}</span>}
-            </li>
-          );
-        })}
-      </ul>
-      <div className="grid grid-cols-2 gap-5 md:grid-cols-3 lg:grid-cols-5">
-        {hasReal
-          ? items.map((item, i) => <TemplateCard key={item.id} item={item} index={i} />)
-          : covers.map((c, i) => (
-              <article key={i} className="glass flex flex-col gap-3.5 rounded-3xl! p-3 pb-[18px]">
-                <div className={`h-[300px] rounded-2xl bg-gradient-to-b lg:h-[340px] ${c}`} />
-                <div className="px-1.5">
-                  <div className="text-[15px] font-semibold">[Nama Template]</div>
-                  <div className="text-[13px] text-muted">oleh [Kreator] · [123] pakai</div>
-                </div>
-              </article>
-            ))}
-      </div>
+
+      {hasReal ? (
+        <>
+          <ul className="flex flex-wrap gap-2.5 text-sm font-medium">
+            {data.tags.map((t, i) => {
+              const key = categoryKeyByLabel.get(t.text.toLowerCase());
+              const cls = i === 0 ? "btn bg-foreground px-5 py-2.5 text-white" : "btn glass rounded-full! px-5 py-2.5 text-muted";
+              return (
+                <li key={`${t.text}-${i}`}>
+                  <Link href={key ? `/template?kategori=${key}` : "/template"} className={cls}>{t.text}</Link>
+                </li>
+              );
+            })}
+          </ul>
+          <div className="grid grid-cols-2 gap-5 md:grid-cols-3 lg:grid-cols-5">
+            {items.map((item, i) => <TemplateCard key={item.id} item={item} index={i} />)}
+          </div>
+        </>
+      ) : (
+        // No catalog yet (or the API is unreachable): an honest teaser instead of fake template cards.
+        <div className="glass flex flex-col items-start gap-4 p-10 md:flex-row md:items-center md:justify-between">
+          <div className="flex max-w-[560px] flex-col gap-2">
+            <h3 className="font-display text-2xl tracking-tight">Koleksi frame segera hadir</h3>
+            <p className="text-[15px] leading-relaxed text-muted">Kami sedang menyiapkan frame pilihan untuk wedding, ulang tahun, dan acara korporat. Desainer bisa mendaftar untuk ikut mengisi katalog.</p>
+          </div>
+          <Link href="/kreator" className="btn btn-primary shrink-0 px-7 py-3.5">Daftar sebagai kreator</Link>
+        </div>
+      )}
     </section>
   );
 }

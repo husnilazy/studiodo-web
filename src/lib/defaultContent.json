@@ -30,24 +30,8 @@
     {
       "key": "trust",
       "data": {
-        "caption": "Dipercaya pemilik booth di [JUMLAH] kota",
-        "logos": [
-          {
-            "name": "[Logo 1]"
-          },
-          {
-            "name": "[Logo 2]"
-          },
-          {
-            "name": "[Logo 3]"
-          },
-          {
-            "name": "[Logo 4]"
-          },
-          {
-            "name": "[Logo 5]"
-          }
-        ]
+        "caption": "Dipakai oleh bisnis photobooth seperti",
+        "logos": []
       }
     },
     {
@@ -147,19 +131,19 @@
       "data": {
         "eyebrow": "Komunitas",
         "title": "Tumbuh bareng sesama pemilik booth.",
-        "body": "Bagikan tips, tanya jawab, dan temukan pelanggan lewat peta booth publik. Kreator terbaik tampil di papan peringkat.",
+        "body": "Temukan dan ditemukan: tampilkan booth Anda di direktori publik, pasang frame dari para desainer, atau kirim desain sendiri untuk ikut mengisi katalog.",
         "perks": [
           {
-            "title": "Forum dan grup diskusi",
-            "body": "Tanya jawab teknis dan bisnis booth"
+            "title": "Direktori booth",
+            "body": "Calon pelanggan mencari booth di kotanya"
           },
           {
-            "title": "Peta booth STUDIODO",
-            "body": "Pelanggan menemukan booth di kotanya"
+            "title": "Marketplace template",
+            "body": "Frame siap pakai dari desainer, dipasang satu klik"
           },
           {
-            "title": "Pusat bantuan dan changelog",
-            "body": "Panduan, video, dan catatan rilis"
+            "title": "Blog dan panduan",
+            "body": "Tips bisnis photobooth dan cara memakai STUDIODO"
           }
         ]
       }
@@ -168,26 +152,7 @@
       "key": "testimonials",
       "data": {
         "title": "Kata pemilik booth.",
-        "items": [
-          {
-            "quote": "[Testimoni pelanggan nyata akan ditempatkan di sini.]",
-            "name": "[Nama]",
-            "business": "[Nama Booth]",
-            "city": "[Kota]"
-          },
-          {
-            "quote": "[Testimoni pelanggan nyata akan ditempatkan di sini.]",
-            "name": "[Nama]",
-            "business": "[Nama Booth]",
-            "city": "[Kota]"
-          },
-          {
-            "quote": "[Testimoni pelanggan nyata akan ditempatkan di sini.]",
-            "name": "[Nama]",
-            "business": "[Nama Booth]",
-            "city": "[Kota]"
-          }
-        ]
+        "items": []
       }
     },
     {
@@ -198,23 +163,23 @@
         "items": [
           {
             "q": "Perangkat apa yang dibutuhkan?",
-            "a": "[Spesifikasi PC minimum, kamera dan printer yang didukung.]"
+            "a": "Aplikasi kiosk berjalan di PC atau laptop Windows 10/11 (64-bit). Untuk kamera, Anda bisa memakai webcam atau kamera DSLR/mirrorless lewat digiCamControl. Untuk cetak, cukup printer yang punya driver Windows. Layar sentuh disarankan untuk pengalaman kiosk yang nyaman."
           },
           {
             "q": "Apakah bisa dipakai tanpa internet?",
-            "a": "[Jawaban.]"
+            "a": "Sesi foto yang sedang berjalan tetap tersimpan di perangkat dan dikirim otomatis begitu koneksi kembali. Fitur yang butuh internet, seperti pembayaran QRIS dan galeri cloud, akan menunggu sampai koneksi tersedia."
           },
           {
             "q": "Bagaimana pembayaran QRIS masuk ke rekening saya?",
-            "a": "[Jawaban.]"
+            "a": "Pembayaran QRIS di kiosk diproses lewat akun Xendit milik Anda sendiri, yang Anda hubungkan di menu pengaturan pembayaran. Dana mengikuti ketentuan dan jadwal pencairan Xendit ke rekening Anda; STUDIODO tidak menahan uang pelanggan Anda."
           },
           {
             "q": "Bisa berhenti berlangganan kapan saja?",
-            "a": "[Jawaban.]"
+            "a": "Bisa. Langganan tidak diperpanjang otomatis, jadi Anda berhenti dengan tidak memperpanjang. Setelah masa aktif dan masa tenggang berakhir, kiosk terkunci sampai langganan diperpanjang."
           },
           {
             "q": "Bagaimana cara menjadi kreator template?",
-            "a": "[Jawaban.]"
+            "a": "Buka halaman Jadi Kreator, kirim tautan portofolio Anda, dan tim kami akan menghubungi bila cocok. Template yang diterbitkan tampil di marketplace dengan kredit nama Anda."
           }
         ]
       }

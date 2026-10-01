@@ -53,13 +53,13 @@ export function Hero({ data }: { data: HeroData }) {
           </div>
           <div>
             <div className="text-xs text-muted">Pembayaran QRIS masuk</div>
-            <div className="font-display text-xl tracking-tight">[Rp 35.000]</div>
+            <div className="font-display text-xl tracking-tight">Rp 35.000</div>
           </div>
         </div>
 
         <div className="glass absolute right-0 top-[330px] hidden w-[200px] rounded-[22px]! px-5 py-4 sm:block">
           <div className="text-xs text-muted">Booth aktif hari ini</div>
-          <div className="my-1 mb-2.5 font-display text-3xl tracking-tight">[N] kiosk</div>
+          <div className="my-1 mb-2.5 font-display text-3xl tracking-tight">3 kiosk</div>
           <div className="h-1.5 rounded-full bg-accent/15">
             <div className="h-1.5 w-[68%] rounded-full bg-accent" />
           </div>

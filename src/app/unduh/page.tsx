@@ -8,13 +8,14 @@ export const metadata: Metadata = {
   description: "Unduh aplikasi kiosk STUDIODO untuk Windows 10/11 dan lihat spesifikasi perangkat yang dibutuhkan.",
 };
 
+// Only what the app actually supports. Minimum CPU/RAM/disk figures are deliberately not listed until
+// they are measured and confirmed — better no number than a made-up one.
 const requirements = [
   ["Sistem operasi", "Windows 10 atau 11 (64-bit)"],
-  ["Prosesor", "[Spesifikasi minimum — perlu dikonfirmasi]"],
-  ["RAM", "[Spesifikasi minimum — perlu dikonfirmasi]"],
-  ["Penyimpanan", "[Spesifikasi minimum — perlu dikonfirmasi]"],
-  ["Kamera", "Webcam atau kamera DSLR/mirrorless via digiCamControl"],
-  ["Printer", "Printer dengan driver Windows"],
+  ["Kamera", "Webcam, atau kamera DSLR/mirrorless lewat digiCamControl"],
+  ["Printer", "Printer apa pun yang memiliki driver Windows"],
+  ["Layar", "Layar sentuh disarankan untuk kiosk"],
+  ["Internet", "Dibutuhkan untuk pembayaran QRIS dan galeri cloud; sesi tetap tersimpan jika koneksi terputus sementara"],
 ];
 
 export default async function UnduhPage() {
