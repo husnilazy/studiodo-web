@@ -39,7 +39,7 @@ export async function Community({ data }: { data: CommunityData }) {
               ? `${listed} booth di ${cities} kota sudah terdaftar dan siap dihubungi untuk acara Anda.`
               : "Pemilik booth bisa menampilkan booth-nya di sini agar mudah ditemukan calon pelanggan."}
           </p>
-          <Link href="/booth" className="btn mt-2 self-start bg-white px-6 py-3 text-foreground">Lihat direktori</Link>
+          <Link href="/booth" className="btn mt-2 self-start bg-white px-6 py-3 text-[#0b1020]">Lihat direktori</Link>
         </div>
         <div className="glass flex flex-col gap-4 p-9">
           <div className="text-[13px] font-semibold uppercase tracking-[0.14em] text-accent">Kreator</div>

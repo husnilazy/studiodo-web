@@ -1,10 +1,26 @@
 import { assetUrl, getSite } from "@/lib/content";
 
-/** The built-in wordmark, or the logo image uploaded in Superadmin → Konten Website → Pengaturan umum. */
-export function Logo({ src }: { src?: string | null }) {
-  if (src) {
+type LogoProps = { src?: string | null; darkSrc?: string | null };
+
+/**
+ * The built-in wordmark, or the logo images uploaded in Superadmin → Konten Website → Pengaturan umum.
+ * With only a light-mode logo it is shown in both themes; with both, the matching one is shown per theme.
+ */
+export function Logo({ src, darkSrc }: LogoProps) {
+  const cls = "h-8 w-auto max-w-[180px] object-contain";
+  if (src && darkSrc) {
+    return (
+      <>
+        {/* eslint-disable-next-line @next/next/no-img-element -- admin-uploaded logo of unknown size, served by the API */}
+        <img src={src} alt="STUDIODO" className={`logo-light ${cls}`} />
+        {/* eslint-disable-next-line @next/next/no-img-element -- admin-uploaded logo of unknown size, served by the API */}
+        <img src={darkSrc} alt="" aria-hidden="true" className={`logo-dark ${cls}`} />
+      </>
+    );
+  }
+  if (src || darkSrc) {
     // eslint-disable-next-line @next/next/no-img-element -- admin-uploaded logo of unknown size, served by the API
-    return <img src={src} alt="STUDIODO" className="h-8 w-auto max-w-[180px] object-contain" />;
+    return <img src={(src || darkSrc) as string} alt="STUDIODO" className={cls} />;
   }
   return (
     <span className="flex items-center gap-2.5">
@@ -17,5 +33,5 @@ export function Logo({ src }: { src?: string | null }) {
 /** Logo wired to the CMS. Use this in headers/footers; plain <Logo/> is for places that must not fetch. */
 export async function SiteLogo() {
   const site = await getSite();
-  return <Logo src={assetUrl(site.logoUrl)} />;
+  return <Logo src={assetUrl(site.logoUrl)} darkSrc={assetUrl(site.logoDarkUrl)} />;
 }

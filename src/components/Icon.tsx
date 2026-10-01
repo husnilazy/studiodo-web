@@ -36,7 +36,7 @@ export function Icon({ name, className = "h-6 w-6" }: { name?: string; className
 export function IconTile({ name, tint, dark = false, size = "lg" }: { name?: string; tint: string; dark?: boolean; size?: "md" | "lg" }) {
   const box = size === "lg" ? "h-[52px] w-[52px] rounded-2xl" : "h-[42px] w-[42px] rounded-[13px]";
   return (
-    <div className={`flex shrink-0 items-center justify-center bg-gradient-to-br ${box} ${tint} ${dark ? "text-white" : "text-accent"}`}>
+    <div className={`flex shrink-0 items-center justify-center bg-gradient-to-br ${box} ${tint} ${dark ? "text-white" : "icon-tile text-accent"}`}>
       <Icon name={name} className={size === "lg" ? "h-6 w-6" : "h-5 w-5"} />
     </div>
   );

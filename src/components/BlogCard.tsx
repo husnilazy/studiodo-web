@@ -18,7 +18,7 @@ export function BlogCard({ post, numbered }: { post: BlogSummary; numbered?: num
           <Icon name={cat.icon} className="h-14 w-14 text-accent/70" />
         )}
         {numbered !== undefined && (
-          <span className="absolute left-4 top-4 flex h-9 w-9 items-center justify-center rounded-full bg-foreground font-display text-sm font-semibold text-white">{numbered}</span>
+          <span className="absolute left-4 top-4 flex h-9 w-9 items-center justify-center rounded-full bg-foreground font-display text-sm font-semibold text-on-foreground">{numbered}</span>
         )}
       </div>
       <div className="flex flex-1 flex-col gap-3 p-7">

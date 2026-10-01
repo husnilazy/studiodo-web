@@ -30,7 +30,7 @@ export default async function PortalTemplatePage({ searchParams }: PageProps<"/p
             const active = c.key === category;
             return (
               <li key={c.key || "all"}>
-                <Link href={c.key ? `/portal/template?kategori=${c.key}` : "/portal/template"} className={active ? "btn bg-foreground px-5 py-2.5 text-white" : "btn glass rounded-full! px-5 py-2.5 text-muted"}>{c.label}</Link>
+                <Link href={c.key ? `/portal/template?kategori=${c.key}` : "/portal/template"} className={active ? "btn bg-foreground px-5 py-2.5 text-on-foreground" : "btn glass rounded-full! px-5 py-2.5 text-muted"}>{c.label}</Link>
               </li>
             );
           })}

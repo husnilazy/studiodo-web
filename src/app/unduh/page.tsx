@@ -28,7 +28,7 @@ export default async function UnduhPage() {
           {release ? (
             <>
               <p className="text-[15px] text-[#c6cce0]">Versi terbaru: {release.version}</p>
-              <a href={release.installerUrl ?? release.releasesUrl} className="btn bg-white py-4 text-center text-foreground">
+              <a href={release.installerUrl ?? release.releasesUrl} className="btn bg-white py-4 text-center text-[#0b1020]">
                 Unduh Installer
               </a>
               <a href={release.releasesUrl} className="text-center text-sm text-[#c6cce0] underline underline-offset-4">
@@ -40,7 +40,7 @@ export default async function UnduhPage() {
               <p className="text-[15px] leading-relaxed text-[#c6cce0]">
                 Tautan unduhan belum tersedia. Daftar dulu dan tim kami akan mengirimkan installer.
               </p>
-              <Link href="/daftar" className="btn bg-white py-4 text-center text-foreground">
+              <Link href="/daftar" className="btn bg-white py-4 text-center text-[#0b1020]">
                 Daftar untuk Mendapat Installer
               </Link>
             </>

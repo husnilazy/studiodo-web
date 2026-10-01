@@ -1,6 +1,7 @@
 @import "tailwindcss";
 
-/* The design is light-only — tell browsers not to force a dark rendering on it. */
+/* Theme tokens. Light is the default; dark is applied by setting data-theme="dark" on <html>
+   (see ThemeToggle + the inline script in layout.tsx, which also honours the OS preference). */
 :root {
   color-scheme: light;
   --background: #fafafd;
@@ -8,6 +9,19 @@
   --muted: #5b6478;
   --accent: #4f4fe8;
   --accent-soft: #9aa6ff;
+  --panel: #ffffff; /* solid surfaces: menus, inputs */
+  --on-foreground: #ffffff; /* text on a --foreground background (primary buttons, active chips) */
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --background: #0a0d18;
+  --foreground: #eceeff;
+  --muted: #9aa3bd;
+  --accent: #8a8aff;
+  --accent-soft: #5b5bd6;
+  --panel: #141829;
+  --on-foreground: #0a0d18;
 }
 
 @theme inline {
@@ -16,6 +30,8 @@
   --color-muted: var(--muted);
   --color-accent: var(--accent);
   --color-accent-soft: var(--accent-soft);
+  --color-panel: var(--panel);
+  --color-on-foreground: var(--on-foreground);
   --font-sans: var(--font-jakarta), system-ui, sans-serif;
   --font-display: var(--font-sora), system-ui, sans-serif;
 }
@@ -24,6 +40,11 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-sans);
+}
+
+::placeholder {
+  color: var(--muted);
+  opacity: 0.7;
 }
 
 html {
@@ -49,14 +70,6 @@ html {
   }
 }
 
-/* Big blurred blobs are the costliest paint on the page — soften them on small screens. */
-@media (max-width: 767px) {
-  .blob {
-    filter: blur(60px);
-    opacity: 0.6;
-  }
-}
-
 @layer components {
   .glass {
     background: rgba(255, 255, 255, 0.55);
@@ -77,6 +90,19 @@ html {
     border-radius: 28px;
     color: #fff;
   }
+  /* In dark mode "glass" turns into a faint light film and the highlight card into a tinted one. */
+  :root[data-theme="dark"] .glass {
+    background: rgba(255, 255, 255, 0.055);
+    border-color: rgba(255, 255, 255, 0.11);
+    box-shadow:
+      0 10px 40px rgba(0, 0, 0, 0.35),
+      inset 0 1px 0 rgba(255, 255, 255, 0.07);
+  }
+  :root[data-theme="dark"] .glass-dark {
+    background: linear-gradient(135deg, rgba(110, 110, 255, 0.3), rgba(110, 110, 255, 0.12));
+    border-color: rgba(160, 160, 255, 0.28);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+  }
   .blob {
     position: absolute;
     border-radius: 9999px;
@@ -95,8 +121,11 @@ html {
   }
   .btn-primary {
     background: var(--foreground);
-    color: #fff;
+    color: var(--on-foreground);
     box-shadow: 0 12px 30px rgba(11, 16, 32, 0.25);
+  }
+  :root[data-theme="dark"] .btn-primary {
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.45);
   }
   .eyebrow {
     font-size: 13px;
@@ -105,4 +134,32 @@ html {
     color: var(--accent);
     text-transform: uppercase;
   }
+}
+
+/* Unlayered on purpose: these must beat Tailwind's utility classes (e.g. opacity-75, bg-gradient-*). */
+:root[data-theme="dark"] .blob {
+  opacity: 0.2 !important;
+}
+:root[data-theme="dark"] .icon-tile {
+  background-image: none;
+  background-color: rgba(138, 138, 255, 0.16);
+}
+
+/* Big blurred blobs are the costliest paint on the page — soften them on small screens. */
+@media (max-width: 767px) {
+  .blob {
+    filter: blur(60px);
+    opacity: 0.6;
+  }
+}
+
+/* Logo variants: when both a light-mode and a dark-mode logo are uploaded, show the one for the active theme. */
+.logo-dark {
+  display: none;
+}
+:root[data-theme="dark"] .logo-light {
+  display: none;
+}
+:root[data-theme="dark"] .logo-dark {
+  display: inline-block;
 }

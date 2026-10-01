@@ -16,7 +16,7 @@ export function TemplateCard({ item, index, action }: { item: MarketItem; index:
         {/* eslint-disable-next-line @next/next/no-img-element -- remote frame art of arbitrary size; next/image would need every host allow-listed */}
         <img src={item.imageUrl} alt={`Frame ${item.name}`} loading="lazy" className="max-h-full max-w-full object-contain drop-shadow-[0_8px_16px_rgba(60,70,140,0.25)]" />
         {item.featured && (
-          <span className="absolute left-3 top-3 rounded-full bg-foreground px-3 py-1 text-[11px] font-semibold text-white">Unggulan</span>
+          <span className="absolute left-3 top-3 rounded-full bg-foreground px-3 py-1 text-[11px] font-semibold text-on-foreground">Unggulan</span>
         )}
       </div>
       <div className="flex flex-col gap-1 px-1.5">

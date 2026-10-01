@@ -84,7 +84,7 @@ export async function Pricing({ data }: { data: PricingData }) {
             <Link
               href={p.href}
               className={`btn py-[15px] text-center ${
-                p.featured ? "bg-white text-foreground" : "border border-foreground/20 text-foreground"
+                p.featured ? "bg-white text-[#0b1020]" : "border border-foreground/20 text-foreground"
               }`}
             >
               {p.cta}

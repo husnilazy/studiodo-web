@@ -54,7 +54,7 @@ export default async function BlogPostPage({ params }: PageProps<"/blog/[slug]">
           <h2 className="font-display text-2xl tracking-tight text-white">Siap mencoba STUDIODO?</h2>
           <p className="text-[15px] leading-relaxed text-[#c6cce0]">Coba semua fitur gratis 7 hari, tanpa kartu kredit.</p>
         </div>
-        <Link href="/daftar" className="btn shrink-0 bg-white px-7 py-3.5 text-foreground">Mulai Trial Gratis</Link>
+        <Link href="/daftar" className="btn shrink-0 bg-white px-7 py-3.5 text-[#0b1020]">Mulai Trial Gratis</Link>
       </aside>
 
       {related.length > 0 && (

@@ -23,7 +23,7 @@ export default async function TemplatePage({ searchParams }: PageProps<"/templat
             return (
               <li key={c.key || "all"}>
                 <Link href={c.key ? `/template?kategori=${c.key}` : "/template"} aria-current={active ? "true" : undefined}
-                  className={active ? "btn bg-foreground px-5 py-2.5 text-white" : "btn glass rounded-full! px-5 py-2.5 text-muted"}>
+                  className={active ? "btn bg-foreground px-5 py-2.5 text-on-foreground" : "btn glass rounded-full! px-5 py-2.5 text-muted"}>
                   {c.label}
                 </Link>
               </li>

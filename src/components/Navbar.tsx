@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { SiteLogo } from "./Logo";
+import { ThemeToggle } from "./ThemeToggle";
 
 const links = [
   { href: "/#fitur", label: "Fitur" },
@@ -24,6 +25,7 @@ export function Navbar() {
           ))}
         </nav>
         <div className="flex items-center gap-1">
+          <ThemeToggle />
           <details className="group lg:hidden">
             <summary aria-label="Menu" className="flex h-11 w-11 cursor-pointer list-none items-center justify-center rounded-full [&::-webkit-details-marker]:hidden">
               <span className="flex flex-col gap-[5px]" aria-hidden="true">
@@ -31,7 +33,7 @@ export function Navbar() {
                 <span className="h-0.5 w-5 bg-foreground transition-transform group-open:-translate-y-[3.5px] group-open:-rotate-45" />
               </span>
             </summary>
-            <nav aria-label="Menu ponsel" className="absolute right-0 top-[calc(100%+8px)] z-30 flex w-60 flex-col gap-1 rounded-3xl border border-white bg-white p-3 text-[15px] font-medium shadow-[0_20px_50px_rgba(60,70,140,0.18)]">
+            <nav aria-label="Menu ponsel" className="absolute right-0 top-[calc(100%+8px)] z-30 flex w-60 flex-col gap-1 rounded-3xl border border-foreground/10 bg-panel p-3 text-[15px] font-medium shadow-[0_20px_50px_rgba(60,70,140,0.18)]">
               {links.map((l) => (
                 <Link key={l.href} href={l.href} className="rounded-2xl px-4 py-3 hover:bg-foreground/[0.05]">{l.label}</Link>
               ))}

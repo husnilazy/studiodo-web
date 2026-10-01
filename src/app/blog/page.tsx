@@ -27,7 +27,7 @@ export default async function BlogPage({ searchParams }: PageProps<"/blog">) {
             const href = `/blog${c.key || q ? "?" : ""}${[c.key ? `kategori=${encodeURIComponent(c.key)}` : "", q ? `q=${encodeURIComponent(q)}` : ""].filter(Boolean).join("&")}`;
             return (
               <li key={c.key || "all"}>
-                <Link href={href} aria-current={active ? "true" : undefined} className={active ? "btn bg-foreground px-5 py-2.5 text-white" : "btn glass rounded-full! px-5 py-2.5 text-muted"}>
+                <Link href={href} aria-current={active ? "true" : undefined} className={active ? "btn bg-foreground px-5 py-2.5 text-on-foreground" : "btn glass rounded-full! px-5 py-2.5 text-muted"}>
                   {c.key || "Semua"}
                 </Link>
               </li>
@@ -42,7 +42,7 @@ export default async function BlogPage({ searchParams }: PageProps<"/blog">) {
             type="search"
             placeholder="Cari artikel…"
             aria-label="Cari artikel"
-            className="w-full rounded-full border border-foreground/10 bg-white/70 px-5 py-2.5 text-sm outline-none focus:border-accent focus:ring-2 focus:ring-accent/25 lg:w-64"
+            className="w-full rounded-full border border-foreground/10 bg-panel/70 px-5 py-2.5 text-sm outline-none focus:border-accent focus:ring-2 focus:ring-accent/25 lg:w-64"
           />
           <button type="submit" className="btn btn-primary px-5 py-2.5 text-sm">Cari</button>
         </form>

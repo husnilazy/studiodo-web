@@ -3,6 +3,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import type { ReactNode } from "react";
 import { SiteLogo } from "@/components/Logo";
+import { ThemeToggle } from "@/components/ThemeToggle";
 import { logoutAction } from "@/app/masuk/actions";
 import { getToken } from "@/lib/portal";
 
@@ -31,9 +32,12 @@ export default async function PortalLayout({ children }: { children: ReactNode }
               <Link key={n.href} href={n.href} className="transition-colors hover:text-foreground">{n.label}</Link>
             ))}
           </nav>
+          <div className="flex items-center gap-1">
+          <ThemeToggle />
           <form action={logoutAction}>
             <button type="submit" className="btn px-5 py-2.5 text-sm">Keluar</button>
           </form>
+          </div>
         </div>
         <nav aria-label="Portal (ponsel)" className="mx-auto mt-3 flex max-w-[1200px] gap-2 overflow-x-auto text-sm font-medium text-muted md:hidden">
           {nav.map((n) => (

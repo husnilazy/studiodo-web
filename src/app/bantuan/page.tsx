@@ -40,7 +40,7 @@ export default async function BantuanPage() {
         <div className="glass-dark flex flex-col gap-3 p-8">
           <h2 className="font-display text-xl tracking-tight text-white">Masih butuh bantuan?</h2>
           <p className="text-[15px] leading-relaxed text-[#c6cce0]">Tim kami siap membantu pemasangan dan pengaturan.</p>
-          <Link href={wa ?? "/kontak"} className="btn mt-auto self-start bg-white px-5 py-2.5 text-sm text-foreground">{wa ? "Chat WhatsApp" : "Hubungi kami"}</Link>
+          <Link href={wa ?? "/kontak"} className="btn mt-auto self-start bg-white px-5 py-2.5 text-sm text-[#0b1020]">{wa ? "Chat WhatsApp" : "Hubungi kami"}</Link>
         </div>
       </div>
     </PageShell>

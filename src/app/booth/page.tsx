@@ -22,7 +22,7 @@ export default async function BoothPage({ searchParams }: PageProps<"/booth">) {
             return (
               <li key={c || "all"}>
                 <Link href={c ? `/booth?kota=${encodeURIComponent(c)}` : "/booth"} aria-current={active ? "true" : undefined}
-                  className={active ? "btn bg-foreground px-5 py-2.5 text-white" : "btn glass rounded-full! px-5 py-2.5 text-muted"}>{label}</Link>
+                  className={active ? "btn bg-foreground px-5 py-2.5 text-on-foreground" : "btn glass rounded-full! px-5 py-2.5 text-muted"}>{label}</Link>
               </li>
             );
           })}

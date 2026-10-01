@@ -11,7 +11,7 @@ export function CheckoutButton({ planSlug, label, featured }: { planSlug: string
       <button
         type="submit"
         disabled={pending}
-        className={`btn py-[15px] text-center disabled:opacity-60 ${featured ? "bg-white text-foreground" : "btn-primary"}`}
+        className={`btn py-[15px] text-center disabled:opacity-60 ${featured ? "bg-white text-[#0b1020]" : "btn-primary"}`}
       >
         {pending ? "Mengalihkan…" : label}
       </button>

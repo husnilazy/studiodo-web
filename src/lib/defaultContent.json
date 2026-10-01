@@ -1,6 +1,8 @@
 {
   "site": {
     "logoUrl": "",
+    "logoDarkUrl": "",
+    "faviconUrl": "",
     "tagline": "Platform photobooth oleh Frameless Creative.",
     "whatsappNumber": "",
     "supportEmail": ""

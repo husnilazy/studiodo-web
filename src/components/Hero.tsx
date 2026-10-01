@@ -42,7 +42,7 @@ export function Hero({ data }: { data: HeroData }) {
             <div className="rounded-2xl bg-gradient-to-br from-[#b8f0e6] to-[#bfd8ff]" />
             <div className="rounded-2xl bg-gradient-to-br from-[#d5ccff] to-[#bfc6ff]" />
           </div>
-          <div className="flex h-[54px] items-center justify-center rounded-full bg-foreground text-[15px] font-semibold text-white">
+          <div className="flex h-[54px] items-center justify-center rounded-full bg-foreground text-[15px] font-semibold text-on-foreground">
             Mulai Foto
           </div>
         </div>

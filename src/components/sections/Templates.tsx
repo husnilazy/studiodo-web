@@ -25,7 +25,7 @@ export async function Templates({ data }: { data: TemplatesData }) {
           <ul className="flex flex-wrap gap-2.5 text-sm font-medium">
             {data.tags.map((t, i) => {
               const key = categoryKeyByLabel.get(t.text.toLowerCase());
-              const cls = i === 0 ? "btn bg-foreground px-5 py-2.5 text-white" : "btn glass rounded-full! px-5 py-2.5 text-muted";
+              const cls = i === 0 ? "btn bg-foreground px-5 py-2.5 text-on-foreground" : "btn glass rounded-full! px-5 py-2.5 text-muted";
               return (
                 <li key={`${t.text}-${i}`}>
                   <Link href={key ? `/template?kategori=${key}` : "/template"} className={cls}>{t.text}</Link>

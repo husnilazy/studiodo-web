@@ -4,7 +4,7 @@ import { useActionState } from "react";
 import { saveDirectoryAction, type DirectoryState } from "@/app/portal/direktori/actions";
 
 const field =
-  "w-full rounded-2xl border border-foreground/10 bg-white/70 px-4 py-3.5 text-[15px] outline-none transition focus:border-accent focus:ring-2 focus:ring-accent/25";
+  "w-full rounded-2xl border border-foreground/10 bg-panel/70 px-4 py-3.5 text-[15px] outline-none transition focus:border-accent focus:ring-2 focus:ring-accent/25";
 
 export type DirectoryProfile = {
   name: string;
