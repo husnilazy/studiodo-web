@@ -12,6 +12,7 @@ const nav = [
   { href: "/portal", label: "Ringkasan" },
   { href: "/portal/tagihan", label: "Langganan & tagihan" },
   { href: "/portal/template", label: "Template" },
+  { href: "/portal/direktori", label: "Direktori" },
   { href: "/portal/akun", label: "Akun" },
   { href: "/unduh", label: "Unduh aplikasi" },
 ];

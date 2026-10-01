@@ -25,6 +25,30 @@ export async function fetchPublicPlans(): Promise<PublicPlan[] | null> {
   }
 }
 
+export type CreatorSubmissionInput = {
+  name: string;
+  email: string;
+  whatsapp?: string;
+  portfolioUrl: string;
+  description?: string;
+  company?: string; // honeypot — real visitors never see or fill it
+};
+
+export async function submitCreatorApplication(input: CreatorSubmissionInput): Promise<{ ok: true } | { ok: false; error: string }> {
+  try {
+    const res = await fetch(`${API_URL}/api/public/creator-submissions`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(input),
+    });
+    const body = await res.json().catch(() => ({}));
+    if (!res.ok) return { ok: false, error: body?.error ?? "Gagal mengirim pendaftaran. Coba lagi." };
+    return { ok: true };
+  } catch {
+    return { ok: false, error: "Tidak dapat terhubung ke server. Periksa koneksi Anda lalu coba lagi." };
+  }
+}
+
 export type TenantApplicationInput = {
   businessName: string;
   ownerName: string;
