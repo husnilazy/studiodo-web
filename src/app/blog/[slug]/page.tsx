@@ -45,7 +45,7 @@ export default async function BlogPostPage({ params }: PageProps<"/blog/[slug]">
           <img src={cover} alt="" className="h-auto max-h-[420px] w-full object-cover" />
         </div>
       )}
-      <article className="glass p-8 md:p-10">
+      <article className="glass p-5 sm:p-8 md:p-10">
         <Markdown source={post.body} />
       </article>
 
