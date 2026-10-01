@@ -64,6 +64,15 @@ export async function getSite(): Promise<SiteData> {
   return (await getSiteContent()).site;
 }
 
+/** wa.me needs digits in international format; Indonesians type "0859…" or "+62 859…". */
+export function waDigits(raw: string): string {
+  const d = raw.replace(/\D/g, "");
+  if (d.startsWith("62")) return d;
+  if (d.startsWith("0")) return "62" + d.slice(1);
+  return d;
+}
+
 export function whatsappLink(site: SiteData, message = "Halo STUDIODO, saya ingin konsultasi soal photobooth."): string | null {
-  return site.whatsappNumber ? `https://wa.me/${site.whatsappNumber}?text=${encodeURIComponent(message)}` : null;
+  const n = waDigits(site.whatsappNumber || "");
+  return n ? `https://wa.me/${n}?text=${encodeURIComponent(message)}` : null;
 }

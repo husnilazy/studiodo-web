@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { PageShell } from "@/components/PageShell";
 import { fetchDirectory } from "@/lib/directory";
+import { waDigits } from "@/lib/content";
 
 export const metadata: Metadata = {
   title: "Cari Photobooth",
@@ -46,7 +47,7 @@ export default async function BoothPage({ searchParams }: PageProps<"/booth">) {
               </div>
               {b.description && <p className="text-[15px] leading-relaxed text-muted">{b.description}</p>}
               <div className="mt-auto flex flex-wrap gap-2 pt-2 text-sm font-semibold">
-                {b.whatsapp && <a href={`https://wa.me/${b.whatsapp}`} target="_blank" rel="noopener noreferrer" className="btn btn-primary px-5 py-2.5">WhatsApp</a>}
+                {b.whatsapp && <a href={`https://wa.me/${waDigits(b.whatsapp)}`} target="_blank" rel="noopener noreferrer" className="btn btn-primary px-5 py-2.5">WhatsApp</a>}
                 {b.instagram && <a href={`https://instagram.com/${b.instagram}`} target="_blank" rel="noopener noreferrer" className="btn glass rounded-full! px-5 py-2.5">Instagram</a>}
                 {b.website && <a href={b.website} target="_blank" rel="noopener noreferrer" className="btn glass rounded-full! px-5 py-2.5">Website</a>}
               </div>

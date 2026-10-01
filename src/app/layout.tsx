@@ -22,6 +22,7 @@ export async function generateMetadata(): Promise<Metadata> {
   const favicon = assetUrl((await getSite()).faviconUrl);
   return {
     metadataBase: new URL(SITE_URL),
+    alternates: { canonical: "./" },
     title: { default: "STUDIODO — Platform Photobooth untuk Pemilik Booth", template: "%s — STUDIODO" },
     description,
     ...(favicon ? { icons: { icon: favicon, apple: favicon } } : {}),
