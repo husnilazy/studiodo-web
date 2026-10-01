@@ -250,3 +250,31 @@ html {
 .site-header[data-scrolled="true"]::before { opacity: 1; }
 .nav-pill { transition: background-color 0.35s ease, box-shadow 0.35s ease; }
 .site-header[data-scrolled="true"] .nav-pill { background-color: color-mix(in srgb, var(--panel) 72%, transparent); }
+
+/* --- /unduh: looping installer mock + FAQ toggle ------------------------------------------------ */
+@keyframes install-fill { 0% { width: 4%; } 70%, 100% { width: 100%; } }
+.install-bar { animation: install-fill 5s ease-in-out infinite; }
+@keyframes label-a { 0%, 66% { opacity: 1; } 72%, 100% { opacity: 0; } }
+@keyframes label-b { 0%, 68% { opacity: 0; } 76%, 96% { opacity: 1; } 100% { opacity: 0; } }
+.install-label-a { animation: label-a 5s ease-in-out infinite; }
+.install-label-b { animation: label-b 5s ease-in-out infinite; opacity: 0; }
+
+.shimmer-text-light {
+  background: linear-gradient(100deg, #ffffff 35%, #a5a8ff 50%, #ffffff 65%);
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: shimmer 5s linear infinite;
+}
+
+.faq-item summary::-webkit-details-marker { display: none; }
+.faq-item .faq-plus { transition: transform 0.3s cubic-bezier(0.3, 1.6, 0.5, 1); }
+.faq-item[open] .faq-plus { transform: rotate(45deg); }
+
+@media (prefers-reduced-motion: reduce) {
+  .install-bar { animation: none; width: 100%; }
+  .install-label-a { animation: none; opacity: 0; }
+  .install-label-b { animation: none; opacity: 1; }
+  .shimmer-text-light { animation: none; }
+}

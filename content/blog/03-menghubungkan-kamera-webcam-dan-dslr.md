@@ -24,6 +24,8 @@ Langkahnya:
 4. Di STUDIODO, buka Admin → Kiosk → Kamera dan pilih **mode tether**.
 5. Pastikan jembatan kamera (bridge) terhubung. Secara bawaan bridge STUDIODO memakai port **5510** dan meneruskan permintaan ke digiCamControl di port **5513**.
 
+Live view kamera **menyala otomatis saat sesi foto dimulai dan mati saat sesi selesai**, jadi kamera tidak terus menyala seharian dan tidak cepat panas. Anda tidak perlu membuka jendela Live View di digiCamControl sendiri.
+
 Setelah terhubung, Anda bisa melihat pratinjau live view dari halaman pengaturan. Pratinjau itu hanya memantau kamera; pengambilan foto tetap dilakukan dari sesi kiosk.
 
 ## Kontrol kamera langsung
