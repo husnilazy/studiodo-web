@@ -6,8 +6,8 @@ import { changePasswordAction, type PasswordState } from "@/app/portal/akun/acti
 const field =
   "w-full rounded-2xl border border-foreground/10 bg-panel/70 px-4 py-3.5 text-[15px] outline-none transition focus:border-accent focus:ring-2 focus:ring-accent/25";
 
-export function PasswordForm() {
-  const [state, action, pending] = useActionState<PasswordState, FormData>(changePasswordAction, { error: null, ok: false });
+export function PasswordForm({ submit = changePasswordAction }: { submit?: (prev: PasswordState, formData: FormData) => Promise<PasswordState> }) {
+  const [state, action, pending] = useActionState<PasswordState, FormData>(submit, { error: null, ok: false });
   return (
     <form action={action} className="grid max-w-[520px] gap-5">
       <label className="grid gap-2 text-sm font-medium">

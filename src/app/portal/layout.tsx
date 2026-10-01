@@ -11,6 +11,7 @@ export const metadata: Metadata = { title: "Dashboard", robots: { index: false, 
 
 const nav = [
   { href: "/portal", label: "Ringkasan" },
+  { href: "/portal/riwayat", label: "Riwayat transaksi" },
   { href: "/portal/tagihan", label: "Langganan & tagihan" },
   { href: "/portal/template", label: "Template" },
   { href: "/portal/direktori", label: "Direktori" },
@@ -27,7 +28,7 @@ export default async function PortalLayout({ children }: { children: ReactNode }
       <header className="relative z-20 px-4 pt-4 md:px-10">
         <div className="glass mx-auto flex h-14 max-w-[1200px] items-center justify-between rounded-full! pl-5 pr-2 md:h-16 md:pl-7">
           <Link href="/portal" aria-label="Dashboard STUDIODO"><SiteLogo /></Link>
-          <nav aria-label="Portal" className="hidden gap-7 text-sm font-medium text-muted md:flex">
+          <nav aria-label="Portal" className="hidden gap-4 whitespace-nowrap text-sm font-medium text-muted md:flex lg:gap-7">
             {nav.map((n) => (
               <Link key={n.href} href={n.href} className="transition-colors hover:text-foreground">{n.label}</Link>
             ))}

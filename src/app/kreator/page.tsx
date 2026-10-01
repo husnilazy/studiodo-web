@@ -10,8 +10,8 @@ export const metadata: Metadata = {
 
 const steps = [
   { t: "Kirim portofolio", b: "Isi form di bawah dengan tautan karya Anda (Behance, Instagram, Drive, atau lainnya)." },
-  { t: "Kami tinjau", b: "Tim STUDIODO melihat karya Anda dan menghubungi bila cocok untuk dijadikan template." },
-  { t: "Tampil di marketplace", b: "Frame diterbitkan dengan kredit nama Anda dan dipakai pemilik booth lewat satu klik." },
+  { t: "Dapat akun kreator", b: "Jika karya Anda cocok, tim STUDIODO membuatkan akun untuk masuk ke portal kreator." },
+  { t: "Unggah & terbit", b: "Unggah frame PNG, tandai slot foto, kirim untuk ditinjau. Setelah disetujui, frame terbit dengan nama Anda dan dipakai pemilik booth lewat satu klik." },
 ];
 
 export default function KreatorPage() {
@@ -30,6 +30,7 @@ export default function KreatorPage() {
         <h2 className="mb-5 font-display text-2xl tracking-tight">Daftar sebagai kreator</h2>
         <CreatorForm />
         <p className="mt-6 text-sm text-muted">
+          Sudah punya akun? <Link href="/kreator/masuk" className="font-semibold text-accent underline underline-offset-4">Masuk ke portal kreator</Link>.<br />
           Ingin melihat hasil karya kreator lain dulu? <Link href="/template" className="font-semibold text-accent underline underline-offset-4">Jelajahi katalog template</Link>.
         </p>
       </div>

@@ -6,8 +6,8 @@ import { loginAction, type LoginState } from "@/app/masuk/actions";
 const field =
   "w-full rounded-2xl border border-foreground/10 bg-panel/70 px-4 py-3.5 text-[15px] outline-none transition focus:border-accent focus:ring-2 focus:ring-accent/25";
 
-export function LoginForm({ sessionExpired }: { sessionExpired: boolean }) {
-  const [state, action, pending] = useActionState<LoginState, FormData>(loginAction, { error: null });
+export function LoginForm({ sessionExpired, submit = loginAction }: { sessionExpired: boolean; submit?: (prev: LoginState, formData: FormData) => Promise<LoginState> }) {
+  const [state, action, pending] = useActionState<LoginState, FormData>(submit, { error: null });
   return (
     <form action={action} className="glass grid gap-5 p-8 md:p-10">
       {sessionExpired && !state.error && (

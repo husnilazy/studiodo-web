@@ -61,3 +61,9 @@ export async function portalGet<T>(path: string): Promise<T> {
 
 export const getSummary = () => portalGet<PortalSummary>("/summary");
 export const getOrders = () => portalGet<BillingOrder[]>("/billing/orders");
+
+export type SessionHistory = {
+  page: number; pageSize: number; total: number; totalPages: number; paidCount: number; revenue: number;
+  items: { id: string; createdAt: string; packageName: string | null; paymentMethod: string; paymentStatus: string; paymentPurpose: string; totalAmount: number; voucherCode: string | null; orientation: string; photoCount: number }[];
+};
+export const getSessionHistory = (query: URLSearchParams) => portalGet<SessionHistory>(`/sessions?${query.toString()}`);
