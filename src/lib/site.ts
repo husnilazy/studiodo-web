@@ -21,12 +21,12 @@ export type ReleaseInfo = {
 type GithubAsset = { name: string; size?: number; browser_download_url: string };
 
 /** Latest published GitHub Release, or null when unreachable / repo private / none yet. */
-export async function fetchLatestRelease(): Promise<ReleaseInfo | null> {
+export async function fetchLatestRelease(revalidateSeconds = 600): Promise<ReleaseInfo | null> {
   const { owner, repo } = GITHUB_REPO;
   try {
     const res = await fetch(`https://api.github.com/repos/${owner}/${repo}/releases/latest`, {
       headers: { Accept: "application/vnd.github+json" },
-      next: { revalidate: 600 },
+      next: { revalidate: revalidateSeconds },
     });
     if (!res.ok) return null;
     const data = (await res.json()) as { tag_name?: string; html_url?: string; body?: string | null; published_at?: string | null; assets?: GithubAsset[] };

@@ -134,13 +134,13 @@ function DownloadCard({ release }: { release: ReleaseInfo | null }) {
                 {date ? ` · dirilis ${date}` : ""}
               </p>
               <div className="flex flex-col gap-3 sm:flex-row">
-                <a href={release.installerUrl ?? release.releasesUrl} className="btn flex-1 bg-white px-6 py-4 text-center text-[#0b1020] shadow-[0_12px_30px_rgba(79,79,232,0.35)]">
+                <a href={release.installerUrl ? "/unduh/windows" : release.releasesUrl} className="btn flex-1 bg-white px-6 py-4 text-center text-[#0b1020] shadow-[0_12px_30px_rgba(79,79,232,0.35)]">
                   <span className="inline-flex items-center justify-center gap-2">
                     <Icon name="download" className="h-5 w-5" /> Unduh Installer{formatSize(release.installerSize) ? ` (${formatSize(release.installerSize)})` : ""}
                   </span>
                 </a>
                 {release.portableUrl && (
-                  <a href={release.portableUrl} className="btn flex-1 border border-white/25 px-6 py-4 text-center text-white hover:bg-white/10">
+                  <a href="/unduh/windows?tipe=portable" className="btn flex-1 border border-white/25 px-6 py-4 text-center text-white hover:bg-white/10">
                     Versi Portable{formatSize(release.portableSize) ? ` (${formatSize(release.portableSize)})` : ""}
                   </a>
                 )}
@@ -171,7 +171,7 @@ function DownloadCard({ release }: { release: ReleaseInfo | null }) {
 }
 
 export default async function UnduhPage() {
-  const release = await fetchLatestRelease();
+  const release = await fetchLatestRelease(60);
   return (
     <PageShell eyebrow="Unduh" title="Aplikasi kiosk untuk Windows." intro="Install di PC booth Anda, lalu pasangkan dengan kunci kiosk dari dashboard admin. Pembaruan berikutnya berjalan otomatis.">
       <Orb className="right-0 top-[-80px] h-44 w-44" speed={0.14} />
