@@ -1,4 +1,5 @@
 import { SectionHeading } from "../SectionHeading";
+import { IconTile } from "../Icon";
 import type { FeaturesData } from "@/lib/content";
 
 const tints = [
@@ -8,6 +9,9 @@ const tints = [
   "from-[#ffe3b8] to-[#fff6e6]",
   "from-[#bfd8ff] to-[#eaf2ff]",
 ];
+
+// Used when an item has no icon chosen yet (e.g. content saved before icons existed): a sensible default by position.
+const FALLBACK_ICONS = ["qr", "ticket", "layout", "camera", "image", "monitor", "sparkles", "chart", "cloud"];
 
 export function Features({ data }: { data: FeaturesData }) {
   const last = data.items.length - 1;
@@ -19,7 +23,7 @@ export function Features({ data }: { data: FeaturesData }) {
           const dark = i === last && data.items.length > 1;
           return (
             <article key={`${f.title}-${i}`} className={`${dark ? "glass-dark" : "glass"} flex min-h-[300px] flex-col justify-between p-9`}>
-              <div className={`h-[52px] w-[52px] rounded-2xl bg-gradient-to-br ${dark ? "from-accent to-accent-soft" : tints[i % tints.length]}`} />
+              <IconTile name={f.icon || FALLBACK_ICONS[i % FALLBACK_ICONS.length]} tint={dark ? "from-accent to-accent-soft" : tints[i % tints.length]} dark={dark} />
               <div>
                 <h3 className={`mb-2.5 font-display text-2xl tracking-tight ${dark ? "text-white" : ""}`}>{f.title}</h3>
                 <p className={`text-[15px] leading-relaxed ${dark ? "text-[#c6cce0]" : "text-muted"}`}>{f.body}</p>

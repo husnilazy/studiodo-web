@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { SectionHeading } from "../SectionHeading";
+import { IconTile } from "../Icon";
 import { fetchDirectory } from "@/lib/directory";
 import type { CommunityData } from "@/lib/content";
 
@@ -18,7 +19,7 @@ export async function Community({ data }: { data: CommunityData }) {
         <ul className="flex flex-col gap-3">
           {data.perks.map((p, i) => (
             <li key={`${p.title}-${i}`} className="glass flex items-center gap-4 rounded-[20px]! px-5 py-4">
-              <div className={`h-[42px] w-[42px] shrink-0 rounded-[13px] bg-gradient-to-br ${tints[i % tints.length]}`} />
+              <IconTile size="md" name={p.icon || ["map-pin", "palette", "sparkles"][i % 3]} tint={tints[i % tints.length]} />
               <div>
                 <div className="text-[15px] font-semibold">{p.title}</div>
                 <div className="text-[13px] text-muted">{p.body}</div>

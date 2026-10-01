@@ -6,16 +6,16 @@ import { API_URL } from "./api";
 // used when the API is unreachable, so the site never renders empty.
 export type Bullet = { text: string };
 export type HeroData = { badge: string; titleLine1: string; titleLine2: string; subtitle: string; primaryCta: string; secondaryCta: string; bullets: Bullet[] };
-export type TrustData = { caption: string; logos: { name: string }[] };
-export type FeaturesData = { eyebrow: string; title: string; items: { title: string; body: string }[] };
+export type TrustData = { caption: string; logos: { name: string; image?: string }[] };
+export type FeaturesData = { eyebrow: string; title: string; items: { icon?: string; title: string; body: string }[] };
 export type HowData = { eyebrow: string; title: string; steps: { title: string; body: string }[] };
 export type TemplatesData = { eyebrow: string; title: string; tags: Bullet[] };
 export type PricingData = { eyebrow: string; title: string };
-export type CommunityData = { eyebrow: string; title: string; body: string; perks: { title: string; body: string }[] };
+export type CommunityData = { eyebrow: string; title: string; body: string; perks: { icon?: string; title: string; body: string }[] };
 export type TestimonialsData = { title: string; items: { quote: string; name: string; business: string; city: string }[] };
 export type FaqData = { eyebrow: string; title: string; items: { q: string; a: string }[] };
 export type CtaData = { title: string; body: string; primaryCta: string; secondaryCta: string };
-export type SiteData = { tagline: string; whatsappNumber: string; supportEmail: string };
+export type SiteData = { logoUrl?: string; tagline: string; whatsappNumber: string; supportEmail: string };
 
 export type SectionKey = "hero" | "trust" | "features" | "howItWorks" | "templates" | "pricing" | "community" | "testimonials" | "faq" | "cta";
 export type SiteContent = { site: SiteData; sections: { key: string; data: Record<string, unknown> }[] };
@@ -53,6 +53,11 @@ export async function getSiteContent(): Promise<SiteContent> {
   } catch {
     return fallback;
   }
+}
+
+/** Turn a CMS image value ("/api/public/assets/<id>") into a loadable URL on the API origin. Anything else is ignored. */
+export function assetUrl(path: string | undefined): string | null {
+  return path && /^\/api\/public\/assets\/[0-9a-f-]{36}$/i.test(path) ? `${API_URL}${path}` : null;
 }
 
 export async function getSite(): Promise<SiteData> {

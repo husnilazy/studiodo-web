@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import type { ReactNode } from "react";
-import { Logo } from "@/components/Logo";
+import { SiteLogo } from "@/components/Logo";
 import { logoutAction } from "@/app/masuk/actions";
 import { getToken } from "@/lib/portal";
 
@@ -25,7 +25,7 @@ export default async function PortalLayout({ children }: { children: ReactNode }
       <div className="blob -left-32 top-[600px] h-[420px] w-[420px] bg-[#ffc8de] opacity-55" />
       <header className="relative z-20 px-4 pt-4 md:px-10">
         <div className="glass mx-auto flex h-14 max-w-[1200px] items-center justify-between rounded-full! pl-5 pr-2 md:h-16 md:pl-7">
-          <Link href="/portal" aria-label="Dashboard STUDIODO"><Logo /></Link>
+          <Link href="/portal" aria-label="Dashboard STUDIODO"><SiteLogo /></Link>
           <nav aria-label="Portal" className="hidden gap-7 text-sm font-medium text-muted md:flex">
             {nav.map((n) => (
               <Link key={n.href} href={n.href} className="transition-colors hover:text-foreground">{n.label}</Link>

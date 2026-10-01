@@ -1,5 +1,6 @@
 {
   "site": {
+    "logoUrl": "",
     "tagline": "Platform photobooth oleh Frameless Creative.",
     "whatsappNumber": "",
     "supportEmail": ""
@@ -41,26 +42,32 @@
         "title": "Semua yang booth Anda butuhkan, dalam satu tempat.",
         "items": [
           {
+            "icon": "qr",
             "title": "QRIS otomatis",
             "body": "Pelanggan bayar langsung dari layar kiosk, dana masuk otomatis."
           },
           {
+            "icon": "ticket",
             "title": "Voucher promo",
             "body": "Buat kode diskon dan pantau performanya per event."
           },
           {
+            "icon": "layout",
             "title": "Screen Builder",
             "body": "Atur tampilan kiosk sesuai brand Anda tanpa coding."
           },
           {
+            "icon": "camera",
             "title": "Kontrol kamera live",
             "body": "ISO, shutter, aperture, dan white balance dari dashboard."
           },
           {
+            "icon": "image",
             "title": "Foto, GIF, dan video",
             "body": "Galeri cloud dengan link share dan cetak tambahan."
           },
           {
+            "icon": "monitor",
             "title": "Satu akun, banyak kiosk",
             "body": "Pantau semua lokasi dan update otomatis dari satu dashboard."
           }
@@ -134,14 +141,17 @@
         "body": "Temukan dan ditemukan: tampilkan booth Anda di direktori publik, pasang frame dari para desainer, atau kirim desain sendiri untuk ikut mengisi katalog.",
         "perks": [
           {
+            "icon": "map-pin",
             "title": "Direktori booth",
             "body": "Calon pelanggan mencari booth di kotanya"
           },
           {
+            "icon": "palette",
             "title": "Marketplace template",
             "body": "Frame siap pakai dari desainer, dipasang satu klik"
           },
           {
+            "icon": "sparkles",
             "title": "Blog dan panduan",
             "body": "Tips bisnis photobooth dan cara memakai STUDIODO"
           }

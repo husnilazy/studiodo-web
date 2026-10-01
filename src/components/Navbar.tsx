@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Logo } from "./Logo";
+import { SiteLogo } from "./Logo";
 
 const links = [
   { href: "/#fitur", label: "Fitur" },
@@ -14,7 +14,7 @@ export function Navbar() {
     <header className="relative z-20 px-4 pt-4 md:px-16 md:pt-5">
       <div className="glass relative mx-auto flex h-14 max-w-[1312px] items-center justify-between rounded-full! pl-5 pr-2 md:h-16 md:pl-7">
         <Link href="/" aria-label="STUDIODO beranda">
-          <Logo />
+          <SiteLogo />
         </Link>
         <nav aria-label="Utama" className="hidden gap-8 text-sm font-medium text-muted lg:flex">
           {links.map((l) => (
