@@ -3,11 +3,12 @@
 import { useActionState } from "react";
 import { checkoutAction, type CheckoutState } from "@/app/portal/tagihan/actions";
 
-export function CheckoutButton({ planSlug, label, featured }: { planSlug: string; label: string; featured: boolean }) {
+export function CheckoutButton({ planSlug, interval = "monthly", label, featured }: { planSlug: string; interval?: "monthly" | "yearly"; label: string; featured: boolean }) {
   const [state, action, pending] = useActionState<CheckoutState, FormData>(checkoutAction, { error: null });
   return (
     <form action={action} className="flex flex-col gap-2">
       <input type="hidden" name="planSlug" value={planSlug} />
+      <input type="hidden" name="interval" value={interval} />
       <button
         type="submit"
         disabled={pending}

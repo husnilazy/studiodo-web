@@ -10,13 +10,14 @@ export async function checkoutAction(_prev: CheckoutState, formData: FormData): 
   const token = await getToken();
   if (!token) redirect("/masuk?sesi=habis");
   const planSlug = String(formData.get("planSlug") ?? "");
+  const interval = formData.get("interval") === "yearly" ? "yearly" : "monthly";
 
   let res: Response;
   try {
     res = await fetch(`${API_URL}/api/portal/billing/checkout`, {
       method: "POST",
       headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
-      body: JSON.stringify({ planSlug }),
+      body: JSON.stringify({ planSlug, interval }),
       cache: "no-store",
     });
   } catch {

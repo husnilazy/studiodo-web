@@ -1,4 +1,4 @@
-import { CheckoutButton } from "@/components/CheckoutButton";
+import { BillingPlanCard } from "@/components/BillingPlanCard";
 import { fetchPublicPlans } from "@/lib/api";
 import { getSiteContent, whatsappLink } from "@/lib/content";
 import { getOrders, getSummary } from "@/lib/portal";
@@ -45,24 +45,9 @@ export default async function TagihanPage({ searchParams }: PageProps<"/portal/t
 
       <section className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         {paidPlans.length === 0 && <p className="text-[15px] text-muted">Daftar paket belum tersedia.</p>}
-        {paidPlans.map((p) => {
-          const current = p.slug === summary.tenant.planSlug;
-          const period = p.billingInterval === "yearly" ? "tahun" : "bulan";
-          return (
-            <article key={p.slug} className="glass flex flex-col gap-4 p-8">
-              <div className="flex items-center justify-between">
-                <h2 className="font-display text-xl tracking-tight">{p.name}</h2>
-                {current && <span className="rounded-full bg-accent/10 px-3 py-1 text-xs font-semibold text-accent">Paket Anda</span>}
-              </div>
-              <div><span className="font-display text-4xl tracking-tight">{formatRupiah(Number(p.price))}</span><span className="text-muted"> /{period}</span></div>
-              {p.description && <p className="text-[15px] text-muted">{p.description}</p>}
-              <p className="text-[13px] text-muted">{p.kioskLimit === null ? "Kiosk tak terbatas" : `${p.kioskLimit} kiosk`}</p>
-              {summary.onlinePaymentEnabled && (
-                <div className="mt-auto"><CheckoutButton planSlug={p.slug} label={current ? `Perpanjang 1 ${period}` : "Pilih paket ini"} featured={false} /></div>
-              )}
-            </article>
-          );
-        })}
+        {paidPlans.map((p) => (
+          <BillingPlanCard key={p.slug} plan={p} current={p.slug === summary.tenant.planSlug} canPay={summary.onlinePaymentEnabled} />
+        ))}
       </section>
 
       <section className="glass p-8">

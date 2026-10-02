@@ -14,7 +14,15 @@ export type TrustData = { caption: string; logos: { name: string; image?: string
 export type FeaturesData = { eyebrow: string; title: string; items: { icon?: string; title: string; body: string }[] };
 export type HowData = { eyebrow: string; title: string; steps: { icon?: string; title: string; body: string }[] };
 export type TemplatesData = { eyebrow: string; title: string; tags: Bullet[] };
-export type PricingData = { eyebrow: string; title: string };
+export type PricingData = {
+  eyebrow: string;
+  title: string;
+  subtitle?: string;
+  volumeTitle?: string;
+  volumeBody?: string;
+  volumePerks?: { text: string }[];
+  volumeCta?: string;
+};
 export type CommunityData = { eyebrow: string; title: string; body: string; perks: { icon?: string; title: string; body: string }[] };
 export type TestimonialsData = { title: string; items: { quote: string; name: string; business: string; city: string }[] };
 export type FaqData = { eyebrow: string; title: string; items: { q: string; a: string }[] };

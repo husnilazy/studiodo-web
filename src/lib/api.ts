@@ -11,6 +11,24 @@ export type PublicPlan = {
   screenBuilderEnabled: boolean;
   gifVideoEnabled: boolean;
   description: string | null;
+  featured?: boolean;
+  features?: string[];
+  discountLabel?: string | null;
+  /** Ready-to-show prices (promo + yearly option), computed by the API. Missing on an older API build. */
+  pricing?: {
+    monthly: PublicPriceOption | null;
+    yearly: PublicPriceOption | null;
+    yearlySavingsPercent: number;
+    activeDiscountPercent: number;
+    discountEndsAt: string | null;
+  };
+};
+
+export type PublicPriceOption = {
+  list: number; // price before any promo
+  final: number; // what is charged
+  discountPercent: number;
+  perMonth: number;
 };
 
 /** Active plans for the pricing section. Returns null when the API is unreachable so the page can fall back. */
