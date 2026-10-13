@@ -11,6 +11,12 @@ import { Community } from "@/components/sections/Community";
 import { Testimonials } from "@/components/sections/Testimonials";
 import { Faq } from "@/components/sections/Faq";
 import { Cta } from "@/components/sections/Cta";
+import { StatsStrip } from "@/components/landing/StatsStrip";
+import { Contrast } from "@/components/landing/Contrast";
+import { DashboardShowcase } from "@/components/landing/DashboardShowcase";
+import { PhotoSamples } from "@/components/landing/PhotoSamples";
+import { FeatureGroups } from "@/components/landing/FeatureGroups";
+import { FEATURE_COUNT } from "@/components/landing/featureData";
 import { getSiteContent, type SiteData } from "@/lib/content";
 import { fetchStats, type PlatformStats } from "@/lib/stats";
 
@@ -32,8 +38,27 @@ const registry: Record<string, Renderer> = {
   cta: (d, site) => <Cta data={d} site={site} />,
 };
 
+// Fixed showcase sections (animated demos), slotted in after a CMS section. Placing them here keeps the
+// CMS section list untouched while the page still reads as one story.
+const extras = (stats: PlatformStats | null): Record<string, ReactNode> => ({
+  trust: (
+    <>
+      <StatsStrip featureCount={FEATURE_COUNT} kiosks={stats && stats.kiosks > 0 ? stats.kiosks : null} />
+      <Contrast />
+    </>
+  ),
+  features: (
+    <>
+      <DashboardShowcase />
+      <PhotoSamples />
+      <FeatureGroups />
+    </>
+  ),
+});
+
 export default async function Home() {
   const [{ site, sections }, stats] = await Promise.all([getSiteContent(), fetchStats()]);
+  const after = extras(stats);
   return (
     <div className="relative flex flex-1 flex-col overflow-clip">
       <div data-parallax="0.10" className="blob left-[55%] -top-20 h-[620px] w-[620px] bg-[#bfc6ff] opacity-75" />
@@ -48,7 +73,12 @@ export default async function Home() {
       <main id="konten" className="flex-1">
         {sections.map((s) => {
           const render = registry[s.key];
-          return render ? <div key={s.key}>{render(s.data, site, stats)}</div> : null;
+          return render ? (
+            <div key={s.key}>
+              {render(s.data, site, stats)}
+              {after[s.key]}
+            </div>
+          ) : null;
         })}
       </main>
       <Footer />

@@ -428,3 +428,48 @@ html {
 @media (prefers-reduced-motion: reduce) { .spin, .nav-progress, .form-busy::after, .check-draw { animation: none !important; } .check-draw { stroke-dashoffset: 0; } }
 /* Old-style page titles inside the dashboard shell (portal sub-pages not yet on PageHeader) match the compact scale. */
 .dash main h1.text-4xl { font-size: 1.9rem; line-height: 1.15; letter-spacing: -0.03em; margin-top: 0.4rem; }
+
+/* ---- Landing showcase motion ---- */
+@keyframes feed-in { from { opacity: 0; transform: translate3d(0, -10px, 0) scale(0.97); } to { opacity: 1; transform: none; } }
+.feed-in { animation: feed-in 0.45s cubic-bezier(0.2, 0.8, 0.2, 1) both; }
+@keyframes bar-grow { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+.bar-grow { transform-origin: left; animation: bar-grow 1s cubic-bezier(0.2, 0.8, 0.2, 1) both; }
+@keyframes tab-timer { from { width: 0; } to { width: 100%; } }
+.tab-timer { animation: tab-timer 6.5s linear both; }
+@keyframes feature-in { from { opacity: 0; transform: translate3d(-8px, 0, 0); } to { opacity: 1; transform: none; } }
+.feature-li { opacity: 0; }
+.in .feature-li, [data-reveal].in .feature-li { animation: feature-in 0.5s ease-out both; animation-delay: calc(var(--i, 0) * 70ms + 250ms); }
+
+/* printed strip slides out of the printer slot, rests, then resets */
+@keyframes strip-print { 0% { transform: translateY(-110%); opacity: 1; } 45%, 85% { transform: translateY(0); opacity: 1; } 100% { transform: translateY(0); opacity: 0; } }
+.strip-print { animation: strip-print 6s cubic-bezier(0.3, 0.7, 0.3, 1) infinite; }
+
+/* GIF flipbook: four stacked frames take turns */
+@keyframes flip-frame { 0%, 24% { opacity: 1; } 25%, 100% { opacity: 0; } }
+.flip-frame { opacity: 0; animation: flip-frame 2s steps(1, end) infinite; }
+.flip-frame:nth-of-type(1) { animation-delay: 0s; }
+.flip-frame:nth-of-type(2) { animation-delay: 0.5s; }
+.flip-frame:nth-of-type(3) { animation-delay: 1s; }
+.flip-frame:nth-of-type(4) { animation-delay: 1.5s; }
+@keyframes flip-progress { from { width: 0; } to { width: 100%; } }
+.flip-progress { animation: flip-progress 2s linear infinite; }
+
+/* QR scans, then fades out to reveal the phone gallery, then comes back */
+@keyframes qr-overlay { 0%, 38% { opacity: 1; visibility: visible; } 46%, 88% { opacity: 0; visibility: hidden; } 96%, 100% { opacity: 1; visibility: visible; } }
+.qr-overlay { animation: qr-overlay 7s ease-in-out infinite; }
+@keyframes qr-scan { 0%, 100% { top: 14px; } 50% { top: calc(100% - 14px); } }
+.qr-scan { animation: qr-scan 1.6s ease-in-out infinite; }
+@keyframes gallery-pop { 0%, 40% { transform: scale(0.85); opacity: 0; } 55%, 90% { transform: scale(1); opacity: 1; } 100% { transform: scale(0.85); opacity: 0; } }
+.gallery-pop { animation: gallery-pop 7s cubic-bezier(0.3, 1.3, 0.5, 1) infinite; }
+
+@keyframes marquee { to { transform: translateX(-50%); } }
+.marquee { animation: marquee 38s linear infinite; }
+.marquee:hover { animation-play-state: paused; }
+
+@media (prefers-reduced-motion: reduce) {
+  .strip-print, .flip-progress, .qr-overlay, .qr-scan, .gallery-pop, .marquee, .tab-timer, .feed-in, .bar-grow { animation: none; }
+  .qr-overlay { opacity: 0; visibility: hidden; }
+  .flip-frame { animation: none; }
+  .flip-frame:first-of-type { opacity: 1; }
+  .feature-li { opacity: 1; animation: none !important; }
+}
