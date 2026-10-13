@@ -16,6 +16,8 @@ import { Contrast } from "@/components/landing/Contrast";
 import { DashboardShowcase } from "@/components/landing/DashboardShowcase";
 import { PhotoSamples } from "@/components/landing/PhotoSamples";
 import { FeatureGroups } from "@/components/landing/FeatureGroups";
+import { JourneyStepper } from "@/components/landing/JourneyStepper";
+import { Hardware } from "@/components/landing/Hardware";
 import { FEATURE_COUNT } from "@/components/landing/featureData";
 import { getSiteContent, type SiteData } from "@/lib/content";
 import { fetchStats, type PlatformStats } from "@/lib/stats";
@@ -52,6 +54,8 @@ const extras = (stats: PlatformStats | null): Record<string, ReactNode> => ({
       <DashboardShowcase />
       <PhotoSamples />
       <FeatureGroups />
+      <JourneyStepper />
+      <Hardware />
     </>
   ),
 });

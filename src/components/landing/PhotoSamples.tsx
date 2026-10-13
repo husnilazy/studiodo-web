@@ -83,6 +83,15 @@ const QR = (() => {
   return { n, cells };
 })();
 
+export function FakeQr({ className = "h-[132px] w-[132px]" }: { className?: string }) {
+  return (
+    <svg viewBox={`0 0 ${QR.n} ${QR.n}`} className={className} shapeRendering="crispEdges" aria-hidden="true">
+      {[[0, 0], [QR.n - 7, 0], [0, QR.n - 7]].map(([x, y]) => (<g key={`${x}${y}`}><rect x={x} y={y} width="7" height="7" fill="#0b1020" /><rect x={x + 1} y={y + 1} width="5" height="5" fill="#fff" /><rect x={x + 2} y={y + 2} width="3" height="3" fill="#0b1020" /></g>))}
+      {QR.cells.map(([x, y]) => <rect key={`${x}-${y}`} x={x} y={y} width="1" height="1" fill="#0b1020" />)}
+    </svg>
+  );
+}
+
 function PhoneGallery() {
   return (
     <div className="relative mx-auto h-[420px] w-[220px] rounded-[34px] bg-foreground p-2 shadow-[0_20px_50px_rgba(11,16,32,0.3)]">
