@@ -159,7 +159,7 @@ function Saldo() {
           <span className="flex-1"><span className="block text-[14px] font-semibold tabular-nums">Rp 2.000.000</span><span className="block text-[12px] text-muted">ke rekening terdaftar</span></span>
           <span key={String(done)} className={`pop-in rounded-full px-2.5 py-1 text-[11px] font-semibold ${done ? "bg-[#22c58b]/15 text-[#12a06f]" : "bg-[#ffa43a]/15 text-[#c47a14]"}`}>{done ? "Berhasil" : "Diproses"}</span>
         </div>
-        <p className="mt-4 text-[12px] leading-relaxed text-muted">Pembayaran QRIS diproses lewat akun Xendit Anda sendiri — STUDIODO tidak menahan uang pelanggan Anda.</p>
+        <p className="mt-4 text-[12px] leading-relaxed text-muted">Pembayaran diproses lewat payment gateway milik Anda sendiri (Xendit atau DOKU) — STUDIODO tidak menahan uang pelanggan Anda.</p>
       </div>
     </div>
   );

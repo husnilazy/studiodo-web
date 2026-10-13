@@ -22,7 +22,7 @@ export const FEATURE_GROUPS: FeatureGroup[] = [
     tint: "from-[#b8f0e6] to-[#eafbf8]",
     items: [
       "QRIS otomatis langsung di layar kiosk",
-      "Dana ke akun Xendit milik Anda sendiri",
+      "Pakai payment gateway Anda sendiri: Xendit atau DOKU",
       "Voucher dan kode promo per event",
       "Paket dan harga fleksibel, termasuk gratis",
       "Cetak tambahan berbayar",

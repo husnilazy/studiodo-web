@@ -5,7 +5,7 @@ const ITEMS = [
   { icon: "camera", tint: "from-[#c7ceff] to-[#edefff]", title: "Kamera", lead: "Webcam atau DSLR / mirrorless", points: ["Terhubung lewat digiCamControl", "ISO, shutter, aperture, white balance diatur dari dashboard", "Live view hanya aktif saat dibutuhkan"] },
   { icon: "printer", tint: "from-[#ffd3e4] to-[#fff0f6]", title: "Printer", lead: "Printer apa saja berdriver Windows", points: ["Strip, grid, atau satu foto", "Pilih mode cermin atau asli untuk hasil cetak", "Cetak tambahan berbayar lewat QRIS"] },
   { icon: "monitor", tint: "from-[#b8f0e6] to-[#eafbf8]", title: "PC & layar", lead: "Windows 10/11 (64-bit)", points: ["Layar sentuh untuk pengalaman kiosk", "Portrait atau landscape", "Update aplikasi otomatis, tinggal diatur per kiosk"] },
-  { icon: "wallet", tint: "from-[#ffe3b8] to-[#fff6e6]", title: "Pembayaran", lead: "QRIS lewat akun Xendit Anda", points: ["Dana mengikuti jadwal pencairan Xendit", "Voucher, paket gratis, dan saldo di dashboard", "STUDIODO tidak menahan uang pelanggan Anda"] },
+  { icon: "wallet", tint: "from-[#ffe3b8] to-[#fff6e6]", title: "Pembayaran", lead: "Payment gateway milik Anda", points: ["Masukkan API key Xendit atau DOKU sendiri, dana masuk langsung ke akun Anda", "Voucher, paket gratis, dan saldo di dashboard", "STUDIODO tidak menahan uang pelanggan Anda"] },
 ];
 
 export function Hardware() {

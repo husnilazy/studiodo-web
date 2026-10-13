@@ -5,7 +5,7 @@ import { FEATURE_GROUPS } from "./featureData";
 export function FeatureGroups() {
   return (
     <section id="semua-fitur" className="relative z-10 mx-auto flex w-full max-w-[1312px] flex-col gap-12 px-4 py-20 md:px-16">
-      <SectionHeading eyebrow="Semua fitur" title="Lengkap dari kamera sampai rekening." />
+      <SectionHeading eyebrow="Semua fitur" title="Dari kamera sampai payment gateway milik Anda." />
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         {FEATURE_GROUPS.map((g, gi) => (
           <article key={g.title} data-reveal="up" data-delay={String((gi % 3) * 110)} className="glass lift flex flex-col gap-5 p-7 sm:p-8">
