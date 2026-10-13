@@ -43,6 +43,20 @@ export async function fetchPublicPlans(): Promise<PublicPlan[] | null> {
   }
 }
 
+export type VolumeTier = { minBooths: number; percent: number };
+
+/** The "buy more booths, pay less" tiers a STUDIODO admin set. Empty when none (or the API is unreachable). */
+export async function fetchVolumeTiers(): Promise<VolumeTier[]> {
+  try {
+    const res = await fetch(`${API_URL}/api/public/volume-discounts`, { next: { revalidate: 300 } });
+    if (!res.ok) return [];
+    const data = (await res.json()) as { tiers?: VolumeTier[] };
+    return Array.isArray(data.tiers) ? data.tiers : [];
+  } catch {
+    return [];
+  }
+}
+
 export type CreatorSubmissionInput = {
   name: string;
   email: string;

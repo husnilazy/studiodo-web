@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import { Icon } from "../Icon";
-import type { PublicPlan } from "@/lib/api";
+import type { PublicPlan, VolumeTier } from "@/lib/api";
 import { kioskLabel, pickInterval, planOptions, type Interval } from "@/lib/pricing";
 import { formatRupiah } from "@/lib/format";
 
@@ -16,7 +16,7 @@ type Row = { label: string; included: boolean };
 /** Every line a plan card lists, in order: kiosk count, features every plan has, gated features, then the plan's own extras. */
 function featureRows(plan: PublicPlan): Row[] {
   return [
-    { label: kioskLabel(plan.kioskLimit), included: true },
+    { label: kioskLabel(), included: true },
     ...COMMON_FEATURES.map((label) => ({ label, included: true })),
     { label: "Screen Builder (desain layar kiosk)", included: plan.screenBuilderEnabled },
     { label: "GIF dan video", included: plan.gifVideoEnabled },
@@ -26,7 +26,7 @@ function featureRows(plan: PublicPlan): Row[] {
 
 const formatEnds = (iso: string) => new Date(iso).toLocaleDateString("id-ID", { day: "numeric", month: "long", year: "numeric", timeZone: "Asia/Jakarta" });
 
-export function PricingBoard({ plans, volume }: { plans: PublicPlan[]; volume: VolumeOffer }) {
+export function PricingBoard({ plans, volume, tiers = [] }: { plans: PublicPlan[]; volume: VolumeOffer; tiers?: VolumeTier[] }) {
   const options = plans.map(planOptions);
   const hasYearly = options.some((o, i) => o.yearly && plans[i].billingInterval !== "yearly");
   const maxSavings = Math.max(0, ...options.map((o) => o.yearlySavingsPercent));
@@ -105,7 +105,7 @@ export function PricingBoard({ plans, volume }: { plans: PublicPlan[]; volume: V
                 )}
                 <div className="flex flex-wrap items-baseline gap-x-1.5">
                   <span className={`font-display text-[36px] leading-none tracking-tight xl:text-[40px] ${featured ? "text-white" : ""}`}>{free ? "Gratis" : formatRupiah(option.final)}</span>
-                  {!free && <span className={`text-[15px] ${muted}`}>/{periodWord}</span>}
+                  {!free && <span className={`text-[15px] ${muted}`}>/booth/{periodWord}</span>}
                 </div>
                 {shown === "yearly" && !free && (
                   <p className={`mt-2 text-[14px] ${muted}`}>
@@ -150,6 +150,16 @@ export function PricingBoard({ plans, volume }: { plans: PublicPlan[]; volume: V
         })}
       </div>
 
+      {tiers.length > 0 && (
+        <p data-reveal="up" className="mx-auto flex max-w-[760px] flex-wrap items-center justify-center gap-x-3 gap-y-2 text-center text-[14px] text-muted">
+          <span className="font-semibold text-foreground">Satu langganan untuk satu booth.</span>
+          Berlangganan banyak booth sekaligus:
+          {tiers.map((t) => (
+            <span key={t.minBooths} className="rounded-full bg-[#dff7ec] px-3 py-1 text-xs font-bold text-[#0f6b45]">{t.minBooths}+ booth hemat {t.percent}%</span>
+          ))}
+        </p>
+      )}
+
       <p data-reveal="up" className="flex flex-wrap items-center justify-center gap-x-7 gap-y-2 text-center text-[14px] text-muted">
         {["Batal kapan saja", "Coba gratis 7 hari", "Pembayaran lewat payment gateway resmi", "Harga dalam Rupiah"].map((note) => (
           <span key={note} className="inline-flex items-center gap-2"><Icon name="check" className="h-3.5 w-3.5 text-accent" />{note}</span>
@@ -173,7 +183,7 @@ function CompareTable({ plans, options, interval }: { plans: PublicPlan[]; optio
       <span className="mx-auto block h-0.5 w-4 rounded-full bg-foreground/20" aria-label="Tidak termasuk" />
     );
   const rows: { label: string; render: (plan: PublicPlan) => React.ReactNode }[] = [
-    { label: "Jumlah kiosk", render: (p) => <span className="font-semibold">{p.kioskLimit === null ? "Tak terbatas" : p.kioskLimit}</span> },
+    { label: "Harga dihitung", render: () => <span className="font-semibold">per booth</span> },
     { label: "QRIS, voucher, galeri cloud, update otomatis", render: () => cell(true) },
     { label: "Screen Builder", render: (p) => cell(p.screenBuilderEnabled) },
     { label: "GIF dan video", render: (p) => cell(p.gifVideoEnabled) },

@@ -28,7 +28,7 @@ function RevenueChart({ data }: { data: { date: string; sessions: number; revenu
 
 export default async function PortalHome() {
   const s = await getSummary();
-  const days = daysUntil(s.tenant.subscriptionEndsAt);
+  const lic = s.licenses;
   const totalKeys = s.kiosks.length;
   const onlineKiosks = s.kiosks.filter((k) => k.online).length;
   // Online first, then most recently active — old test keys sink to the bottom instead of burying live kiosks.
@@ -39,11 +39,15 @@ export default async function PortalHome() {
   const shownKiosks = sortedKiosks.slice(0, KIOSK_PREVIEW);
   const hiddenKiosks = totalKeys - shownKiosks.length;
 
+  // Per-booth licences: the headline is how many booths run, not one account-wide date.
   let statusTone = "bg-[#dff7ec] text-[#0f6b45]";
-  let statusText = "Aktif";
-  if (s.tenant.locked) { statusTone = "bg-[#ffe3e3] text-[#a12626]"; statusText = "Terkunci — perpanjang untuk mengaktifkan kembali kiosk"; }
-  else if (days !== null && days < 0) { statusTone = "bg-[#fff3d6] text-[#7a5a00]"; statusText = `Masa aktif habis, masa tenggang ${s.tenant.graceDaysRemaining ?? 0} hari lagi`; }
-  else if (days !== null && days <= 7) { statusTone = "bg-[#fff3d6] text-[#7a5a00]"; statusText = `Berakhir ${days} hari lagi`; }
+  let statusText = "Semua booth aktif";
+  if (lic && lic.activeKeys === 0) { statusTone = "bg-foreground/[0.06] text-muted"; statusText = "Belum ada booth"; }
+  else if (lic && lic.locked > 0) { statusTone = "bg-[#ffe3e3] text-[#a12626]"; statusText = `${lic.locked} dari ${lic.activeKeys} booth terkunci`; }
+  else if (lic && lic.unpaid > 0) { statusTone = "bg-[#fff3d6] text-[#7a5a00]"; statusText = `${lic.unpaid} booth belum berlangganan`; }
+  else if (lic && lic.expiringSoon > 0) { statusTone = "bg-[#fff3d6] text-[#7a5a00]"; statusText = `${lic.expiringSoon} booth berakhir dalam 7 hari`; }
+  else if (lic && lic.trial > 0) { statusTone = "bg-[#fff3d6] text-[#7a5a00]"; statusText = `${lic.trial} booth masih trial`; }
+  const nearestDays = daysUntil(lic?.nearestEndsAt ?? s.tenant.subscriptionEndsAt);
 
   return (
     <div className="flex flex-col gap-8">
@@ -55,22 +59,24 @@ export default async function PortalHome() {
 
       <section className="glass flex flex-col items-start justify-between gap-5 p-8 md:flex-row md:items-center">
         <div className="flex flex-col gap-2">
-          <div className="text-sm text-muted">Paket saat ini</div>
-          <div className="font-display text-3xl tracking-tight">{s.tenant.planName}</div>
+          <div className="text-sm text-muted">Langganan · paket {s.tenant.planName}</div>
+          <div className="font-display text-3xl tracking-tight">{lic ? `${lic.paid} dari ${lic.activeKeys} booth berlangganan` : s.tenant.planName}</div>
           <div className="text-[15px] text-muted">
-            {s.tenant.subscriptionEndsAt ? `Berlaku sampai ${formatDate(s.tenant.subscriptionEndsAt)}` : "Tanpa batas waktu"}
+            {lic?.nearestEndsAt ?? s.tenant.subscriptionEndsAt
+              ? `Masa aktif terdekat berakhir ${formatDate(lic?.nearestEndsAt ?? s.tenant.subscriptionEndsAt)}${nearestDays !== null && nearestDays >= 0 ? ` (${nearestDays} hari lagi)` : ""}`
+              : "Tanpa batas waktu"}
           </div>
           <span className={`mt-1 inline-block self-start rounded-full px-3.5 py-1.5 text-xs font-semibold ${statusTone}`}>{statusText}</span>
         </div>
-        <Link href="/portal/tagihan" className="btn btn-primary px-7 py-3.5">Perpanjang / ganti paket</Link>
+        <Link href="/portal/booth" className="btn btn-primary px-7 py-3.5">Kelola booth &amp; langganan</Link>
       </section>
 
       <div className="grid gap-6 sm:grid-cols-3">
         <div className="glass p-7"><div className="text-sm text-muted">Sesi foto (30 hari)</div><div className="mt-2 font-display text-4xl tracking-tight">{s.last30Days.sessions}</div></div>
         <div className="glass p-7"><div className="text-sm text-muted">Pendapatan (30 hari)</div><div className="mt-2 font-display text-4xl tracking-tight">{formatRupiah(s.last30Days.revenue)}</div></div>
         <div className="glass p-7">
-          <div className="text-sm text-muted">Kunci kiosk</div>
-          <div className="mt-2 font-display text-4xl tracking-tight">{totalKeys}{s.tenant.kioskLimit !== null && <span className="text-xl text-muted"> / {s.tenant.kioskLimit}</span>}</div>
+          <div className="text-sm text-muted">Booth</div>
+          <div className="mt-2 font-display text-4xl tracking-tight">{totalKeys}</div>
           <div className="mt-1 text-[13px] text-muted">{onlineKiosks} online sekarang</div>
         </div>
       </div>
@@ -78,9 +84,9 @@ export default async function PortalHome() {
       {s.daily && s.daily.length > 0 && <RevenueChart data={s.daily} />}
 
       <section className="glass p-8">
-        <h2 className="mb-4 font-display text-xl tracking-tight">Kiosk</h2>
+        <div className="mb-4 flex items-center justify-between gap-3"><h2 className="font-display text-xl tracking-tight">Booth</h2><Link href="/portal/booth" className="text-[13px] font-semibold text-accent underline underline-offset-4">Kelola</Link></div>
         {s.kiosks.length === 0 ? (
-          <p className="text-[15px] text-muted">Belum ada kiosk. Buat kunci kiosk dari menu Admin di aplikasi STUDIODO, lalu pasangkan di PC booth.</p>
+          <p className="text-[15px] text-muted">Belum ada booth. Buka &ldquo;Booth &amp; langganan&rdquo; untuk menambah booth, lalu pasangkan key-nya di aplikasi STUDIODO pada PC booth.</p>
         ) : (
           <ul className="divide-y divide-foreground/[0.08]">
             {shownKiosks.map((k) => (
@@ -91,14 +97,19 @@ export default async function PortalHome() {
                     {k.paired ? "Terpasang" : "Belum dipasangkan"} · versi {k.appVersion ?? "—"} · terakhir aktif {formatDateTime(k.lastUsedAt)}
                   </div>
                 </div>
-                <span className={`rounded-full px-3 py-1 text-xs font-semibold ${k.online ? "bg-[#dff7ec] text-[#0f6b45]" : "bg-foreground/[0.06] text-muted"}`}>
-                  {k.online ? "Online" : "Offline"}
-                </span>
+                <div className="flex flex-wrap items-center gap-2">
+                  <span className={`rounded-full px-3 py-1 text-xs font-semibold ${k.locked ? "bg-[#ffe3e3] text-[#a12626]" : k.licenseType === "trial" ? "bg-[#fff3d6] text-[#7a5a00]" : "bg-[#dff7ec] text-[#0f6b45]"}`}>
+                    {k.licenseType === "unpaid" ? "Belum berlangganan" : k.locked ? (k.licenseType === "trial" ? "Trial habis" : "Terkunci") : k.licenseType === "trial" ? `Trial · ${Math.max(0, k.daysRemaining ?? 0)} hari` : k.licenseEndsAt ? `Aktif s/d ${formatDate(k.licenseEndsAt)}` : "Aktif"}
+                  </span>
+                  <span className={`rounded-full px-3 py-1 text-xs font-semibold ${k.online ? "bg-[#dff7ec] text-[#0f6b45]" : "bg-foreground/[0.06] text-muted"}`}>
+                    {k.online ? "Online" : "Offline"}
+                  </span>
+                </div>
               </li>
             ))}
           </ul>
         )}
-        {hiddenKiosks > 0 && <p className="mt-3 text-[13px] text-muted">+{hiddenKiosks} kunci lainnya (kebanyakan tidak aktif). Kelola kunci di menu Admin aplikasi STUDIODO.</p>}
+        {hiddenKiosks > 0 && <p className="mt-3 text-[13px] text-muted">+{hiddenKiosks} booth lainnya. <Link href="/portal/booth" className="font-semibold text-accent underline underline-offset-4">Lihat semua booth</Link></p>}
       </section>
 
       <section className="glass p-8">

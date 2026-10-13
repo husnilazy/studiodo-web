@@ -2,7 +2,7 @@ import Link from "next/link";
 import { SectionHeading } from "../SectionHeading";
 import { Orb } from "../Decor";
 import { PricingBoard, type VolumeOffer } from "./PricingBoard";
-import { fetchPublicPlans } from "@/lib/api";
+import { fetchPublicPlans, fetchVolumeTiers } from "@/lib/api";
 import { getSite, whatsappLink, type PricingData } from "@/lib/content";
 
 // Used when the CMS copy predates these fields (an older saved "Harga" section) so the offer never renders empty.
@@ -15,7 +15,7 @@ const DEFAULTS = {
 };
 
 export async function Pricing({ data }: { data: PricingData }) {
-  const [plans, site] = await Promise.all([fetchPublicPlans(), getSite()]);
+  const [plans, site, tiers] = await Promise.all([fetchPublicPlans(), getSite(), fetchVolumeTiers()]);
   const wa = whatsappLink(site, "Halo STUDIODO, saya punya lebih dari 10 booth dan ingin minta penawaran khusus.");
   const cmsPerks = (data.volumePerks ?? []).map((perk) => perk.text?.trim()).filter((text): text is string => Boolean(text));
   const volume: VolumeOffer = {
@@ -42,7 +42,7 @@ export async function Pricing({ data }: { data: PricingData }) {
           <Link href="/kontak" className="btn btn-primary px-7 py-3.5">Hubungi Kami</Link>
         </div>
       )}
-      {plans && <PricingBoard plans={plans} volume={volume} />}
+      {plans && <PricingBoard plans={plans} volume={volume} tiers={tiers} />}
     </section>
   );
 }

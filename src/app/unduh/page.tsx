@@ -55,7 +55,7 @@ const requirementGroups = [
 
 const steps = [
   { icon: "download", tint: "from-[#c7ceff] to-[#edefff]", title: "Unduh & pasang", body: "Jalankan installer di PC booth, lalu buka aplikasi STUDIODO." },
-  { icon: "lock", tint: "from-[#ffd3e4] to-[#fff0f6]", title: "Buat kunci kiosk", body: "Di dashboard Admin → Kiosk → API Key, buat kunci untuk satu PC booth." },
+  { icon: "lock", tint: "from-[#ffd3e4] to-[#fff0f6]", title: "Siapkan kunci kiosk", body: "Pakai key trial dari tim STUDIODO untuk mencoba dulu, atau buat key booth di dashboard web (Booth & langganan). Satu key untuk satu PC booth." },
   { icon: "sliders", tint: "from-[#b8f0e6] to-[#eafbf8]", title: "Pasangkan", body: "Di layar Setup kiosk, isi URL server dan kunci tadi. Satu kunci terkunci ke satu komputer." },
   { icon: "rocket", tint: "from-[#ffe3b8] to-[#fff6e6]", title: "Hubungkan & mulai", body: "Pilih kamera dan printer, atur paket serta frame, lalu booth siap dipakai." },
 ];
@@ -64,7 +64,8 @@ const faqs = [
   ["Windows memperingatkan \"Windows protected your PC\". Aman?", "Aplikasi belum memiliki tanda tangan digital berbayar, jadi Windows SmartScreen menampilkan peringatan ini untuk setiap aplikasi baru. Klik “Informasi lebih lanjut”, lalu “Tetap jalankan”. Unduh hanya dari halaman ini atau dari rilis resmi kami di GitHub."],
   ["Apa bedanya Installer dan Portable?", "Installer memasang STUDIODO seperti aplikasi biasa lengkap dengan pintasan dan pembaruan otomatis. Portable adalah satu file yang bisa dijalankan langsung tanpa instalasi, cocok untuk mencoba atau PC yang tidak boleh dipasangi aplikasi."],
   ["Apakah aplikasi memperbarui dirinya sendiri?", "Ya. Setiap kiosk memeriksa versi baru secara berkala. Anda bisa mematikan pembaruan otomatis per kunci kiosk, misalnya untuk menahan satu booth di versi tertentu saat event besar."],
-  ["Berapa komputer yang bisa saya pasang?", "Jumlah kunci kiosk aktif mengikuti paket langganan Anda. Satu kunci dipakai satu komputer; ganti komputer cukup dengan Reset device di dashboard."],
+  ["Berapa komputer yang bisa saya pasang?", "Sebanyak booth yang Anda langgani: satu key = satu booth = satu komputer, masing-masing dengan masa aktifnya sendiri. Ganti komputer cukup dengan Reset device di dashboard."],
+  ["Bagaimana cara mencoba dulu?", "Minta key trial ke tim STUDIODO, lalu tempel di layar Setup saat pertama kali membuka aplikasi. Saat masa trial habis, kiosk terkunci otomatis dan Anda diminta berlangganan di dashboard — semua pengaturan dan data tetap aman."],
   ["Apakah perlu SDK Canon?", "Tidak. Kamera DSLR/mirrorless dikendalikan lewat digiCamControl, aplikasi gratis yang menjembatani kamera ke STUDIODO."],
   ["Apakah ada versi Mac atau tablet?", "Belum. Saat ini aplikasi kiosk hanya untuk Windows 10 dan 11 (64-bit)."],
 ];
@@ -285,7 +286,7 @@ export default async function UnduhPage() {
           <div className="pointer-events-none absolute left-1/2 top-0 h-48 w-96 -translate-x-1/2 rounded-full bg-accent/30 blur-3xl" />
           <div className="relative flex flex-col items-center gap-5">
             <h2 className="font-display text-3xl tracking-tight text-white md:text-4xl">Belum punya akun STUDIODO?</h2>
-            <p className="max-w-[520px] text-[16px] leading-relaxed text-[#c6cce0]">Aplikasi butuh kunci kiosk dari dashboard admin. Daftar gratis dulu, lalu pasangkan PC booth Anda.</p>
+            <p className="max-w-[520px] text-[16px] leading-relaxed text-[#c6cce0]">Aplikasi butuh kunci kiosk. Daftar dulu untuk mendapat key trial, lalu pasangkan PC booth Anda.</p>
             <div className="flex flex-col gap-3 sm:flex-row">
               <Link href="/daftar" className="btn bg-white px-8 py-4 text-[#0b1020]">Coba Gratis</Link>
               <Link href="/bantuan" className="btn border border-white/25 px-8 py-4 text-white hover:bg-white/10">Butuh bantuan?</Link>

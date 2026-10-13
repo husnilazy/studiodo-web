@@ -38,4 +38,5 @@ export function pickInterval(options: PlanOptions, wanted: Interval): { interval
   return { interval: "yearly", option: options.yearly! };
 }
 
-export const kioskLabel = (limit: number | null) => (limit === null ? "Kiosk tak terbatas" : limit === 1 ? "1 kiosk" : `Hingga ${limit} kiosk`);
+/** Plans are priced per booth: one kiosk key = one booth = one subscription. (The plan's old kiosk cap no longer limits anything.) */
+export const kioskLabel = () => "Harga per booth — 1 key untuk 1 booth";
