@@ -2,6 +2,7 @@
 
 import { useState, type FormEvent } from "react";
 import { submitTenantApplication } from "@/lib/api";
+import { Spinner } from "@/components/Spinner";
 
 const businessTypes = [
   { value: "photobooth_rental", label: "Sewa photobooth" },
@@ -43,18 +44,19 @@ export function SignupForm({ plan }: { plan?: string }) {
 
   if (status === "done") {
     return (
-      <div className="glass flex flex-col items-start gap-3 p-10" role="status">
+      <div className="glass flex flex-col items-start gap-4 p-10" role="status">
+        <span className="pop-in grid h-14 w-14 place-items-center rounded-full bg-[#dff7ec] text-[#0f6b45]"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" className="h-7 w-7" aria-hidden="true"><path className="check-draw" d="M5 12.5l4.5 4.5L19 7.5" /></svg></span>
         <h2 className="font-display text-3xl tracking-tight">Pengajuan terkirim</h2>
         <p className="text-[15px] leading-relaxed text-muted">
-          Terima kasih! Tim kami akan meninjau pengajuan Anda dan menghubungi lewat email atau WhatsApp untuk
-          mengaktifkan akun tenant.
+          Terima kasih! Kami baru saja mengirim <strong className="text-foreground">email konfirmasi</strong> ke alamat yang Anda isi (cek juga folder spam).
+          Tim kami akan meninjau pengajuan Anda dan menghubungi lewat email atau WhatsApp untuk mengaktifkan akun tenant.
         </p>
       </div>
     );
   }
 
   return (
-    <form onSubmit={onSubmit} className="glass grid gap-5 p-8 md:p-10">
+    <form onSubmit={onSubmit} aria-busy={status === "sending"} className={`glass grid gap-5 p-8 md:p-10 ${status === "sending" ? "form-busy" : ""}`}>
       <div className="grid gap-5 md:grid-cols-2">
         <label className="grid gap-2 text-sm font-medium">
           Nama bisnis
@@ -102,7 +104,7 @@ export function SignupForm({ plan }: { plan?: string }) {
         </p>
       )}
       <button type="submit" disabled={status === "sending"} className="btn btn-primary py-4 text-base disabled:opacity-60">
-        {status === "sending" ? "Mengirim…" : "Kirim Pengajuan"}
+        {status === "sending" ? <><Spinner />Mengirim pengajuan…</> : "Kirim Pengajuan"}
       </button>
     </form>
   );

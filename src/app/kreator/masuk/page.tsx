@@ -15,7 +15,7 @@ export default async function KreatorMasukPage({ searchParams }: PageProps<"/kre
   return (
     <PageShell eyebrow="Kreator" title="Masuk ke portal kreator." intro="Gunakan akun yang dikirim tim STUDIODO setelah portofolio Anda diterima." narrow>
       <div className="max-w-[520px]">
-        <LoginForm sessionExpired={sp.sesi === "habis"} submit={creatorLoginAction} />
+        <LoginForm sessionExpired={sp.sesi === "habis"} submit={creatorLoginAction} forgotHref="/lupa-password?jenis=creator" />
         <p className="mt-6 text-sm text-muted">
           Belum punya akun? <Link href="/kreator" className="font-semibold text-accent underline underline-offset-4">Kirim portofolio Anda</Link>
         </p>

@@ -3,7 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { API_URL } from "@/lib/api";
-import { getToken } from "@/lib/portal";
+import { getToken, portalCall } from "@/lib/portal";
 
 export type InstallState = { error: string | null; ok: boolean };
 
@@ -25,4 +25,26 @@ export async function installTemplateAction(_prev: InstallState, formData: FormD
   if (!res.ok) return { error: body.error ?? "Gagal memasang template.", ok: false };
   revalidatePath("/portal/template");
   return { error: null, ok: true };
+}
+
+// --- Reviews & reports (called from the public template page by a signed-in tenant) -----------------------
+
+export type FeedbackResult = { ok: boolean; error?: string };
+
+async function feedbackCall(method: "PUT" | "DELETE" | "POST", id: string, path: string, body?: unknown): Promise<FeedbackResult> {
+  if (!/^[0-9a-f-]{36}$/i.test(id)) return { ok: false, error: "Template tidak valid" };
+  const r = await portalCall(method, `/api/portal/marketplace/${id}/${path}`, body);
+  if (!r.ok) return { ok: false, error: r.error };
+  revalidatePath(`/template/${id}`);
+  return { ok: true };
+}
+
+export async function saveReviewAction(id: string, rating: number, comment: string): Promise<FeedbackResult> {
+  return feedbackCall("PUT", id, "review", { rating, comment });
+}
+export async function deleteReviewAction(id: string): Promise<FeedbackResult> {
+  return feedbackCall("DELETE", id, "review");
+}
+export async function reportTemplateAction(id: string, reason: string, detail: string): Promise<FeedbackResult> {
+  return feedbackCall("POST", id, "report", { reason, detail });
 }

@@ -18,6 +18,8 @@ export type CreatorTemplate = {
   submittedAt: string | null;
   updatedAt: string;
   installCount: number;
+  ratingAverage?: number | null;
+  ratingCount?: number;
 };
 
 export const CATEGORIES = [

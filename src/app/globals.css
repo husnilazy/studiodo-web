@@ -278,3 +278,153 @@ html {
   .install-label-b { animation: none; opacity: 1; }
   .shimmer-text-light { animation: none; }
 }
+
+/* ================================================================================================
+   Dashboard (tenant portal). A flat, solid-surface light theme: white cards on a soft grey canvas, dark ink accents.
+   Deliberately NO backdrop-filter / big blur filters in here — on a data-heavy page they were the main cause of
+   laggy scrolling and navigation. Everything is scoped under `.dash`, so the marketing site keeps its glass look.
+   The shared utility classes the portal components already use (.glass, .glass-dark, .btn…) are re-skinned here.
+   ================================================================================================ */
+.dash {
+  --background: #e9e9ef;
+  --foreground: #0f1222;
+  --muted: #69708a;
+  --accent: #4f4fe8;
+  --accent-soft: #9aa6ff;
+  --panel: #ffffff;
+  --on-foreground: #ffffff;
+  --card: #ffffff;
+  --card-edge: rgba(15, 18, 34, 0.06);
+  --soft: rgba(15, 18, 34, 0.05);
+  --ink: #15171f;
+  --ink-2: #2a2d3a;
+  background: var(--background);
+  color: var(--foreground);
+}
+:root[data-theme="dark"] .dash {
+  --background: #0b0d15;
+  --foreground: #eceeff;
+  --muted: #9aa3bd;
+  --accent: #8a8aff;
+  --accent-soft: #5b5bd6;
+  --panel: #171b2b;
+  --on-foreground: #0b0d15;
+  --card: #131726;
+  --card-edge: rgba(255, 255, 255, 0.07);
+  --soft: rgba(255, 255, 255, 0.055);
+  --ink: #1f2338;
+  --ink-2: #2b3050;
+}
+
+.dash .glass {
+  background: var(--card);
+  border: 1px solid var(--card-edge);
+  box-shadow: 0 1px 2px rgba(15, 18, 34, 0.04), 0 8px 24px -12px rgba(15, 18, 34, 0.1);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  border-radius: 26px;
+}
+:root[data-theme="dark"] .dash .glass {
+  background: var(--card);
+  border-color: var(--card-edge);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 10px 28px -14px rgba(0, 0, 0, 0.55);
+}
+.dash .glass-dark {
+  background: linear-gradient(145deg, var(--ink) 0%, var(--ink-2) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow: 0 18px 40px -18px rgba(15, 18, 34, 0.55);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  color: #fff;
+}
+.dash .btn { transition: transform 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease, color 0.15s ease; }
+.dash .btn-primary { box-shadow: 0 8px 20px -8px rgba(15, 18, 34, 0.5); }
+.dash .btn:not(.btn-primary):not(.glass) { background: var(--soft); color: var(--foreground); }
+.dash .btn.glass { box-shadow: none; background: var(--soft); border-color: transparent; }
+.dash .btn.glass:hover { background: color-mix(in srgb, var(--foreground) 9%, transparent); }
+.dash .eyebrow { font-size: 12px; letter-spacing: 0.12em; }
+/* Form controls sit on white cards: tint them so they read as inputs instead of vanishing into the card. */
+.dash .glass :is(input:not([type="checkbox"]):not([type="radio"]):not([type="range"]), select, textarea) {
+  background: var(--soft);
+  border-color: transparent;
+}
+.dash .glass :is(input, select, textarea):focus { background: var(--card); }
+.dash :is(input[type="date"], select) { color-scheme: inherit; }
+.dash ::selection { background: color-mix(in srgb, var(--accent) 25%, transparent); }
+
+/* One-page data views: a panel that fills the height under the page header and scrolls INSIDE itself (header row and
+   pager stay put). Below the lg breakpoint pages simply flow and scroll normally. */
+.fit-page { display: flex; flex-direction: column; gap: 1rem; min-height: 0; }
+.fit-panel { display: flex; flex-direction: column; min-height: 0; overflow: hidden; }
+.fit-scroll { min-height: 0; overflow: auto; overscroll-behavior: contain; scrollbar-width: thin; scrollbar-color: color-mix(in srgb, var(--foreground) 22%, transparent) transparent; }
+@media (min-width: 1024px) {
+  .fit-page { height: 100%; }
+  .fit-panel { flex: 1 1 0%; }
+}
+@media (max-width: 1023px) {
+  .fit-panel { overflow: visible; }
+  .fit-scroll { max-height: none; overflow: visible; }
+}
+.sticky-head thead th { position: sticky; top: 0; z-index: 1; background: var(--card); }
+
+.dash-scroll { scrollbar-width: thin; scrollbar-color: color-mix(in srgb, var(--foreground) 22%, transparent) transparent; }
+.dash-scroll::-webkit-scrollbar { width: 10px; height: 10px; }
+.dash-scroll::-webkit-scrollbar-thumb { background: color-mix(in srgb, var(--foreground) 20%, transparent); border-radius: 99px; border: 3px solid transparent; background-clip: content-box; }
+
+/* Page entrance: children of a .dash-stagger container rise in one after another. Pure CSS — runs on every navigation
+   without waiting for hydration, and is switched off for reduced motion. */
+@keyframes dash-rise { from { opacity: 0; transform: translate3d(0, 14px, 0); } to { opacity: 1; transform: none; } }
+.dash-stagger > * { animation: dash-rise 0.5s cubic-bezier(0.2, 0.7, 0.2, 1) both; }
+.dash-stagger > *:nth-child(2) { animation-delay: 50ms; }
+.dash-stagger > *:nth-child(3) { animation-delay: 100ms; }
+.dash-stagger > *:nth-child(4) { animation-delay: 150ms; }
+.dash-stagger > *:nth-child(5) { animation-delay: 200ms; }
+.dash-stagger > *:nth-child(n+6) { animation-delay: 250ms; }
+@keyframes dash-grow { from { transform: scaleY(0); } to { transform: scaleY(1); } }
+.dash-bar { transform-origin: bottom; animation: dash-grow 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) both; animation-delay: calc(var(--i, 0) * 14ms + 200ms); }
+@keyframes dash-ring { from { stroke-dashoffset: var(--ring-len); } }
+.dash-ring { animation: dash-ring 1.1s cubic-bezier(0.2, 0.8, 0.2, 1) 0.25s both; }
+@keyframes dash-pop { from { opacity: 0; transform: translateY(-6px) scale(0.98); } to { opacity: 1; transform: none; } }
+.dash-pop { animation: dash-pop 0.16s ease-out both; transform-origin: top right; }
+@keyframes dash-shine { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
+.skeleton { background: linear-gradient(100deg, var(--soft) 30%, color-mix(in srgb, var(--foreground) 9%, transparent) 50%, var(--soft) 70%); background-size: 200% 100%; animation: dash-shine 1.4s linear infinite; border-radius: 14px; }
+@keyframes dash-drift { 0%, 100% { transform: translate3d(0, 0, 0); } 50% { transform: translate3d(18px, -14px, 0); } }
+.dash-orb { position: absolute; border-radius: 9999px; pointer-events: none; animation: dash-drift 14s ease-in-out infinite; }
+.dash-nav-link { position: relative; }
+.dash-nav-link .dash-nav-icon { transition: transform 0.25s cubic-bezier(0.3, 1.6, 0.5, 1); }
+.dash-nav-link:hover .dash-nav-icon { transform: scale(1.12) rotate(-6deg); }
+.dash-card-hover { transition: translate 0.25s ease, box-shadow 0.25s ease; }
+.dash-card-hover:hover { translate: 0 -3px; box-shadow: 0 1px 2px rgba(15, 18, 34, 0.04), 0 18px 36px -14px rgba(15, 18, 34, 0.18); }
+@media (prefers-reduced-motion: reduce) {
+  .dash-stagger > *, .dash-bar, .dash-ring, .dash-pop, .dash-orb, .skeleton { animation: none !important; }
+  .dash-card-hover:hover { translate: none; }
+}
+:root[data-theme="dark"] .dash .dash-orb { opacity: 0.55; }
+@media (max-width: 767px) { .dash .dash-orb { opacity: 0.5; max-width: 80vw; max-height: 80vw; } }
+
+/* --- Loading feedback ---------------------------------------------------------------------------- */
+@keyframes spin-around { to { transform: rotate(360deg); } }
+.spin { animation: spin-around 0.8s linear infinite; }
+.nav-progress {
+  position: fixed; inset: 0 0 auto 0; z-index: 80; height: 3px; pointer-events: none;
+  background: linear-gradient(90deg, var(--accent-soft), var(--accent));
+  transform-origin: 0 50%; animation: nav-grow 10s cubic-bezier(0.1, 0.8, 0.2, 1) forwards;
+  box-shadow: 0 0 10px color-mix(in srgb, var(--accent) 60%, transparent);
+}
+.nav-progress-done { animation: nav-finish 0.4s ease-out forwards; }
+@keyframes nav-grow { from { transform: scaleX(0.04); } to { transform: scaleX(0.92); } }
+@keyframes nav-finish { from { transform: scaleX(0.92); opacity: 1; } to { transform: scaleX(1); opacity: 0; } }
+/* A form that is being submitted: dimmed and sweeping with a light bar so it is obvious something is happening. */
+.form-busy { position: relative; pointer-events: none; }
+.form-busy > * { opacity: 0.55; transition: opacity 0.2s; }
+.form-busy::after {
+  content: ""; position: absolute; inset: 0 0 auto 0; height: 3px; border-radius: 3px; opacity: 1;
+  background: linear-gradient(90deg, transparent, var(--accent), transparent); background-size: 50% 100%; background-repeat: no-repeat;
+  animation: form-sweep 1.1s ease-in-out infinite;
+}
+@keyframes form-sweep { from { background-position: -60% 0; } to { background-position: 160% 0; } }
+@keyframes check-draw { from { stroke-dashoffset: 30; } to { stroke-dashoffset: 0; } }
+.check-draw { stroke-dasharray: 30; animation: check-draw 0.5s ease-out 0.25s both; }
+@media (prefers-reduced-motion: reduce) { .spin, .nav-progress, .form-busy::after, .check-draw { animation: none !important; } .check-draw { stroke-dashoffset: 0; } }
+/* Old-style page titles inside the dashboard shell (portal sub-pages not yet on PageHeader) match the compact scale. */
+.dash main h1.text-4xl { font-size: 1.9rem; line-height: 1.15; letter-spacing: -0.03em; margin-top: 0.4rem; }

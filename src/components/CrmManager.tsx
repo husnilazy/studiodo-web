@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState, useTransition } from "react";
+import { Spinner } from "@/components/Spinner";
 import { createPortal } from "react-dom";
 import type { CrmCustomer, CrmList, CrmSession, CrmSummary } from "@/lib/portalTypes";
 import { DEFAULT_WA_TEMPLATE, downloadText, fillTemplate, initialsOf, prettyPhone, relativeTime, rupiah, toCsv, waHref, rupiahShort } from "@/lib/crmFormat";
@@ -181,7 +182,7 @@ function Drawer({ customerKey, brand, onClose, onSaved }: { customerKey: string;
               <label className="grid gap-2 text-sm font-medium">Catatan<textarea value={notes} onChange={(e) => { setNotes(e.target.value); touch(); }} rows={3} maxLength={2000} placeholder="Preferensi, acara yang pernah dipesan, dsb." className={field} /></label>
               <label className="flex min-h-[44px] cursor-pointer items-center gap-3 text-sm"><input type="checkbox" checked={optOut} onChange={(e) => { setOptOut(e.target.checked); touch(); }} className="h-5 w-5 accent-[var(--accent)]" />Jangan hubungi untuk promo</label>
               {message && <p role={message.tone === "error" ? "alert" : "status"} className={`rounded-2xl px-4 py-3 text-sm ${message.tone === "ok" ? "bg-[#dff7ec] text-[#0f6b45]" : "bg-[#ffe3e3] text-[#a12626]"}`}>{message.text}</p>}
-              <button type="button" onClick={save} disabled={pending} className="btn btn-primary min-h-[52px] w-full py-3.5 text-base disabled:opacity-60">{pending ? "Menyimpan…" : "Simpan perubahan"}</button>
+              <button type="button" onClick={save} disabled={pending} className="btn btn-primary min-h-[52px] w-full py-3.5 text-base disabled:opacity-60">{pending ? <><Spinner />Menyimpan…</> : "Simpan perubahan"}</button>
             </section>
 
             <section>
@@ -223,6 +224,7 @@ export function CrmManager({ initial, brand }: { initial: CrmList; brand: string
   const [open, setOpen] = useState<string | null>(null);
   const [exporting, setExporting] = useState(false);
   const first = useRef(true);
+  const sentinel = useRef<HTMLDivElement>(null);
 
   useEffect(() => { const t = setTimeout(() => setDebounced(query), 300); return () => clearTimeout(t); }, [query]);
 
@@ -244,6 +246,16 @@ export function CrmManager({ initial, brand }: { initial: CrmList; brand: string
     void load(false, 0);
   }, [load]);
 
+  // Infinite scroll: when the marker at the end of the list scrolls into view inside the panel, fetch the next page.
+  const more = items.length < total;
+  useEffect(() => {
+    const el = sentinel.current;
+    if (!el || !more || loading) return;
+    const io = new IntersectionObserver((entries) => { if (entries[0]?.isIntersecting) void load(true, items.length); }, { root: el.closest(".fit-scroll"), rootMargin: "0px 0px 200px 0px" });
+    io.observe(el);
+    return () => io.disconnect();
+  }, [more, loading, items.length, load]);
+
   const exportCsv = async () => {
     setExporting(true);
     const r = await exportCustomersAction(params);
@@ -254,14 +266,14 @@ export function CrmManager({ initial, brand }: { initial: CrmList; brand: string
     downloadText(`pelanggan-${new Date().toISOString().slice(0, 10)}.csv`, toCsv(rows));
   };
 
-  const chip = (active: boolean) => `min-h-[44px] rounded-full px-4 text-sm font-semibold transition ${active ? "bg-foreground text-[var(--on-foreground)] shadow-sm" : "glass rounded-full! text-muted hover:text-foreground"}`;
+  const chip = (active: boolean) => `min-h-[38px] rounded-full px-4 text-[13px] font-semibold transition ${active ? "bg-[var(--ink)] text-white shadow-sm" : "bg-[var(--soft)] text-muted hover:text-foreground"}`;
   const stat = (label: string, value: string, detail?: string) => (
-    <div className="glass min-w-0 p-6"><div className="text-sm text-muted">{label}</div><div className="mt-2 truncate font-display text-[26px] leading-tight tracking-tight xl:text-2xl 2xl:text-3xl">{value}</div>{detail && <div className="mt-1 text-[12px] font-medium text-accent">{detail}</div>}</div>
+    <div className="glass min-w-0 rounded-[20px] px-4 py-3.5"><div className="text-[12.5px] text-muted">{label}</div><div className="mt-1 truncate font-display text-[22px] leading-tight tracking-tight">{value}</div>{detail && <div className="mt-0.5 truncate text-[11.5px] font-medium text-accent">{detail}</div>}</div>
   );
 
   return (
-    <div className="flex flex-col gap-6">
-      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-5">
+    <div className="fit-page flex-1">
+      <div className="grid grid-cols-2 gap-3 md:grid-cols-3 xl:grid-cols-5">
         {stat("Pelanggan", String(summary.customers), `${summary.new30d} baru 30 hari terakhir`)}
         {stat("Punya WhatsApp", String(summary.withWhatsapp), "Bisa dihubungi langsung")}
         {stat("Pelanggan setia", String(summary.returning), "Datang 2× atau lebih")}
@@ -269,16 +281,19 @@ export function CrmManager({ initial, brand }: { initial: CrmList; brand: string
         {stat("Total belanja", rupiahShort(summary.lifetimeSpend))}
       </div>
 
-      <section className="glass flex flex-col gap-4 p-6 md:p-7">
+      <section className="glass fit-panel">
+        <div className="flex flex-col gap-3 border-b border-[var(--card-edge)] px-4 py-4 md:px-5">
         <div className="flex flex-wrap items-center gap-3">
-          <input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Cari nama, nomor WhatsApp, email, atau catatan…" aria-label="Cari pelanggan" className={`${field} min-w-[240px] flex-1 !rounded-full !px-6 !py-3.5`} />
+          <input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Cari nama, nomor WhatsApp, email, atau catatan…" aria-label="Cari pelanggan" className={`${field} min-w-[240px] flex-1 !rounded-full !px-6 !py-3`} />
           <select value={sort} onChange={(e) => setSort(e.target.value as typeof sort)} aria-label="Urutkan" className={`${field} !w-auto !rounded-full !px-5`}>{SORTS.map((s) => <option key={s.id} value={s.id}>{s.label}</option>)}</select>
-          <button type="button" onClick={exportCsv} disabled={exporting} className={`${smallBtn} min-h-[48px]`}>{exporting ? "Menyiapkan…" : "Ekspor CSV"}</button>
+          <button type="button" onClick={exportCsv} disabled={exporting} className={`${smallBtn} min-h-[44px]`}>{exporting ? <><Spinner />Menyiapkan…</> : "Ekspor CSV"}</button>
         </div>
         <div className="flex flex-wrap items-center gap-2">
           {FILTERS.map((f) => <button key={f.id} type="button" onClick={() => setFilter(f.id)} aria-pressed={filter === f.id} className={chip(filter === f.id)}>{f.label}</button>)}
           {allTags.map((t) => <button key={t} type="button" onClick={() => setTag(tag === t ? "" : t)} aria-pressed={tag === t} className={chip(tag === t)}>#{t}</button>)}
         </div>
+        </div>
+        <div className="fit-scroll dash-scroll px-4 md:px-5">
 
         {error && <p role="alert" className="rounded-2xl bg-[#ffe3e3] px-4 py-3 text-sm text-[#a12626]">{error}</p>}
 
@@ -315,9 +330,11 @@ export function CrmManager({ initial, brand }: { initial: CrmList; brand: string
           </ul>
         )}
 
-        <div className="flex flex-wrap items-center justify-between gap-3 text-sm text-muted">
-          <span>{loading ? "Memuat…" : `Menampilkan ${items.length} dari ${total} pelanggan`}</span>
-          {items.length < total && !loading && <button type="button" onClick={() => void load(true, items.length)} className={`${smallBtn} min-h-[48px] px-6`}>Muat lebih banyak</button>}
+        {items.length < total && <div ref={sentinel} className="h-px" aria-hidden="true" />}
+        </div>
+        <div className="mt-auto flex flex-wrap items-center justify-between gap-3 border-t border-[var(--card-edge)] px-4 py-3 text-[13px] text-muted md:px-5">
+          <span>{loading ? <><Spinner />Memuat…</> : `Menampilkan ${items.length} dari ${total} pelanggan`}</span>
+          {items.length < total && !loading && <button type="button" onClick={() => void load(true, items.length)} className={smallBtn}>Muat lebih banyak</button>}
         </div>
       </section>
 

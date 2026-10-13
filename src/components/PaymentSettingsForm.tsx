@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
+import { Spinner } from "@/components/Spinner";
 import type { PaymentConfig } from "@/lib/portalTypes";
 import { savePaymentAction, testPaymentAction } from "@/app/portal/pembayaran/actions";
 
@@ -127,7 +128,7 @@ export function PaymentSettingsForm({ config }: { config: PaymentConfig }) {
 
       {message && <Notice tone={message.tone}>{message.text}</Notice>}
       <div className="flex flex-wrap gap-3">
-        <button type="button" disabled={pending} onClick={() => save()} className="btn btn-primary px-8 py-3.5 disabled:opacity-60">{pending ? "Memproses…" : "Simpan"}</button>
+        <button type="button" disabled={pending} onClick={() => save()} className="btn btn-primary px-8 py-3.5 disabled:opacity-60">{pending ? <><Spinner />Memproses…</> : "Simpan"}</button>
         <button type="button" disabled={pending || (provider === "xendit" ? !config.hasSecretKey : !dokuReady)} onClick={test} className={smallBtn}>Tes koneksi</button>
         {(provider === "xendit" ? config.hasSecretKey || config.hasWebhookToken : dokuReady) && (
           <button type="button" disabled={pending} className={`${smallBtn} hover:!text-[#a12626]`} onClick={() => window.confirm(`Hapus kredensial ${provider === "xendit" ? "Xendit" : "DOKU"}? Kiosk tidak bisa menerima QRIS lewat gateway ini sampai diisi lagi.`) && save(provider === "xendit" ? { clearXendit: true } : { clearDoku: true }, "Kredensial dihapus.")}>

@@ -2,7 +2,7 @@
 
 import { redirect } from "next/navigation";
 import { API_URL } from "@/lib/api";
-import { getToken } from "@/lib/portal";
+import { getToken, portalCall } from "@/lib/portal";
 
 export type PasswordState = { error: string | null; ok: boolean };
 
@@ -31,4 +31,11 @@ export async function changePasswordAction(_prev: PasswordState, formData: FormD
   const body = (await res.json().catch(() => ({}))) as { error?: string };
   if (!res.ok) return { error: body.error ?? "Gagal mengganti password.", ok: false };
   return { error: null, ok: true };
+}
+
+export type EmailPrefsResult = { ok: boolean; error?: string; prefs?: Record<string, boolean> };
+
+export async function saveEmailPrefsAction(patch: Record<string, boolean>): Promise<EmailPrefsResult> {
+  const r = await portalCall<{ prefs: Record<string, boolean> }>("PATCH", "/api/portal/email-preferences", patch);
+  return r.ok ? { ok: true, prefs: r.data.prefs } : { ok: false, error: r.error };
 }

@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useState, useTransition } from "react";
+import { Spinner } from "@/components/Spinner";
 import type { PackageRow } from "@/lib/portalTypes";
 import { formatRupiah } from "@/lib/format";
 import { resizeImageToDataUrl } from "@/lib/imageResize";
@@ -82,7 +83,7 @@ function PackageForm({ initial, existingThumb, mediaLocked, onSaved, onCancel, i
       {mediaLocked && <p className="text-[13px] text-muted">GIF / video / stop motion tidak termasuk dalam paket langganan Anda saat ini.</p>}
       {error && <p role="alert" className="rounded-2xl bg-[#ffe3e3] px-4 py-3 text-sm text-[#a12626]">{error}</p>}
       <div className="flex gap-3">
-        <button type="button" disabled={pending || !d.name.trim()} onClick={submit} className="btn btn-primary px-7 py-3 disabled:opacity-60">{pending ? "Menyimpan…" : id ? "Simpan perubahan" : "Tambah paket"}</button>
+        <button type="button" disabled={pending || !d.name.trim()} onClick={submit} className="btn btn-primary px-7 py-3 disabled:opacity-60">{pending ? <><Spinner />Menyimpan…</> : id ? "Simpan perubahan" : "Tambah paket"}</button>
         {onCancel && <button type="button" onClick={onCancel} className={smallBtn}>Batal</button>}
       </div>
     </div>

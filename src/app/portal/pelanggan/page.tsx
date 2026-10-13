@@ -1,4 +1,5 @@
 import { CrmManager } from "@/components/CrmManager";
+import { PageHeader } from "@/components/dash/PageHeader";
 import { portalFetch } from "@/lib/portal";
 import type { CrmList } from "@/lib/portalTypes";
 
@@ -10,15 +11,12 @@ export default async function PelangganPage() {
     portalFetch<{ brandName?: string }>("/api/config/tenant"),
   ]);
   return (
-    <div className="flex flex-col gap-8">
-      <div>
-        <div className="eyebrow">Ringkasan</div>
-        <h1 className="mt-3 font-display text-4xl font-normal tracking-[-0.035em]">Pelanggan (CRM)</h1>
-        <p className="mt-2 max-w-[660px] text-[15px] text-muted">
-          Semua orang yang meninggalkan nomor WhatsApp atau email di kiosk Anda, digabung per orang. Ketuk <strong className="text-foreground">WhatsApp</strong> untuk langsung menyapa,
-          atau buka satu pelanggan untuk melihat riwayat sesi, menambah catatan dan label.
-        </p>
-      </div>
+    <div className="fit-page dash-stagger pb-6 lg:pb-0">
+      <PageHeader
+        eyebrow="Ringkasan"
+        title="Pelanggan (CRM)"
+        intro={<>Semua orang yang meninggalkan nomor WhatsApp atau email di kiosk Anda, digabung per orang. Ketuk <strong className="text-foreground">WhatsApp</strong> untuk langsung menyapa, atau buka satu pelanggan untuk riwayat, catatan, dan label.</>}
+      />
       <CrmManager initial={initial} brand={tenant.brandName ?? "kami"} />
     </div>
   );

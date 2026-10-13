@@ -15,7 +15,7 @@ export default async function MasukPage({ searchParams }: PageProps<"/masuk">) {
   return (
     <PageShell eyebrow="Masuk" title="Masuk ke dashboard." intro="Gunakan email dan password akun tenant Anda." narrow>
       <div className="max-w-[520px]">
-        <LoginForm sessionExpired={sp.sesi === "habis"} />
+        <LoginForm sessionExpired={sp.sesi === "habis"} forgotHref="/lupa-password?jenis=tenant" />
         <p className="mt-6 text-sm text-muted">
           Belum punya akun? <Link href="/daftar" className="font-semibold text-accent underline underline-offset-4">Ajukan akun</Link>
         </p>

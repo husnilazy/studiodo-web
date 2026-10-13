@@ -1,4 +1,5 @@
 import { KioskSettingsForm } from "@/components/KioskSettingsForm";
+import { PageHeader } from "@/components/dash/PageHeader";
 import { portalFetch } from "@/lib/portal";
 import type { PrintingConfig, TenantConfig } from "@/lib/portalTypes";
 
@@ -10,15 +11,9 @@ export default async function PengaturanPage() {
     portalFetch<PrintingConfig>("/api/config/printing"),
   ]);
   return (
-    <div className="flex flex-col gap-8">
-      <div>
-        <div className="eyebrow">Kelola kiosk</div>
-        <h1 className="mt-3 font-display text-4xl font-normal tracking-[-0.035em]">Tampilan &amp; pengaturan</h1>
-        <p className="mt-2 max-w-[640px] text-[15px] text-muted">
-          Ubah brand, teks, warna, dan aturan sesi dari sini. Semua kiosk Anda memuat pengaturan ini otomatis saat tersambung internet.
-          Pengaturan perangkat (kamera, printer) tetap diatur di aplikasi kiosk karena berbeda untuk tiap komputer.
-        </p>
-      </div>
+    <div className="dash-stagger flex flex-col gap-4 pb-6 lg:gap-5">
+      <PageHeader eyebrow="Kelola kiosk" title="Tampilan &amp; pengaturan" intro="Ubah brand, teks, warna, dan aturan sesi dari sini. Semua kiosk Anda memuat pengaturan ini otomatis saat tersambung internet.
+          Pengaturan perangkat (kamera, printer) tetap diatur di aplikasi kiosk karena berbeda untuk tiap komputer." />
       <KioskSettingsForm tenant={tenant} printing={printing} />
     </div>
   );

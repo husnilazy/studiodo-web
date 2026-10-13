@@ -1,4 +1,5 @@
 import { BoothManager, type BoothView } from "@/components/BoothManager";
+import { PageHeader } from "@/components/dash/PageHeader";
 import { fetchPublicPlans } from "@/lib/api";
 import { getSiteContent, whatsappLink } from "@/lib/content";
 import { getSummary, portalFetch } from "@/lib/portal";
@@ -21,17 +22,11 @@ export default async function BoothPage() {
   const wa = whatsappLink(content.site, `Halo STUDIODO, saya butuh bantuan langganan booth untuk "${summary.tenant.name}".`);
 
   return (
-    <div className="flex flex-col gap-8">
-      <div>
-        <div className="eyebrow">Booth &amp; langganan</div>
-        <h1 className="mt-3 font-display text-4xl font-normal tracking-[-0.035em]">Kelola booth</h1>
-        <p className="mt-2 max-w-[640px] text-[15px] text-muted">
-          Satu key = satu booth = satu langganan. Booth yang masa aktifnya habis terkunci sendiri tanpa memengaruhi booth lain.
+    <div className="fit-page dash-stagger pb-6 lg:pb-0">
+      <PageHeader eyebrow="Booth &amp; langganan" title="Kelola booth" intro={<>Satu key = satu booth = satu langganan. Booth yang masa aktifnya habis terkunci sendiri tanpa memengaruhi booth lain.
           {lic && lic.activeKeys > 0 && (
             <> Saat ini <strong className="text-foreground">{lic.activeKeys} booth</strong>: {lic.paid} berlangganan{lic.trial > 0 ? `, ${lic.trial} trial` : ""}{lic.unpaid > 0 ? `, ${lic.unpaid} belum berlangganan` : ""}{lic.locked > 0 ? ` — ${lic.locked} terkunci` : ""}.</>
-          )}
-        </p>
-      </div>
+          )}</>} />
 
       <BoothManager
         booths={booths}

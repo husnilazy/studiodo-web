@@ -1,6 +1,7 @@
 "use client";
 
 import { useActionState } from "react";
+import { Spinner } from "@/components/Spinner";
 import { saveDirectoryAction, type DirectoryState } from "@/app/portal/direktori/actions";
 
 const field =
@@ -51,7 +52,7 @@ export function DirectoryForm({ profile }: { profile: DirectoryProfile }) {
       </label>
       {state.error && <p role="alert" className="rounded-2xl bg-[#ffe3e3] px-4 py-3 text-sm text-[#a12626]">{state.error}</p>}
       {state.ok && <p role="status" className="rounded-2xl bg-[#dff7ec] px-4 py-3 text-sm text-[#0f6b45]">Tersimpan. Perubahan tampil di direktori dalam beberapa menit.</p>}
-      <button type="submit" disabled={pending} className="btn btn-primary py-4 text-base disabled:opacity-60">{pending ? "Menyimpan…" : "Simpan"}</button>
+      <button type="submit" disabled={pending} className="btn btn-primary py-4 text-base disabled:opacity-60">{pending ? <><Spinner />Menyimpan…</> : "Simpan"}</button>
     </form>
   );
 }

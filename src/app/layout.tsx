@@ -4,6 +4,7 @@ import "./globals.css";
 import { SITE_NAME, SITE_URL } from "@/lib/site";
 import { assetUrl, getSite } from "@/lib/content";
 import { MotionEffects } from "@/components/MotionEffects";
+import { NavProgress } from "@/components/NavProgress";
 
 const jakarta = Plus_Jakarta_Sans({
   variable: "--font-jakarta",
@@ -39,8 +40,8 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 // Runs before first paint so a dark-mode visitor never sees a flash of the light theme.
-// Mirrors ThemeToggle: a stored "light"/"dark" wins, otherwise follow the OS preference.
-const THEME_INIT = `(function(){try{var m=localStorage.getItem('studiodo-theme');var d=m==='dark'||(m!=='light'&&window.matchMedia('(prefers-color-scheme: dark)').matches);document.documentElement.dataset.theme=d?'dark':'light';}catch(e){}document.documentElement.classList.add('js');
+// Mirrors ThemeToggle: light is the default; "dark" or "system" (follow the OS) only when the visitor chose it.
+const THEME_INIT = `(function(){try{var m=localStorage.getItem('studiodo-theme');var d=m==='dark'||(m==='system'&&window.matchMedia('(prefers-color-scheme: dark)').matches);document.documentElement.dataset.theme=d?'dark':'light';}catch(e){}document.documentElement.classList.add('js');
 // Safety net: if hydration is slow or fails, above-the-fold content that .js hid would stay invisible. After 1.5s anything already on screen is shown.
 setTimeout(function(){try{document.querySelectorAll('[data-reveal]').forEach(function(e){if(e.getBoundingClientRect().top<innerHeight)e.classList.add('in')})}catch(e){}},1500);})();`;
 
@@ -58,6 +59,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         </a>
         {children}
         <MotionEffects />
+        <NavProgress />
       </body>
     </html>
   );

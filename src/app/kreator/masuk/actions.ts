@@ -1,6 +1,7 @@
 "use server";
 
 import { cookies } from "next/headers";
+import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { API_URL } from "@/lib/api";
 import { CREATOR_COOKIE, CREATOR_MAX_AGE, getCreatorToken } from "@/lib/creator";
@@ -84,4 +85,55 @@ export async function creatorPasswordAction(_prev: PasswordState, formData: Form
   const body = (await res.json().catch(() => ({}))) as { error?: string };
   if (!res.ok) return { error: body.error ?? "Gagal mengganti password.", ok: false };
   return { error: null, ok: true };
+}
+
+async function creatorApi(method: "POST" | "PATCH" | "DELETE", path: string, body?: unknown): Promise<{ ok: true; data: unknown } | { ok: false; error: string }> {
+  const token = await getCreatorToken();
+  if (!token) redirect("/kreator/masuk?sesi=habis");
+  let res: Response;
+  try {
+    res = await fetch(`${API_URL}/api/creator${path}`, {
+      method,
+      headers: { Authorization: `Bearer ${token}`, ...(body !== undefined ? { "Content-Type": "application/json" } : {}) },
+      body: body !== undefined ? JSON.stringify(body) : undefined,
+      cache: "no-store",
+    });
+  } catch {
+    return { ok: false, error: "Tidak dapat terhubung ke server. Coba lagi." };
+  }
+  if (res.status === 401) redirect("/kreator/masuk?sesi=habis");
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) return { ok: false, error: (data as { error?: string }).error ?? `Permintaan gagal (HTTP ${res.status})` };
+  return { ok: true, data };
+}
+
+export type ActionResult = { ok: boolean; error?: string };
+
+export async function duplicateTemplateAction(id: string): Promise<ActionResult> {
+  const r = await creatorApi("POST", `/templates/${encodeURIComponent(id)}/duplicate`);
+  if (!r.ok) return r;
+  revalidatePath("/kreator/portal");
+  return { ok: true };
+}
+
+export async function deleteTemplateAction(id: string): Promise<ActionResult> {
+  const r = await creatorApi("DELETE", `/templates/${encodeURIComponent(id)}`);
+  if (!r.ok) return r;
+  revalidatePath("/kreator/portal");
+  return { ok: true };
+}
+
+export type ProfileState = { error: string | null; ok: boolean };
+
+export async function updateCreatorProfileAction(_prev: ProfileState, formData: FormData): Promise<ProfileState> {
+  const get = (k: string) => String(formData.get(k) ?? "");
+  const r = await creatorApi("PATCH", "/me", { name: get("name"), bio: get("bio"), whatsapp: get("whatsapp"), instagramHandle: get("instagramHandle"), website: get("website") });
+  if (!r.ok) return { error: r.error, ok: false };
+  revalidatePath("/kreator/portal/akun");
+  return { error: null, ok: true };
+}
+
+export async function saveCreatorEmailPrefsAction(patch: Record<string, boolean>): Promise<{ ok: boolean; error?: string; prefs?: Record<string, boolean> }> {
+  const r = await creatorApi("PATCH", "/email-preferences", patch);
+  return r.ok ? { ok: true, prefs: (r.data as { prefs: Record<string, boolean> }).prefs } : { ok: false, error: r.error };
 }

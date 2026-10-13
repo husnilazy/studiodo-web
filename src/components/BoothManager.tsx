@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState, useTransition } from "react";
+import { Spinner } from "@/components/Spinner";
 import type { PublicPlan } from "@/lib/api";
 import { formatRupiah, formatDate, formatDateTime } from "@/lib/format";
 import { planOptions, pickInterval, type Interval } from "@/lib/pricing";
@@ -173,13 +174,21 @@ export function BoothManager({
     });
   };
 
+  const [tab, setTab] = useState<"booth" | "langganan">("booth");
   const sorted = [...booths].sort((a, b) => Number(b.online) - Number(a.online) || new Date(b.lastUsedAt ?? 0).getTime() - new Date(a.lastUsedAt ?? 0).getTime());
 
   return (
-    <div className="flex flex-col gap-8">
-      <section className="flex flex-col gap-4">
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          <h2 className="font-display text-2xl tracking-tight">Booth Anda ({booths.length})</h2>
+    <div className="fit-page flex-1">
+      <div role="tablist" aria-label="Bagian" className="flex w-fit gap-1 rounded-full bg-[var(--card)] p-1 ring-1 ring-[var(--card-edge)]">
+        {([["booth", `Booth (${booths.length})`], ["langganan", selected.length > 0 ? `Langganan & bayar · ${selected.length} dipilih` : "Langganan & bayar"]] as const).map(([id, label]) => (
+          <button key={id} type="button" role="tab" aria-selected={tab === id} onClick={() => setTab(id)} className={`rounded-full px-5 py-2 text-[13.5px] font-semibold transition ${tab === id ? "bg-[var(--ink)] text-white shadow-sm" : "text-muted hover:text-foreground"}`}>{label}</button>
+        ))}
+      </div>
+
+      {tab === "booth" && (
+      <section className="glass fit-panel">
+        <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[var(--card-edge)] px-5 py-4">
+          <h2 className="font-display text-lg tracking-tight">Booth Anda ({booths.length})</h2>
           <form className="flex items-center gap-2" onSubmit={(e) => {
             e.preventDefault();
             setCreateError(null);
@@ -189,12 +198,13 @@ export function BoothManager({
             });
           }}>
             <input value={newLabel} onChange={(e) => setNewLabel(e.target.value)} maxLength={80} placeholder="Nama booth baru (opsional)" className={`${field} !py-2.5 w-56`} aria-label="Nama booth baru" />
-            <button type="submit" disabled={createPending} className={smallBtn}>{createPending ? "Membuat…" : "+ Buat key booth"}</button>
+            <button type="submit" disabled={createPending} className={smallBtn}>{createPending ? <><Spinner />Membuat…</> : "+ Buat key booth"}</button>
           </form>
         </div>
+        <div className="fit-scroll dash-scroll flex flex-col gap-4 p-4 md:p-5">
         {createError && <p role="alert" className="rounded-2xl bg-[#ffe3e3] px-4 py-3 text-sm text-[#a12626]">{createError}</p>}
         {createdKey && (
-          <div className="glass p-5">
+          <div className="rounded-[20px] bg-[var(--soft)] p-5">
             <p className="font-semibold">Key booth baru dibuat</p>
             <p className="mt-1 text-[13px] text-muted">Tempel key ini di aplikasi STUDIODO pada komputer booth. Booth baru terkunci sampai Anda berlangganan di bawah. Key bisa dilihat lagi kapan saja lewat tombol &ldquo;Lihat key&rdquo;.</p>
             <CopyKey value={createdKey} />
@@ -208,9 +218,19 @@ export function BoothManager({
             {sorted.map((b) => <BoothCard key={b.id} booth={b} selected={selected.includes(b.id)} onToggle={() => toggle(b.id)} />)}
           </ul>
         )}
+        </div>
+        {selected.length > 0 && (
+          <div className="flex items-center justify-between gap-3 border-t border-[var(--card-edge)] px-5 py-3">
+            <span className="text-[13.5px] text-muted">{selected.length} booth dipilih untuk diperpanjang</span>
+            <button type="button" onClick={() => setTab("langganan")} className="btn btn-primary px-5 py-2.5 text-[13.5px]">Lanjut ke pembayaran</button>
+          </div>
+        )}
       </section>
+      )}
 
-      <section className="glass flex flex-col gap-6 p-8">
+      {tab === "langganan" && (
+      <section className="glass fit-panel">
+        <div className="fit-scroll dash-scroll flex flex-col gap-6 p-6 md:p-8">
         <div>
           <h2 className="font-display text-2xl tracking-tight">Langganan</h2>
           <p className="mt-1 text-[15px] text-muted">Satu langganan untuk satu booth (satu key, satu komputer). Berlangganan banyak booth sekaligus — makin banyak, makin hemat.</p>
@@ -315,18 +335,20 @@ export function BoothManager({
                 ) : quoteError ? (
                   <p role="alert" className="text-[15px] text-[#ffb4b4]">{quoteError}</p>
                 ) : (
-                  <p className="text-[15px] opacity-80">{quoting ? "Menghitung…" : "—"}</p>
+                  <p className="text-[15px] opacity-80">{quoting ? <><Spinner />Menghitung…</> : "—"}</p>
                 )}
                 {payError && <p role="alert" className="rounded-xl bg-[#ffe3e3] px-3 py-2 text-sm text-[#a12626]">{payError}</p>}
                 <button type="button" disabled={!canPay || paying || !shownQuote || quoting} onClick={pay} className="btn mt-1 bg-white py-[15px] text-center text-[#0b1020] disabled:opacity-50">
-                  {paying ? "Mengalihkan…" : canPay ? "Bayar sekarang" : "Pembayaran online belum aktif"}
+                  {paying ? <><Spinner />Mengalihkan…</> : canPay ? "Bayar sekarang" : "Pembayaran online belum aktif"}
                 </button>
                 <p className="text-[12px] opacity-60">Masa aktif ditambahkan ke tiap booth begitu pembayaran terkonfirmasi (biasanya beberapa menit). Booth yang masih aktif tidak kehilangan sisa harinya.</p>
               </aside>
             </div>
           </>
         )}
+        </div>
       </section>
+      )}
     </div>
   );
 }

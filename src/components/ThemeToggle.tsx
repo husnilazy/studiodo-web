@@ -4,7 +4,7 @@ import { useEffect, useSyncExternalStore } from "react";
 
 type Mode = "system" | "light" | "dark";
 const KEY = "studiodo-theme";
-const ORDER: Mode[] = ["system", "light", "dark"];
+const ORDER: Mode[] = ["light", "dark", "system"];
 const LABEL: Record<Mode, string> = { system: "Tema: ikuti sistem", light: "Tema: terang", dark: "Tema: gelap" };
 
 function resolve(mode: Mode): "light" | "dark" {
@@ -19,9 +19,10 @@ function apply(mode: Mode) {
 function read(): Mode {
   try {
     const v = localStorage.getItem(KEY);
-    return v === "light" || v === "dark" ? v : "system";
+    // Light is the default look; following the OS is an explicit choice.
+    return v === "light" || v === "dark" || v === "system" ? v : "light";
   } catch {
-    return "system"; // storage can throw in private/locked-down contexts — just follow the OS
+    return "light"; // storage can throw in private/locked-down contexts
   }
 }
 
@@ -46,10 +47,10 @@ const ICONS: Record<Mode, string> = {
   dark: "M20 14.5A8 8 0 0 1 9.5 4 8 8 0 1 0 20 14.5z",
 };
 
-/** Cycles system → light → dark. The initial theme is set before paint by the inline script in layout.tsx. */
+/** Cycles light → dark → system. The initial theme is set before paint by the inline script in layout.tsx. */
 export function ThemeToggle({ className = "" }: { className?: string }) {
-  // Server render and first client render both see "system", so hydration matches; the real value follows right after.
-  const mode = useSyncExternalStore(subscribe, read, () => "system" as Mode);
+  // Server render and first client render both see "light", so hydration matches; the real value follows right after.
+  const mode = useSyncExternalStore(subscribe, read, () => "light" as Mode);
 
   // While following the OS, react to it changing (e.g. scheduled dark mode at sunset).
   useEffect(() => {
@@ -63,8 +64,7 @@ export function ThemeToggle({ className = "" }: { className?: string }) {
   const next = () => {
     const nextMode = ORDER[(ORDER.indexOf(mode) + 1) % ORDER.length];
     try {
-      if (nextMode === "system") localStorage.removeItem(KEY);
-      else localStorage.setItem(KEY, nextMode);
+      localStorage.setItem(KEY, nextMode);
     } catch {
       // not persisted — still applied for this visit
     }

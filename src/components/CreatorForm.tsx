@@ -2,6 +2,7 @@
 
 import { useState, type FormEvent } from "react";
 import { submitCreatorApplication } from "@/lib/api";
+import { Spinner } from "@/components/Spinner";
 
 const field =
   "w-full rounded-2xl border border-foreground/10 bg-panel/70 px-4 py-3.5 text-[15px] outline-none transition focus:border-accent focus:ring-2 focus:ring-accent/25";
@@ -30,7 +31,8 @@ export function CreatorForm() {
 
   if (status === "done") {
     return (
-      <div className="glass flex flex-col items-start gap-3 p-10" role="status">
+      <div className="glass flex flex-col items-start gap-4 p-10" role="status">
+        <span className="pop-in grid h-14 w-14 place-items-center rounded-full bg-[#dff7ec] text-[#0f6b45]"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" className="h-7 w-7" aria-hidden="true"><path className="check-draw" d="M5 12.5l4.5 4.5L19 7.5" /></svg></span>
         <h2 className="font-display text-3xl tracking-tight">Pendaftaran terkirim</h2>
         <p className="text-[15px] leading-relaxed text-muted">Terima kasih! Tim kami akan melihat portofolio Anda dan menghubungi lewat email atau WhatsApp bila cocok.</p>
       </div>
@@ -38,7 +40,7 @@ export function CreatorForm() {
   }
 
   return (
-    <form onSubmit={onSubmit} className="glass grid gap-5 p-8 md:p-10">
+    <form onSubmit={onSubmit} aria-busy={status === "sending"} className={`glass grid gap-5 p-8 md:p-10 ${status === "sending" ? "form-busy" : ""}`}>
       <div className="grid gap-5 md:grid-cols-2">
         <label className="grid gap-2 text-sm font-medium">Nama / nama studio<input name="name" required maxLength={100} className={field} autoComplete="name" /></label>
         <label className="grid gap-2 text-sm font-medium">Email<input name="email" type="email" required className={field} autoComplete="email" /></label>
@@ -51,7 +53,7 @@ export function CreatorForm() {
         <label>Perusahaan<input name="company" tabIndex={-1} autoComplete="off" /></label>
       </div>
       {error && <p role="alert" className="rounded-2xl bg-[#ffe3e3] px-4 py-3 text-sm text-[#a12626]">{error}</p>}
-      <button type="submit" disabled={status === "sending"} className="btn btn-primary py-4 text-base disabled:opacity-60">{status === "sending" ? "Mengirim…" : "Kirim Pendaftaran"}</button>
+      <button type="submit" disabled={status === "sending"} className="btn btn-primary py-4 text-base disabled:opacity-60">{status === "sending" ? <><Spinner />Mengirim…</> : "Kirim Pendaftaran"}</button>
     </form>
   );
 }

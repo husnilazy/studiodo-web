@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
+import { Spinner } from "@/components/Spinner";
 import type { VoucherRow } from "@/lib/portalTypes";
 import { formatDate, formatRupiah } from "@/lib/format";
 import { bulkVouchersAction, createVoucherAction, deleteVoucherAction, setVoucherActiveAction, type VoucherInput } from "@/app/portal/voucher/actions";
@@ -71,14 +72,16 @@ export function VoucherManager({ vouchers, report }: { vouchers: VoucherRow[]; r
   };
 
   return (
-    <div className="flex flex-col gap-6">
-      <div className="grid gap-4 sm:grid-cols-3">
-        <div className="glass p-6"><div className="text-sm text-muted">Voucher dipakai</div><div className="mt-2 font-display text-3xl tracking-tight">{report.totalRedemptions}</div></div>
-        <div className="glass p-6"><div className="text-sm text-muted">Total diskon diberikan</div><div className="mt-2 font-display text-3xl tracking-tight">{formatRupiah(report.totalDiscountGiven)}</div></div>
-        <div className="glass p-6"><div className="text-sm text-muted">Pendapatan setelah diskon</div><div className="mt-2 font-display text-3xl tracking-tight">{formatRupiah(report.totalRevenueAfterDiscount)}</div></div>
+    <div className="fit-page flex-1">
+      <div className="grid gap-3 sm:grid-cols-3">
+        <div className="glass flex items-baseline justify-between gap-3 rounded-[22px] px-5 py-4"><div className="text-[13px] text-muted">Voucher dipakai</div><div className="font-display text-[22px] tracking-tight">{report.totalRedemptions}</div></div>
+        <div className="glass flex items-baseline justify-between gap-3 rounded-[22px] px-5 py-4"><div className="text-[13px] text-muted">Diskon diberikan</div><div className="font-display text-[22px] tracking-tight">{formatRupiah(report.totalDiscountGiven)}</div></div>
+        <div className="glass-dark flex items-baseline justify-between gap-3 rounded-[22px] px-5 py-4"><div className="text-[13px] text-white/65">Pendapatan setelah diskon</div><div className="font-display text-[22px] tracking-tight">{formatRupiah(report.totalRevenueAfterDiscount)}</div></div>
       </div>
 
-      <section className="glass p-7">
+      <div className="grid min-h-0 flex-1 gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
+      <section className="glass fit-panel">
+        <div className="fit-scroll dash-scroll p-6">
         <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
           <h2 className="font-display text-xl tracking-tight">Buat voucher</h2>
           <div role="radiogroup" aria-label="Jenis pembuatan" className="inline-flex rounded-full border border-foreground/10 bg-foreground/[0.04] p-1 text-[13px] font-semibold">
@@ -87,9 +90,9 @@ export function VoucherManager({ vouchers, report }: { vouchers: VoucherRow[]; r
             ))}
           </div>
         </div>
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid gap-4 sm:grid-cols-2">
           {mode === "single" ? (
-            <label className="grid gap-2 text-sm font-medium lg:col-span-2">Kode
+            <label className="grid gap-2 text-sm font-medium sm:col-span-2">Kode
               <input value={d.code} onChange={(e) => set("code", e.target.value.toUpperCase())} maxLength={40} className={field} placeholder="mis. HEMAT20" />
             </label>
           ) : (
@@ -127,17 +130,21 @@ export function VoucherManager({ vouchers, report }: { vouchers: VoucherRow[]; r
             <button type="button" className={`${smallBtn} mt-2`} onClick={() => { void navigator.clipboard?.writeText(generated.join("\n")); setCopied(true); setTimeout(() => setCopied(false), 1500); }}>{copied ? "Tersalin!" : "Salin semua"}</button>
           </div>
         )}
-        <button type="button" disabled={pending || (mode === "single" && !d.code.trim())} onClick={submit} className="btn btn-primary mt-5 px-7 py-3 disabled:opacity-60">{pending ? "Membuat…" : mode === "single" ? "Buat voucher" : "Buat kode"}</button>
+        <button type="button" disabled={pending || (mode === "single" && !d.code.trim())} onClick={submit} className="btn btn-primary mt-5 px-7 py-3 disabled:opacity-60">{pending ? <><Spinner />Membuat…</> : mode === "single" ? "Buat voucher" : "Buat kode"}</button>
+        </div>
       </section>
 
-      <section className="glass p-7">
-        <h2 className="mb-2 font-display text-xl tracking-tight">Semua voucher ({vouchers.length})</h2>
-        {vouchers.length === 0 ? <p className="text-[15px] text-muted">Belum ada voucher.</p> : (
-          <ul className="divide-y divide-foreground/[0.08]">
+      <section className="glass fit-panel">
+        <h2 className="border-b border-[var(--card-edge)] px-6 py-4 font-display text-lg tracking-tight">Semua voucher ({vouchers.length})</h2>
+        <div className="fit-scroll dash-scroll px-6">
+        {vouchers.length === 0 ? <p className="py-6 text-[15px] text-muted">Belum ada voucher.</p> : (
+          <ul className="divide-y divide-[var(--card-edge)]">
             {[...vouchers].reverse().map((v) => <VoucherRowItem key={`${v.id}-${v.active}`} v={v} />)}
           </ul>
         )}
+        </div>
       </section>
+      </div>
     </div>
   );
 }

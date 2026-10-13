@@ -1,6 +1,7 @@
 "use client";
 
 import { useActionState } from "react";
+import { Spinner } from "@/components/Spinner";
 import { changePasswordAction, type PasswordState } from "@/app/portal/akun/actions";
 
 const field =
@@ -25,7 +26,7 @@ export function PasswordForm({ submit = changePasswordAction }: { submit?: (prev
       {state.error && <p role="alert" className="rounded-2xl bg-[#ffe3e3] px-4 py-3 text-sm text-[#a12626]">{state.error}</p>}
       {state.ok && <p role="status" className="rounded-2xl bg-[#dff7ec] px-4 py-3 text-sm text-[#0f6b45]">Password berhasil diganti. Kiosk yang sudah terpasang tidak terpengaruh.</p>}
       <button type="submit" disabled={pending} className="btn btn-primary py-4 text-base disabled:opacity-60">
-        {pending ? "Menyimpan…" : "Ganti Password"}
+        {pending ? <><Spinner />Menyimpan…</> : "Ganti Password"}
       </button>
     </form>
   );

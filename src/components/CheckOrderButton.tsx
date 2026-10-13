@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
+import { Spinner } from "@/components/Spinner";
 import { checkOrderAction } from "@/app/portal/booth/actions";
 
 /** "I paid but nothing changed": asks the gateway directly instead of waiting for a notification that may have been lost. */
@@ -18,7 +19,7 @@ export function CheckOrderButton({ orderId }: { orderId: string }) {
           setMessage(!r.ok ? r.error : r.data.result === "paid" ? "Pembayaran ditemukan — langganan sudah aktif." : r.data.result === "waiting" ? "Belum ada pembayaran yang masuk." : `Status: ${r.data.status}`);
         })}
       >
-        {pending ? "Mengecek…" : "Cek status pembayaran"}
+        {pending ? <><Spinner />Mengecek…</> : "Cek status pembayaran"}
       </button>
       {message && <p role="status" className="max-w-[260px] text-right text-[12px] text-muted">{message}</p>}
     </div>

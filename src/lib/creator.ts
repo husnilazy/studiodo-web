@@ -15,7 +15,7 @@ export async function getCreatorToken(): Promise<string | null> {
 export type { CreatorSlot, CreatorTemplate } from "./creatorTypes";
 export { CATEGORIES, PRESETS } from "./creatorTypes";
 
-export type CreatorMe = { name: string; email: string; whatsapp: string | null };
+export type CreatorMe = { id: string; name: string; email: string; whatsapp: string | null; bio?: string | null; instagramHandle?: string | null; website?: string | null };
 
 export async function creatorGet<T>(path: string): Promise<T | null> {
   const token = await getCreatorToken();

@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useState, useTransition } from "react";
+import { Spinner } from "@/components/Spinner";
 import { resizeImageToDataUrl } from "@/lib/imageResize";
 import type { PrintingConfig, TenantConfig } from "@/lib/portalTypes";
 import { saveKioskSettingsAction, saveLogoAction, savePrintingAction, saveProfileAction } from "@/app/portal/pengaturan/actions";
@@ -108,7 +109,7 @@ export function KioskSettingsForm({ tenant, printing }: { tenant: TenantConfig; 
           <Text label="Alamat" value={profile.address} onChange={setP("address")} max={200} />
         </div>
         <Feedback msg={profileMsg} />
-        <div><button type="button" disabled={pending} className="btn btn-primary px-7 py-3 disabled:opacity-60" onClick={() => { setProfileMsg(null); start(async () => { const r = await saveProfileAction(profile); setProfileMsg(r.ok ? { tone: "ok", text: "Profil tersimpan." } : { tone: "error", text: r.error }); }); }}>{pending ? "Menyimpan…" : "Simpan profil"}</button></div>
+        <div><button type="button" disabled={pending} className="btn btn-primary px-7 py-3 disabled:opacity-60" onClick={() => { setProfileMsg(null); start(async () => { const r = await saveProfileAction(profile); setProfileMsg(r.ok ? { tone: "ok", text: "Profil tersimpan." } : { tone: "error", text: r.error }); }); }}>{pending ? <><Spinner />Menyimpan…</> : "Simpan profil"}</button></div>
       </Section>
 
       <Section title="Tampilan & teks kiosk" hint="Warna aksen dan judul di tiap layar. Kosongkan untuk memakai teks bawaan.">
@@ -152,7 +153,7 @@ export function KioskSettingsForm({ tenant, printing }: { tenant: TenantConfig; 
           </div>
         )}
         <Feedback msg={kioskMsg} />
-        <div><button type="button" disabled={pending} className="btn btn-primary px-7 py-3 disabled:opacity-60" onClick={() => { setKioskMsg(null); start(async () => { const r = await saveKioskSettingsAction(kiosk); setKioskMsg(r.ok ? { tone: "ok", text: "Pengaturan kiosk tersimpan. Kiosk memuatnya saat berikutnya tersambung." } : { tone: "error", text: r.error }); }); }}>{pending ? "Menyimpan…" : "Simpan tampilan, sesi & event"}</button></div>
+        <div><button type="button" disabled={pending} className="btn btn-primary px-7 py-3 disabled:opacity-60" onClick={() => { setKioskMsg(null); start(async () => { const r = await saveKioskSettingsAction(kiosk); setKioskMsg(r.ok ? { tone: "ok", text: "Pengaturan kiosk tersimpan. Kiosk memuatnya saat berikutnya tersambung." } : { tone: "error", text: r.error }); }); }}>{pending ? <><Spinner />Menyimpan…</> : "Simpan tampilan, sesi & event"}</button></div>
       </Section>
 
       <Section title="Cetak tambahan" hint="Pelanggan bisa membeli salinan cetak ekstra setelah sesi.">
@@ -163,7 +164,7 @@ export function KioskSettingsForm({ tenant, printing }: { tenant: TenantConfig; 
           <label className="grid gap-2 text-sm font-medium">Maks. cetak tambahan<input type="number" min={1} max={20} value={print.max} onChange={(e) => setPrint((c) => ({ ...c, max: e.target.value }))} className={field} /></label>
         </div>
         <Feedback msg={printMsg} />
-        <div><button type="button" disabled={pending} className="btn btn-primary px-7 py-3 disabled:opacity-60" onClick={() => { setPrintMsg(null); start(async () => { const r = await savePrintingAction({ enabled: print.enabled, label: print.label, price: Number(print.price), max: Number(print.max) }); setPrintMsg(r.ok ? { tone: "ok", text: "Tersimpan." } : { tone: "error", text: r.error }); }); }}>{pending ? "Menyimpan…" : "Simpan cetak tambahan"}</button></div>
+        <div><button type="button" disabled={pending} className="btn btn-primary px-7 py-3 disabled:opacity-60" onClick={() => { setPrintMsg(null); start(async () => { const r = await savePrintingAction({ enabled: print.enabled, label: print.label, price: Number(print.price), max: Number(print.max) }); setPrintMsg(r.ok ? { tone: "ok", text: "Tersimpan." } : { tone: "error", text: r.error }); }); }}>{pending ? <><Spinner />Menyimpan…</> : "Simpan cetak tambahan"}</button></div>
       </Section>
     </div>
   );

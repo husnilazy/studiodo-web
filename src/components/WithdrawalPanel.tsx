@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
+import { Spinner } from "@/components/Spinner";
 import type { WithdrawalsData } from "@/lib/portalTypes";
 import { formatDate, formatRupiah } from "@/lib/format";
 import { cancelWithdrawalAction, requestWithdrawalAction } from "@/app/portal/saldo/actions";
@@ -68,7 +69,7 @@ export function WithdrawalPanel({ data }: { data: WithdrawalsData }) {
           <label className="grid gap-2 text-sm font-medium sm:col-span-2">Catatan (opsional)<input value={note} onChange={(e) => setNote(e.target.value)} maxLength={300} className={field} /></label>
         </div>
         {message && <p role={message.tone === "error" ? "alert" : "status"} className={`rounded-2xl px-4 py-3 text-sm ${message.tone === "ok" ? "bg-[#dff7ec] text-[#0f6b45]" : "bg-[#ffe3e3] text-[#a12626]"}`}>{message.text}</p>}
-        <div><button type="button" disabled={pending || !amount || !bank || !number || !holder} onClick={submit} className="btn btn-primary px-7 py-3 disabled:opacity-60">{pending ? "Mengirim…" : "Ajukan penarikan"}</button></div>
+        <div><button type="button" disabled={pending || !amount || !bank || !number || !holder} onClick={submit} className="btn btn-primary px-7 py-3 disabled:opacity-60">{pending ? <><Spinner />Mengirim…</> : "Ajukan penarikan"}</button></div>
       </section>
 
       <section className="glass p-7">
@@ -100,5 +101,5 @@ export function WithdrawalPanel({ data }: { data: WithdrawalsData }) {
 
 function CancelButton({ id }: { id: string }) {
   const [pending, start] = useTransition();
-  return <button type="button" disabled={pending} className={smallBtn} onClick={() => window.confirm("Batalkan permintaan penarikan ini?") && start(async () => { await cancelWithdrawalAction(id); })}>{pending ? "…" : "Batalkan"}</button>;
+  return <button type="button" disabled={pending} className={smallBtn} onClick={() => window.confirm("Batalkan permintaan penarikan ini?") && start(async () => { await cancelWithdrawalAction(id); })}>{pending ? <><Spinner />…</> : "Batalkan"}</button>;
 }
