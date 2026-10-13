@@ -18,6 +18,7 @@ const groups: NavGroup[] = [
     title: "Ringkasan",
     items: [
       { href: "/portal", label: "Dashboard", icon: "home" },
+      { href: "/portal/kasir", label: "Kasir (POS)", icon: "receipt", hint: "pos kasir antrian shift refund struk" },
       { href: "/portal/monitor", label: "Monitor booth", icon: "activity", hint: "live online antrian" },
       { href: "/portal/pelanggan", label: "Pelanggan (CRM)", icon: "users", hint: "customer whatsapp database" },
       { href: "/portal/riwayat", label: "Riwayat transaksi", icon: "receipt", hint: "sesi pembayaran csv" },
