@@ -35,7 +35,7 @@ export function Hero({ data, stats }: { data: HeroData; stats: PlatformStats | n
             {data.primaryCta}
             <Icon name="arrow" className="h-4 w-4 transition-transform group-hover:translate-x-1" />
           </Link>
-          <Link href="/kontak" className="btn glass rounded-full! px-7 py-4 text-base">
+          <Link href="/#alur" className="btn glass rounded-full! px-7 py-4 text-base">
             {data.secondaryCta}
           </Link>
         </div>

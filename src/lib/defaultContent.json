@@ -19,12 +19,12 @@
         "boothLabel": "Booth aktif hari ini",
         "boothValue": "",
         "galleryLabel": "Galeri siap dibagikan",
-        "badge": "Platform photobooth untuk pemilik booth",
-        "titleLine1": "Kelola booth foto,",
-        "titleLine2": "tanpa ribet.",
-        "subtitle": "QRIS otomatis, template dari kreator, galeri cloud, dan dashboard real-time untuk semua booth Anda.",
+        "badge": "Photobooth self-service: QRIS, galeri cloud, dashboard",
+        "titleLine1": "Booth jalan sendiri,",
+        "titleLine2": "cuan masuk terus.",
+        "subtitle": "Pelanggan bayar QRIS, foto, cetak, lalu bawa pulang hasilnya, tanpa perlu kasir. Anda cukup pantau omzet semua booth dari satu dashboard.",
         "primaryCta": "Mulai Trial Gratis",
-        "secondaryCta": "Lihat Demo",
+        "secondaryCta": "Lihat Cara Kerjanya",
         "bullets": [
           {
             "text": "Tanpa kartu kredit"
@@ -33,7 +33,7 @@
             "text": "Setup 15 menit"
           },
           {
-            "text": "Windows 10/11"
+            "text": "Trial gratis 7 hari"
           }
         ]
       }
@@ -49,37 +49,37 @@
       "key": "features",
       "data": {
         "eyebrow": "Fitur",
-        "title": "Semua yang booth Anda butuhkan, dalam satu tempat.",
+        "title": "Dulu butuh banyak orang. Sekarang cukup satu dashboard.",
         "items": [
           {
             "icon": "qr",
-            "title": "QRIS otomatis",
-            "body": "Pelanggan bayar langsung dari layar kiosk, dana masuk otomatis."
+            "title": "Bayar sendiri, lunas sendiri",
+            "body": "QRIS muncul di layar kiosk. Begitu lunas, sesi foto langsung jalan, tanpa kasir dan tanpa cek mutasi."
           },
           {
             "icon": "ticket",
-            "title": "Voucher promo",
-            "body": "Buat kode diskon dan pantau performanya per event."
+            "title": "Promo tanpa pusing",
+            "body": "Buat kode voucher per event atau jam tertentu, lalu lihat berapa kali dipakai."
           },
           {
             "icon": "layout",
-            "title": "Screen Builder",
-            "body": "Atur tampilan kiosk sesuai brand Anda tanpa coding."
+            "title": "Kiosk rasa brand Anda",
+            "body": "Atur warna, layar, dan alur kiosk lewat Screen Builder. Tanpa coding, tanpa panggil teknisi."
           },
           {
             "icon": "camera",
-            "title": "Kontrol kamera live",
-            "body": "ISO, shutter, aperture, dan white balance dari dashboard."
+            "title": "Atur kamera dari mana saja",
+            "body": "ISO, shutter, aperture, dan white balance bisa diubah dari dashboard, tanpa datang ke lokasi."
           },
           {
             "icon": "image",
-            "title": "Foto, GIF, dan video",
-            "body": "Galeri cloud dengan link share dan cetak tambahan."
+            "title": "Sekali sesi, tiga hasil",
+            "body": "Foto, GIF, dan video pendek, lengkap dengan galeri cloud dan cetak tambahan berbayar."
           },
           {
             "icon": "monitor",
-            "title": "Satu akun, banyak kiosk",
-            "body": "Pantau semua lokasi dan update otomatis dari satu dashboard."
+            "title": "Satu akun, semua booth",
+            "body": "Pantau status setiap lokasi dan update aplikasi otomatis dari satu layar."
           }
         ]
       }
@@ -88,27 +88,27 @@
       "key": "howItWorks",
       "data": {
         "eyebrow": "Cara kerja",
-        "title": "Empat langkah, booth Anda jalan.",
+        "title": "Dari daftar sampai booth jalan: sekitar 15 menit.",
         "steps": [
           {
             "icon": "user-plus",
             "title": "Daftar",
-            "body": "Isi form singkat, tim kami aktifkan akun tenant Anda."
+            "body": "Isi form singkat. Tim kami mengaktifkan akun Anda."
           },
           {
             "icon": "download",
             "title": "Install",
-            "body": "Unduh aplikasi Windows, pasangkan dengan kunci kiosk."
+            "body": "Pasang aplikasi di PC Windows, lalu pasangkan dengan kunci kiosk."
           },
           {
             "icon": "sliders",
             "title": "Atur",
-            "body": "Pilih template, paket, harga, dan tampilan kiosk."
+            "body": "Pilih frame, paket, harga, dan tampilan kiosk sesuai selera."
           },
           {
             "icon": "rocket",
             "title": "Jalan",
-            "body": "Terima pembayaran dan pantau omzet dari dashboard."
+            "body": "Pelanggan mulai foto. Anda tinggal pantau omzet dari HP."
           }
         ]
       }
@@ -117,7 +117,7 @@
       "key": "templates",
       "data": {
         "eyebrow": "Marketplace template",
-        "title": "Frame dari kreator, siap pakai di booth Anda.",
+        "title": "Tema event baru? Pasang frame-nya satu klik.",
         "tags": [
           {
             "text": "Semua"
@@ -229,8 +229,8 @@
     {
       "key": "cta",
       "data": {
-        "title": "Siap buka booth berikutnya?",
-        "body": "Coba semua fitur gratis 7 hari. Tanpa kartu kredit.",
+        "title": "Booth Anda bisa mulai cuan hari ini.",
+        "body": "Coba semua fitur gratis 7 hari. Tanpa kartu kredit, tanpa ribet.",
         "primaryCta": "Mulai Trial Gratis",
         "secondaryCta": "Konsultasi via WhatsApp"
       }
