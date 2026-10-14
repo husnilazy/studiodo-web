@@ -13,7 +13,7 @@ const field = "h-11 w-full rounded-2xl border-0 bg-[var(--soft)] px-4 text-[14.5
 const card = "rounded-[22px] bg-[var(--card)] ring-1 ring-[var(--card-edge)]";
 
 type Line = PosItem & { key: string };
-type Tab = "package" | "print" | "product" | "custom";
+type Tab = "package" | "print" | "frame" | "product" | "custom";
 
 export function OpenShiftForm() {
   const router = useRouter();
@@ -49,6 +49,8 @@ export function PosTerminal({ catalog }: { catalog: PosCatalog }) {
   const [tab, setTab] = useState<Tab>("package");
   const [lines, setLines] = useState<Line[]>([]);
   const [discount, setDiscount] = useState("");
+  const [discMode, setDiscMode] = useState<"rp" | "pct">("rp");
+  const [search, setSearch] = useState("");
   const [method, setMethod] = useState<PaymentMethod>("cash");
   const [received, setReceived] = useState("");
   const [name, setName] = useState("");
@@ -60,10 +62,13 @@ export function PosTerminal({ catalog }: { catalog: PosCatalog }) {
   const [pending, start] = useTransition();
 
   const subtotal = lines.reduce((s, l) => s + l.unitPrice * l.qty, 0);
-  const disc = Math.min(subtotal, Number(discount) || 0);
+  const discRaw = discMode === "pct" ? Math.round((subtotal * Math.min(100, Number(discount) || 0)) / 100) : Number(discount) || 0;
+  const disc = Math.min(subtotal, discRaw);
   const total = subtotal - disc;
   const cash = Number(received) || 0;
   const hasBooth = lines.some((l) => l.type === "package" || l.type === "print");
+  const hasFrame = lines.some((l) => l.type === "frame");
+  const hasPackage = lines.some((l) => l.type === "package");
   const quick = useMemo(() => [...new Set([total, ...[20000, 50000, 100000, 200000].filter((v) => v > total)].filter((v) => v > 0))].slice(0, 5), [total]);
 
   if (!catalog.shift) return <OpenShiftForm />;
@@ -78,11 +83,12 @@ export function PosTerminal({ catalog }: { catalog: PosCatalog }) {
     });
   };
   const bump = (key: string, by: number) => setLines((prev) => prev.flatMap((l) => (l.key !== key ? [l] : l.qty + by < 1 ? [] : [{ ...l, qty: Math.min(99, l.qty + by) }])));
-  const reset = () => { setLines([]); setDiscount(""); setReceived(""); setName(""); setWa(""); setError(null); setMethod("cash"); };
+  const reset = () => { setLines([]); setDiscount(""); setDiscMode("rp"); setReceived(""); setName(""); setWa(""); setError(null); setMethod("cash"); };
 
   const pay = () => {
     setError(null);
     if (!lines.length) return setError("Keranjang masih kosong.");
+    if (hasFrame && !hasPackage) return setError("Frame custom harus dibeli bersama paket foto. Tambahkan paket dulu.");
     if (method === "cash" && cash < total) return setError("Uang diterima kurang dari total.");
     start(async () => {
       let ticket: PosTicket | null = null;
@@ -100,8 +106,14 @@ export function PosTerminal({ catalog }: { catalog: PosCatalog }) {
     });
   };
 
-  const tabs: { id: Tab; label: string }[] = [{ id: "package", label: "Paket foto" }, { id: "print", label: "Cetak tambahan" }, { id: "product", label: "Produk" }, { id: "custom", label: "Item bebas" }];
-  const prints = catalog.packages.flatMap((p) => p.prints.map((x) => ({ ...x, pkg: p.name })));
+  const tabs: { id: Tab; label: string }[] = [{ id: "package", label: "Paket foto" }, { id: "print", label: "Cetak tambahan" }, { id: "frame", label: "Frame custom" }, { id: "product", label: "Produk" }, { id: "custom", label: "Item bebas" }];
+  const q = search.trim().toLowerCase();
+  const match = (t: string) => !q || t.toLowerCase().includes(q);
+  const prints = catalog.packages.flatMap((p) => p.prints.map((x) => ({ ...x, pkg: p.name }))).filter((x) => match(x.name) || match(x.pkg));
+  // Add-ons of the packages already in the cart, offered as one-tap chips so the cashier does not have to hunt for them.
+  const cartPkgIds = new Set(lines.filter((l) => l.type === "package").map((l) => l.refId));
+  const suggestions = catalog.packages.filter((p) => cartPkgIds.has(p.id)).flatMap((p) => p.prints.map((x) => ({ ...x, pkg: p.name })))
+    .filter((x) => !lines.some((l) => l.type === "print" && l.refId === x.key));
 
   return (
     <div className="grid min-h-0 gap-4 lg:grid-cols-[1fr_400px]">
@@ -114,19 +126,26 @@ export function PosTerminal({ catalog }: { catalog: PosCatalog }) {
           {tabs.map((t) => <button key={t.id} role="tab" aria-selected={tab === t.id} onClick={() => setTab(t.id)} className={`shrink-0 rounded-full px-4 py-2 text-[13.5px] font-semibold transition ${tab === t.id ? "bg-accent text-white" : "bg-[var(--card)] text-muted ring-1 ring-[var(--card-edge)] hover:text-foreground"}`}>{t.label}</button>)}
         </div>
 
+        {tab !== "custom" && <input className={field} type="search" placeholder="Cari item…" value={search} onChange={(e) => setSearch(e.target.value)} aria-label="Cari item" />}
+
         {tab === "package" && (
-          <Grid empty={catalog.packages.length === 0} hint="Belum ada paket foto aktif. Buat dulu di menu Paket foto.">
-            {catalog.packages.map((p) => <Tile key={p.id} title={p.name} sub={`${p.photoCount} foto`} price={p.price} onClick={() => add({ type: "package", refId: p.id, name: p.name, unitPrice: p.price })} />)}
+          <Grid empty={catalog.packages.length === 0 || !catalog.packages.some((p) => match(p.name))} hint="Belum ada paket foto aktif. Buat dulu di menu Paket foto.">
+            {catalog.packages.filter((p) => match(p.name)).map((p) => <Tile key={p.id} title={p.name} sub={`${p.photoCount} foto${p.prints.length ? ` · ${p.prints.length} add-on` : ""}`} price={p.price} onClick={() => add({ type: "package", refId: p.id, name: p.name, unitPrice: p.price })} />)}
           </Grid>
         )}
         {tab === "print" && (
-          <Grid empty={prints.length === 0} hint="Belum ada opsi cetak tambahan. Tambahkan di pengaturan paket foto.">
-            {prints.map((x) => <Tile key={x.key} title={x.name} sub={x.pkg} price={x.price} onClick={() => add({ type: "print", refId: x.key, name: `${x.name} (${x.pkg})`, unitPrice: x.price })} />)}
+          <Grid empty={prints.length === 0} hint={<>{q ? "Tidak ada add-on yang cocok." : <>Belum ada add-on. Tambahkan di <Link className="font-semibold text-accent" href="/portal/paket">Paket foto</Link> (bagian Add-on saat mengubah paket), mis. Cetak tambahan 4R.</>}</>}>
+            {prints.map((x) => <Tile key={x.key} title={x.name} sub={`Add-on · ${x.pkg}`} price={x.price} onClick={() => add({ type: "print", refId: x.key, name: `${x.name} (${x.pkg})`, unitPrice: x.price })} />)}
+          </Grid>
+        )}
+        {tab === "frame" && (
+          <Grid empty={!(catalog.customFrames ?? []).some((f) => match(f.name) || match(f.customerName ?? ""))} hint={<>Belum ada frame custom. Unggah desain pelanggan di <Link className="font-semibold text-accent" href="/portal/frame/custom">Frame custom</Link>.</>}>
+            {(catalog.customFrames ?? []).filter((f) => match(f.name) || match(f.customerName ?? "")).map((f) => <Tile key={f.id} title={f.name} sub={f.customerName ? `Untuk ${f.customerName}` : "Frame custom"} price={f.price} onClick={() => { if (lines.some((l) => l.type === "frame")) return setError("Satu transaksi hanya untuk satu frame custom."); add({ type: "frame", refId: f.id, name: `Frame custom · ${f.name}`, unitPrice: f.price }); }} />)}
           </Grid>
         )}
         {tab === "product" && (
-          <Grid empty={catalog.products.length === 0} hint={<>Belum ada produk. Tambahkan di <Link className="font-semibold text-accent" href="/portal/kasir/pengaturan">Produk & pengaturan</Link>.</>}>
-            {catalog.products.map((p) => <Tile key={p.id} title={p.name} sub="Produk" price={p.price} onClick={() => add({ type: "product", refId: p.id, name: p.name, unitPrice: p.price })} />)}
+          <Grid empty={catalog.products.length === 0 || !catalog.products.some((p) => match(p.name))} hint={<>Belum ada produk. Tambahkan di <Link className="font-semibold text-accent" href="/portal/kasir/pengaturan">Produk & pengaturan</Link>.</>}>
+            {catalog.products.filter((p) => match(p.name)).map((p) => <Tile key={p.id} title={p.name} sub="Produk" price={p.price} onClick={() => add({ type: "product", refId: p.id, name: p.name, unitPrice: p.price })} />)}
           </Grid>
         )}
         {tab === "custom" && (
@@ -156,6 +175,13 @@ export function PosTerminal({ catalog }: { catalog: PosCatalog }) {
           </ul>
         )}
 
+        {suggestions.length > 0 && (
+          <div className="flex flex-col gap-1.5">
+            <div className="text-[12px] font-semibold uppercase tracking-wider text-muted">Tawarkan add-on</div>
+            <div className="flex flex-wrap gap-1.5">{suggestions.map((x) => <button key={x.key} type="button" onClick={() => add({ type: "print", refId: x.key, name: `${x.name} (${x.pkg})`, unitPrice: x.price })} className="rounded-full bg-accent/10 px-3 py-1.5 text-[12.5px] font-semibold text-accent transition hover:bg-accent/20">+ {x.name} · {formatRupiah(x.price)}</button>)}</div>
+          </div>
+        )}
+
         <div className="grid grid-cols-2 gap-2">
           <input className={field} placeholder="Nama pelanggan" value={name} onChange={(e) => setName(e.target.value)} maxLength={100} />
           <input className={field} placeholder="WhatsApp" inputMode="tel" value={wa} onChange={(e) => setWa(e.target.value)} maxLength={20} />
@@ -164,7 +190,8 @@ export function PosTerminal({ catalog }: { catalog: PosCatalog }) {
 
         <div className="flex flex-col gap-1.5 border-t border-[var(--card-edge)] pt-3 text-[14px]">
           <Row label="Subtotal" value={formatRupiah(subtotal)} />
-          <div className="flex items-center justify-between gap-3"><span className="text-muted">Diskon (Rp)</span><input className="h-9 w-[130px] rounded-full border-0 bg-[var(--soft)] px-3.5 text-right text-[13.5px] outline-none focus:ring-2 focus:ring-accent/40" inputMode="numeric" value={discount} onChange={(e) => setDiscount(e.target.value.replace(/\D/g, ""))} placeholder="0" /></div>
+          {disc > 0 && discMode === "pct" && <Row label={`Potongan ${discount}%`} value={`− ${formatRupiah(disc)}`} />}
+          <div className="flex items-center justify-between gap-3"><span className="flex items-center gap-1.5 text-muted">Diskon<span className="inline-flex overflow-hidden rounded-full bg-[var(--soft)] text-[11.5px] font-semibold">{(["rp", "pct"] as const).map((m) => <button key={m} type="button" onClick={() => { setDiscMode(m); setDiscount(""); }} className={`px-2.5 py-1 ${discMode === m ? "bg-[var(--ink)] text-white" : ""}`}>{m === "rp" ? "Rp" : "%"}</button>)}</span></span><input className="h-9 w-[130px] rounded-full border-0 bg-[var(--soft)] px-3.5 text-right text-[13.5px] outline-none focus:ring-2 focus:ring-accent/40" inputMode="numeric" value={discount} onChange={(e) => setDiscount(e.target.value.replace(/\D/g, "").slice(0, discMode === "pct" ? 3 : 9))} placeholder="0" /></div>
           <div className="flex items-baseline justify-between pt-1"><span className="font-semibold">Total</span><span className="font-display text-[26px] font-semibold tracking-tight tabular-nums">{formatRupiah(total)}</span></div>
         </div>
 
@@ -221,6 +248,7 @@ function SuccessModal({ done, onNew }: { done: { order: PosOrder; ticket: PosTic
             <div className="text-[12px] font-semibold uppercase tracking-widest text-accent">Kode untuk kiosk</div>
             <button type="button" onClick={() => { void navigator.clipboard?.writeText(order.kioskVoucherCode ?? ""); setCopied(true); }} className="mt-1 font-display text-[28px] font-semibold tracking-wider">{order.kioskVoucherCode}</button>
             <div className="mt-1 text-[12px] text-muted">{copied ? "Disalin!" : "Pelanggan memasukkan kode ini di layar pembayaran kiosk (menu voucher)."}</div>
+            {order.items.some((i) => i.type === "frame") && <div className="mt-2 rounded-xl bg-accent/10 px-3 py-2 text-[12.5px] font-semibold text-accent">Voucher ini membuka frame custom pelanggan. Sesi langsung memakai frame itu.</div>}
           </div>
         )}
         {ticket && <div className="mt-3 rounded-2xl bg-[var(--soft)] p-3.5 text-[14px]">Nomor antrian <b className="ml-1 font-display text-[22px] tracking-tight">{ticket.label}</b></div>}

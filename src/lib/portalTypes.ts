@@ -90,6 +90,7 @@ export type PackageRow = {
   hasGif: boolean;
   hasVideo: boolean;
   hasStopMotion: boolean;
+  extraPrints?: { id: string; name: string; price: number }[];
   active: boolean;
   sortOrder: number;
   description: string | null;
@@ -122,6 +123,8 @@ export type FrameRow = {
   slotCount: number;
   imageUrl: string | null;
   stopMotion: boolean;
+  price?: string | null;
+  customerName?: string | null;
 };
 
 export type WithdrawalsData = {

@@ -11,11 +11,12 @@ const field =
   "w-full rounded-2xl border border-foreground/10 bg-panel/70 px-4 py-3 text-[15px] outline-none transition focus:border-accent focus:ring-2 focus:ring-accent/25";
 const smallBtn = "btn glass rounded-full! px-3.5 py-2 text-[13px] text-muted transition hover:text-foreground disabled:opacity-50";
 
-type Draft = { name: string; price: string; photoCount: string; hasGif: boolean; hasVideo: boolean; hasStopMotion: boolean; description: string; thumbnailUrl: string | null | undefined };
-const EMPTY: Draft = { name: "", price: "50000", photoCount: "3", hasGif: false, hasVideo: false, hasStopMotion: false, description: "", thumbnailUrl: undefined };
+type Draft = { name: string; price: string; photoCount: string; hasGif: boolean; hasVideo: boolean; hasStopMotion: boolean; description: string; extraPrints: { id: string; name: string; price: string }[]; thumbnailUrl: string | null | undefined };
+const EMPTY: Draft = { name: "", price: "50000", photoCount: "3", hasGif: false, hasVideo: false, hasStopMotion: false, description: "", extraPrints: [], thumbnailUrl: undefined };
+const PRESET_ADDONS = [{ name: "Cetak tambahan 4R", price: "10000" }, { name: "Cetak strip", price: "5000" }, { name: "Cetak 2R (sticker)", price: "5000" }, { name: "Frame fisik", price: "15000" }];
 
 function fromRow(p: PackageRow): Draft {
-  return { name: p.name, price: String(Number(p.price)), photoCount: String(p.photoCount), hasGif: p.hasGif, hasVideo: p.hasVideo, hasStopMotion: p.hasStopMotion, description: p.description ?? "", thumbnailUrl: undefined };
+  return { name: p.name, price: String(Number(p.price)), photoCount: String(p.photoCount), hasGif: p.hasGif, hasVideo: p.hasVideo, hasStopMotion: p.hasStopMotion, description: p.description ?? "", extraPrints: (p.extraPrints ?? []).map((x) => ({ id: x.id, name: x.name, price: String(x.price) })), thumbnailUrl: undefined };
 }
 
 function PackageForm({ initial, existingThumb, mediaLocked, onSaved, onCancel, id }: {
@@ -34,6 +35,7 @@ function PackageForm({ initial, existingThumb, mediaLocked, onSaved, onCancel, i
       const input: PackageInput = {
         name: d.name, price: Number(d.price), photoCount: Number(d.photoCount),
         hasGif: d.hasGif, hasVideo: d.hasVideo, hasStopMotion: d.hasStopMotion, description: d.description,
+        extraPrints: d.extraPrints.map((x) => ({ id: x.id, name: x.name, price: Number(x.price) || 0 })),
         ...(d.thumbnailUrl !== undefined ? { thumbnailUrl: d.thumbnailUrl } : {}),
       };
       const r = await savePackageAction(id, input);
@@ -80,6 +82,25 @@ function PackageForm({ initial, existingThumb, mediaLocked, onSaved, onCancel, i
           </label>
         ))}
       </div>
+      <div className="grid gap-3 rounded-2xl border border-foreground/10 p-4">
+        <div>
+          <div className="text-sm font-medium">Add-on <span className="font-normal text-muted">(cetak tambahan, frame fisik, dll)</span></div>
+          <p className="text-[13px] text-muted">Dijual di atas harga paket. Muncul di tab &ldquo;Cetak tambahan&rdquo; kasir dan sebagai pilihan tambahan di kiosk.</p>
+        </div>
+        {d.extraPrints.map((x, i) => (
+          <div key={x.id} className="flex flex-wrap items-center gap-2">
+            <input value={x.name} maxLength={60} placeholder="Nama add-on" onChange={(e) => set("extraPrints", d.extraPrints.map((y, j) => (j === i ? { ...y, name: e.target.value } : y)))} className={`${field} min-w-0 flex-1 basis-48`} />
+            <input type="number" min={0} value={x.price} placeholder="Harga" onChange={(e) => set("extraPrints", d.extraPrints.map((y, j) => (j === i ? { ...y, price: e.target.value } : y)))} className={`${field} w-32`} />
+            <button type="button" className={`${smallBtn} hover:!text-[#a12626]`} onClick={() => set("extraPrints", d.extraPrints.filter((_, j) => j !== i))}>Hapus</button>
+          </div>
+        ))}
+        <div className="flex flex-wrap gap-2">
+          <button type="button" className={smallBtn} onClick={() => set("extraPrints", [...d.extraPrints, { id: `ao${Date.now().toString(36)}`, name: "", price: "10000" }])}>+ Tambah add-on</button>
+          {PRESET_ADDONS.filter((p) => !d.extraPrints.some((x) => x.name === p.name)).map((p) => (
+            <button key={p.name} type="button" className={smallBtn} onClick={() => set("extraPrints", [...d.extraPrints, { id: `ao${Date.now().toString(36)}${d.extraPrints.length}`, ...p }])}>+ {p.name}</button>
+          ))}
+        </div>
+      </div>
       {mediaLocked && <p className="text-[13px] text-muted">GIF / video / stop motion tidak termasuk dalam paket langganan Anda saat ini.</p>}
       {error && <p role="alert" className="rounded-2xl bg-[#ffe3e3] px-4 py-3 text-sm text-[#a12626]">{error}</p>}
       <div className="flex gap-3">
@@ -106,7 +127,7 @@ function Row({ pkg, mediaLocked, onChanged }: { pkg: PackageRow; mediaLocked: bo
         {pkg.thumbnailUrl ? <img src={pkg.thumbnailUrl} alt="" className="h-14 w-14 shrink-0 rounded-2xl object-cover" /> : <div className="h-14 w-14 shrink-0 rounded-2xl bg-foreground/[0.06]" />}
         <div className="min-w-0">
           <div className="font-semibold">{pkg.name} {!pkg.active && <span className="ml-1 rounded-full bg-foreground/[0.08] px-2 py-0.5 text-[11px] font-semibold text-muted">Nonaktif</span>}</div>
-          <div className="text-[13px] text-muted">{formatRupiah(Number(pkg.price))} · {pkg.photoCount} foto{extras ? ` · ${extras}` : ""}</div>
+          <div className="text-[13px] text-muted">{formatRupiah(Number(pkg.price))} · {pkg.photoCount} foto{extras ? ` · ${extras}` : ""}{pkg.extraPrints?.length ? ` · ${pkg.extraPrints.length} add-on` : ""}</div>
           {pkg.description && <div className="truncate text-[13px] text-muted">{pkg.description}</div>}
         </div>
       </div>

@@ -14,6 +14,8 @@ export type PackageInput = {
   hasVideo: boolean;
   hasStopMotion: boolean;
   description: string;
+  /** Add-ons (extra prints etc.) sold on top of the package, at the kiosk and at the cashier. */
+  extraPrints?: { id: string; name: string; price: number }[];
   sortOrder?: number;
   active?: boolean;
   /** A data: URI from the browser (resized client-side), an existing URL, or null to remove. Undefined = leave as is. */
@@ -28,6 +30,12 @@ function clean(input: PackageInput) {
     name, price, photoCount,
     hasGif: Boolean(input.hasGif), hasVideo: Boolean(input.hasVideo), hasStopMotion: Boolean(input.hasStopMotion),
     description: String(input.description ?? "").trim().slice(0, 300),
+    ...(input.extraPrints !== undefined ? {
+      extraPrints: input.extraPrints
+        .map((x, i) => ({ id: String(x.id || `ao${i + 1}`).slice(0, 40), name: String(x.name ?? "").trim().slice(0, 60), price: Math.max(0, Math.round(Number(x.price) || 0)) }))
+        .filter((x) => x.name)
+        .slice(0, 12),
+    } : {}),
     ...(input.sortOrder !== undefined ? { sortOrder: Math.round(Number(input.sortOrder) || 0) } : {}),
     ...(input.active !== undefined ? { active: Boolean(input.active) } : {}),
     ...(input.thumbnailUrl !== undefined ? { thumbnailUrl: input.thumbnailUrl } : {}),

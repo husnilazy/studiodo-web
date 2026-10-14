@@ -1,12 +1,13 @@
 // Shapes returned by the kiosk API's /api/pos/* routes (server/routes/pos.ts).
 
-export type PosLineType = "package" | "print" | "product" | "custom";
+export type PosLineType = "package" | "print" | "product" | "custom" | "frame";
 export type PosItem = { type: PosLineType; refId?: string | null; name: string; qty: number; unitPrice: number };
 export type PaymentMethod = "cash" | "qris" | "transfer" | "other";
 
 export type PosCatalog = {
   packages: { id: string; name: string; price: number; photoCount: number; thumbnailUrl: string | null; prints: { key: string; name: string; price: number }[] }[];
   products: { id: string; name: string; price: number }[];
+  customFrames: { id: string; name: string; customerName: string | null; price: number; imageUrl: string | null; orientation: string }[];
   booths: { id: string; label: string }[];
   shift: { id: string; cashierName: string; openedAt: string } | null;
   settings: { receiptHeader: string; receiptFooter: string; queuePrefix: string; hasPin: boolean };
