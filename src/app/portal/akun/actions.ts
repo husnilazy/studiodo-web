@@ -1,8 +1,9 @@
 "use server";
 
+import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { API_URL } from "@/lib/api";
-import { getToken, portalCall } from "@/lib/portal";
+import { getToken, portalCall, SESSION_COOKIE, SESSION_MAX_AGE } from "@/lib/portal";
 
 export type PasswordState = { error: string | null; ok: boolean };
 
@@ -28,8 +29,13 @@ export async function changePasswordAction(_prev: PasswordState, formData: FormD
     return { error: "Tidak dapat terhubung ke server. Coba lagi.", ok: false };
   }
   if (res.status === 401) redirect("/masuk?sesi=habis");
-  const body = (await res.json().catch(() => ({}))) as { error?: string };
+  const body = (await res.json().catch(() => ({}))) as { error?: string; token?: string };
   if (!res.ok) return { error: body.error ?? "Gagal mengganti password.", ok: false };
+  // The server ended every session that was signed in with the old password (other devices included). This one keeps
+  // going: swap in the token it issued for the new password.
+  if (body.token) {
+    (await cookies()).set(SESSION_COOKIE, body.token, { httpOnly: true, sameSite: "lax", secure: process.env.NODE_ENV === "production", path: "/", maxAge: SESSION_MAX_AGE });
+  }
   return { error: null, ok: true };
 }
 

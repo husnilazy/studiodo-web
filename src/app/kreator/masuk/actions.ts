@@ -82,8 +82,11 @@ export async function creatorPasswordAction(_prev: PasswordState, formData: Form
     return { error: "Tidak dapat terhubung ke server. Coba lagi.", ok: false };
   }
   if (res.status === 401) redirect("/kreator/masuk?sesi=habis");
-  const body = (await res.json().catch(() => ({}))) as { error?: string };
+  const body = (await res.json().catch(() => ({}))) as { error?: string; token?: string };
   if (!res.ok) return { error: body.error ?? "Gagal mengganti password.", ok: false };
+  if (body.token) {
+    (await cookies()).set(CREATOR_COOKIE, body.token, { httpOnly: true, sameSite: "lax", secure: process.env.NODE_ENV === "production", path: "/", maxAge: CREATOR_MAX_AGE });
+  }
   return { error: null, ok: true };
 }
 
