@@ -8,6 +8,7 @@ const ROWS: { before: string; after: string }[] = [
   { before: "Keliling cek booth, baru tahu rusak setelah ada komplain", after: "Status semua booth terlihat real-time dari HP" },
   { before: "Catat omzet manual, ujungnya selisih kas", after: "Riwayat dan grafik omzet otomatis, ekspor ke CSV" },
   { before: "Internet putus, sesi pelanggan hilang", after: "Sesi tersimpan di kiosk dan terkirim sendiri saat online" },
+  { before: "Antrian pakai kertas atau teriak nama, kas dihitung dari ingatan", after: "Nomor antrian digital dan shift kasir dengan hitung laci yang tercatat" },
   { before: "Update aplikasi harus datangi tiap lokasi", after: "Update otomatis, tinggal atur per kiosk" },
 ];
 

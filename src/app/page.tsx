@@ -17,6 +17,7 @@ import { DashboardShowcase } from "@/components/landing/DashboardShowcase";
 import { PhotoSamples } from "@/components/landing/PhotoSamples";
 import { FeatureGroups } from "@/components/landing/FeatureGroups";
 import { JourneyStepper } from "@/components/landing/JourneyStepper";
+import { PosShowcase } from "@/components/landing/PosShowcase";
 import { Hardware } from "@/components/landing/Hardware";
 import { FEATURE_COUNT } from "@/components/landing/featureData";
 import { getSiteContent, type SiteData } from "@/lib/content";
@@ -55,6 +56,7 @@ const extras = (stats: PlatformStats | null): Record<string, ReactNode> => ({
       <PhotoSamples />
       <FeatureGroups />
       <JourneyStepper />
+      <PosShowcase />
       <Hardware />
     </>
   ),

@@ -3,6 +3,22 @@ export type FeatureGroup = { icon: string; title: string; tint: string; items: s
 
 export const FEATURE_GROUPS: FeatureGroup[] = [
   {
+    icon: "receipt",
+    title: "Kasir & Antrian",
+    tint: "from-[#ffd3e4] to-[#ffe3b8]",
+    items: [
+      "Kasir satu layar: paket foto, cetak tambahan, produk, dan item bebas",
+      "Tunai, QRIS, atau transfer dengan kembalian otomatis",
+      "Kode kiosk otomatis untuk paket yang dibayar di kasir",
+      "Struk yang bisa dicetak dengan kop sendiri",
+      "Antrian digital: nomor harian, panggil berikutnya, kirim ke booth",
+      "Pelanggan yang masih di booth lain tidak ikut terpanggil",
+      "Shift kasir: modal awal, hitung laci, selisih kas",
+      "Refund per item dengan PIN supervisor",
+      "Laporan penjualan harian dan item terlaris",
+    ],
+  },
+  {
     icon: "camera",
     title: "Pengalaman Booth",
     tint: "from-[#c7ceff] to-[#edefff]",

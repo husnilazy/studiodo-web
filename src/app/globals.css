@@ -505,3 +505,41 @@ html {
   .pay-wait { opacity: 0; }
   .count-num { opacity: 0; }
 }
+
+/* ---- Landing: Kasir (POS) demos. One 9s loop per demo; each element fades in at its own point in the cycle. ---- */
+@keyframes pos-line { 0%, 6% { opacity: 0; transform: translateX(-10px); } 12%, 90% { opacity: 1; transform: none; } 97%, 100% { opacity: 0; } }
+.pos-line { opacity: 0; animation: pos-line 9s ease-out infinite; animation-play-state: var(--play, running); }
+.pos-loop { animation: none; }
+.pos-line-0 { animation-delay: 0s; }
+.pos-line-1 { animation-delay: 0.9s; }
+.pos-line-2 { animation-delay: 1.8s; }
+@keyframes pos-total-0 { 0%, 5% { opacity: 0; } 8%, 16% { opacity: 1; } 18%, 100% { opacity: 0; } }
+@keyframes pos-total-1 { 0%, 17% { opacity: 0; } 20%, 26% { opacity: 1; } 28%, 100% { opacity: 0; } }
+@keyframes pos-total-2 { 0%, 27% { opacity: 0; } 30%, 62% { opacity: 1; } 66%, 100% { opacity: 0; } }
+.pos-total { opacity: 0; animation-duration: 9s; animation-iteration-count: infinite; animation-play-state: var(--play, running); }
+.pos-total-0 { animation-name: pos-total-0; } .pos-total-1 { animation-name: pos-total-1; } .pos-total-2 { animation-name: pos-total-2; }
+@keyframes pos-pay { 0%, 40% { transform: scale(1); } 46% { transform: scale(0.95); } 52%, 100% { transform: scale(1); } }
+@keyframes pos-pay-fade { 0%, 52% { opacity: 1; } 56%, 92% { opacity: 0; } 98%, 100% { opacity: 1; } }
+.pos-pay { animation: pos-pay-fade 9s infinite; animation-play-state: var(--play, running); }
+@keyframes pos-done { 0%, 54% { opacity: 0; transform: scale(0.9); } 60%, 90% { opacity: 1; transform: none; } 97%, 100% { opacity: 0; } }
+.pos-done { opacity: 0; animation: pos-done 9s infinite; animation-play-state: var(--play, running); }
+
+@keyframes queue-ticket { 0%, 18% { transform: translateX(0); } 40%, 78% { transform: translateX(calc(100% + 8px)); } 92%, 100% { transform: translateX(calc(100% + 8px)); opacity: 0; } }
+.queue-ticket { animation: queue-ticket 7s ease-in-out infinite; }
+@keyframes queue-badge { 0%, 40% { opacity: 0; transform: translateY(6px); } 48%, 82% { opacity: 1; transform: none; } 92%, 100% { opacity: 0; } }
+.queue-badge { opacity: 0; animation: queue-badge 7s ease-out infinite; }
+
+@keyframes pin-dot { 0%, 10% { transform: scale(0.45); opacity: 0.25; } 16%, 70% { transform: scale(1); opacity: 1; } 92%, 100% { transform: scale(0.45); opacity: 0.25; } }
+.pin-dot { opacity: 0.25; animation: pin-dot 8s ease-out infinite; }
+.pin-dot-1 { animation-delay: 0.4s; } .pin-dot-2 { animation-delay: 0.8s; } .pin-dot-3 { animation-delay: 1.2s; }
+@keyframes shift-approved { 0%, 28% { opacity: 0; } 34%, 70% { opacity: 1; } 80%, 100% { opacity: 0; } }
+.shift-approved { opacity: 0; animation: shift-approved 8s infinite; }
+@keyframes shift-ok { 0%, 4% { opacity: 0; transform: scale(0.96); } 12%, 90% { opacity: 1; transform: none; } 98%, 100% { opacity: 0; } }
+.shift-ok { opacity: 0; animation: shift-ok 8s ease-out infinite; }
+
+@media (prefers-reduced-motion: reduce) {
+  .pos-line, .pos-total, .pos-pay, .pos-done, .queue-ticket, .queue-badge, .pin-dot, .shift-approved, .shift-ok { animation: none; }
+  .pos-line, .pos-total-2, .pos-done, .queue-badge, .pin-dot, .shift-approved, .shift-ok { opacity: 1; }
+  .pos-pay { opacity: 0; }
+  .queue-ticket { transform: translateX(calc(100% + 8px)); }
+}
