@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { PageHeader } from "@/components/dash/PageHeader";
 import { CheckOrderButton } from "@/components/CheckOrderButton";
-import { getOrders, getSummary } from "@/lib/portal";
+import { getOrders, getSummary, portalCall } from "@/lib/portal";
 import { formatDate, formatRupiah } from "@/lib/format";
 
 export const dynamic = "force-dynamic";
@@ -15,6 +15,10 @@ const ORDER_STATUS: Record<string, { label: string; tone: string }> = {
 
 export default async function TagihanPage({ searchParams }: PageProps<"/portal/tagihan">) {
   const sp = await searchParams;
+  // Coming back from Midtrans' payment page (it appends ?order_id=…): ask the gateway right now instead of waiting for
+  // the notification, so the order already reads "Lunas" when the tenant lands here.
+  const returned = typeof sp.order_id === "string" && /^SDO-[A-Z0-9-]{4,40}$/.test(sp.order_id) ? sp.order_id : null;
+  if (returned) await portalCall("POST", `/api/portal/billing/orders/${returned}/check`);
   const [summary, orders] = await Promise.all([getSummary(), getOrders()]);
   const lic = summary.licenses;
 
@@ -27,6 +31,12 @@ export default async function TagihanPage({ searchParams }: PageProps<"/portal/t
         actions={<Link href="/portal/booth" className="btn btn-primary px-6 py-3 text-[14px]">Berlangganan / perpanjang booth</Link>}
       />
 
+      {sp.status === "gagal" && (
+        <p role="alert" className="rounded-2xl bg-[#ffe3e3] px-5 py-4 text-sm text-[#a12626]">Pembayaran tidak berhasil diproses. Tidak ada dana yang terpotong untuk pesanan ini. Anda bisa mencoba lagi dari menu Booth &amp; langganan, atau buka invoice di bawah untuk membayar ulang.</p>
+      )}
+      {sp.status === "belum" && (
+        <p role="status" className="rounded-2xl bg-[#fff3d6] px-5 py-4 text-sm text-[#7a5a00]">Pembayaran belum diselesaikan. Invoice-nya masih bisa dibayar sampai batas waktunya; buka &ldquo;Lihat invoice&rdquo; pada pesanan di bawah untuk melanjutkan.</p>
+      )}
       {sp.status === "selesai" && (
         <p role="status" className="rounded-2xl bg-[#dff7ec] px-5 py-4 text-sm text-[#0f6b45]">
           Terima kasih! Pembayaran sedang diproses. Masa aktif booth diperbarui otomatis begitu pembayaran terkonfirmasi (biasanya beberapa menit). Bila belum berubah, tekan &ldquo;Cek status pembayaran&rdquo; pada pesanan di bawah.
@@ -52,6 +62,7 @@ export default async function TagihanPage({ searchParams }: PageProps<"/portal/t
                   <div className="flex flex-wrap items-center gap-3">
                     <span className="font-semibold">{formatRupiah(o.amount)}</span>
                     <span className={`rounded-full px-3 py-1 text-xs font-semibold ${st.tone}`}>{st.label}</span>
+                    <Link href={`/invoice/${o.orderId}`} className="btn glass rounded-full! px-3.5 py-2 text-[13px] text-accent transition hover:opacity-80">Lihat invoice</Link>
                     {o.status === "pending" && <CheckOrderButton orderId={o.orderId} />}
                   </div>
                 </li>

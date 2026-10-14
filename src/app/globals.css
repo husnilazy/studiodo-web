@@ -543,3 +543,11 @@ html {
   .pos-pay { opacity: 0; }
   .queue-ticket { transform: translateX(calc(100% + 8px)); }
 }
+
+/* ---- Printing the invoice page: just the document, with its colours ---- */
+@media print {
+  @page { size: A4; margin: 12mm; }
+  * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  body { background: #ffffff !important; }
+  .scroll-progress, .nav-progress, button[aria-label="Kembali ke atas"] { display: none !important; }
+}
