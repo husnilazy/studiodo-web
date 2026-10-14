@@ -53,6 +53,7 @@ export function KioskSettingsForm({ tenant, printing }: { tenant: TenantConfig; 
     brandName: str("brandName", tenant.brandName ?? ""), tagline: str("tagline", tenant.tagline ?? ""),
     contactWhatsapp: str("contactWhatsapp", tenant.contactWhatsapp ?? ""), socialInstagram: str("socialInstagram", tenant.socialInstagram ?? ""),
     socialTiktok: str("socialTiktok", tenant.socialTiktok ?? ""), socialFacebook: str("socialFacebook", tenant.socialFacebook ?? ""),
+    socialYoutube: str("socialYoutube", tenant.socialYoutube ?? ""), hashtag: str("hashtag", tenant.hashtag ?? ""),
     websiteUrl: str("websiteUrl", tenant.websiteUrl ?? ""), address: str("address", tenant.address ?? ""),
   });
   const [kiosk, setKiosk] = useState({
@@ -106,6 +107,8 @@ export function KioskSettingsForm({ tenant, printing }: { tenant: TenantConfig; 
           <Text label="Instagram" value={profile.socialInstagram} onChange={setP("socialInstagram")} max={160} />
           <Text label="TikTok" value={profile.socialTiktok} onChange={setP("socialTiktok")} max={160} />
           <Text label="Facebook" value={profile.socialFacebook} onChange={setP("socialFacebook")} max={160} />
+          <Text label="YouTube" value={profile.socialYoutube} onChange={setP("socialYoutube")} max={160} placeholder="@namakanal" />
+          <Text label="Hashtag" value={profile.hashtag} onChange={setP("hashtag")} max={60} placeholder="#studiodo" />
           <Text label="Alamat" value={profile.address} onChange={setP("address")} max={200} />
         </div>
         <Feedback msg={profileMsg} />

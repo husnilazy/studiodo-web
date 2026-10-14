@@ -9,7 +9,7 @@ const text = (v: unknown, max: number) => String(v ?? "").trim().slice(0, max);
 
 export type ProfileInput = {
   brandName: string; tagline: string; contactWhatsapp: string; socialInstagram: string; socialTiktok: string;
-  socialFacebook: string; websiteUrl: string; address: string;
+  socialFacebook: string; socialYoutube: string; hashtag: string; websiteUrl: string; address: string;
 };
 
 /**
@@ -24,6 +24,8 @@ export async function saveProfileAction(input: ProfileInput): Promise<ActionResu
     socialInstagram: text(input.socialInstagram, 160),
     socialTiktok: text(input.socialTiktok, 160),
     socialFacebook: text(input.socialFacebook, 160),
+    socialYoutube: text(input.socialYoutube, 160),
+    hashtag: text(input.hashtag, 60),
     websiteUrl: text(input.websiteUrl, 160),
     address: text(input.address, 200),
   };

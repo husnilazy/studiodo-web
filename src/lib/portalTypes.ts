@@ -152,7 +152,7 @@ export type PrintingConfig = { enabled: boolean; label: string; price: number; m
 
 export type TenantConfig = {
   brandName?: string; tagline?: string | null; logoUrl?: string | null; contactWhatsapp?: string | null;
-  socialInstagram?: string | null; socialTiktok?: string | null; socialFacebook?: string | null; websiteUrl?: string | null;
+  socialInstagram?: string | null; socialTiktok?: string | null; socialFacebook?: string | null; socialYoutube?: string | null; hashtag?: string | null; websiteUrl?: string | null;
   address?: string | null; accentColor?: string; countdownSeconds?: number; beepEnabled?: boolean; sessionTimerMinutes?: number;
   kioskConfig?: Record<string, unknown> | null;
 };
