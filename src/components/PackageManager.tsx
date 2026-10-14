@@ -120,11 +120,16 @@ function Row({ pkg, mediaLocked, onChanged }: { pkg: PackageRow; mediaLocked: bo
   );
 }
 
-export function PackageManager({ packages, mediaLocked }: { packages: PackageRow[]; mediaLocked: boolean }) {
+export function PackageManager({ packages, mediaLocked, limitedBooths = [] }: { packages: PackageRow[]; mediaLocked: boolean; limitedBooths?: string[] }) {
   const [adding, setAdding] = useState(false);
   const refresh = () => undefined; // the server actions revalidate the page; local state resets on the refreshed props
   return (
     <div className="flex flex-col gap-6">
+      {!mediaLocked && limitedBooths.length > 0 && (
+        <p role="note" className="rounded-2xl bg-[#fff3d6] px-5 py-3.5 text-[13.5px] leading-relaxed text-[#7a5a00]">
+          GIF, video, dan stop-motion <strong>tidak tampil di booth: {limitedBooths.join(", ")}</strong>, karena paket langganan booth tersebut tidak menyertakannya. Paket foto Anda tidak berubah; upgrade paket booth itu di menu <em>Booth &amp; langganan</em> agar fitur ini muncul.
+        </p>
+      )}
       <ul className="flex flex-col gap-4">
         {packages.map((p) => <Row key={`${p.id}-${p.name}-${p.price}-${p.active}-${p.photoCount}`} pkg={p} mediaLocked={mediaLocked} onChanged={refresh} />)}
         {packages.length === 0 && <li className="glass p-6 text-[15px] text-muted">Belum ada paket. Tambahkan paket pertama Anda di bawah.</li>}
