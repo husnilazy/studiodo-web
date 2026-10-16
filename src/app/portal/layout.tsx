@@ -33,6 +33,7 @@ const groups: NavGroup[] = [
       { href: "/portal/paket", label: "Paket foto", icon: "box", hint: "harga" },
       { href: "/portal/voucher", label: "Voucher", icon: "ticket", hint: "diskon kode promo" },
       { href: "/portal/frame", label: "Frame & template", icon: "image", hint: "desain" },
+      { href: "/portal/frame/custom", label: "Frame custom", icon: "ticket", hint: "frame pelanggan desain khusus voucher jual" },
       { href: "/portal/pembayaran", label: "Pembayaran kiosk", icon: "card", hint: "xendit doku gateway" },
       { href: "/portal/pengaturan", label: "Tampilan & pengaturan", icon: "sliders", hint: "logo warna" },
     ],
