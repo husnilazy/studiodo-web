@@ -5,7 +5,7 @@ import { portalCall } from "@/lib/portal";
 import type { ActionResult } from "@/lib/portalTypes";
 
 const UUID = /^[0-9a-f-]{36}$/i;
-export const CUSTOM_FRAME_CATEGORY = "__custom";
+const CUSTOM_FRAME_CATEGORY = "__custom";
 
 export type CustomFrameInput = {
   name: string;
