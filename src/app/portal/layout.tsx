@@ -30,6 +30,7 @@ const groups: NavGroup[] = [
     title: "Kelola kiosk",
     items: [
       { href: "/portal/booth", label: "Booth & langganan", icon: "monitor", hint: "key trial perpanjang" },
+      { href: "/portal/kamera", label: "Kamera didukung", icon: "camera", hint: "dslr canon sony nikon webcam usb digicamcontrol sambung" },
       { href: "/portal/paket", label: "Paket foto", icon: "box", hint: "harga" },
       { href: "/portal/voucher", label: "Voucher", icon: "ticket", hint: "diskon kode promo" },
       { href: "/portal/frame", label: "Frame & template", icon: "image", hint: "desain" },

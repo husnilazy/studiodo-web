@@ -20,7 +20,7 @@ const REQ = [
   ["Sistem operasi", "Windows 10 / 11 (64-bit)"],
   ["Memori & prosesor", "4 GB RAM · dual-core (disarankan 8 GB · quad-core)"],
   ["Penyimpanan", "2 GB kosong (disarankan SSD)"],
-  ["Kamera", "Webcam USB, atau DSLR lewat digiCamControl"],
+  ["Kamera", "Webcam USB, atau DSLR/mirrorless (lihat Kamera didukung)"],
   ["Internet", "Dibutuhkan untuk QRIS & galeri cloud"],
 ];
 
@@ -81,7 +81,7 @@ export default async function PortalUnduhPage() {
               ["Unduh & pasang", "Jalankan installer di PC booth, lalu buka aplikasi STUDIODO. Jika Windows SmartScreen muncul, pilih “Informasi lebih lanjut” → “Tetap jalankan”."],
               ["Siapkan key booth", <>Buat atau salin key di <Link href="/portal/booth" className="font-semibold text-accent hover:underline">Booth &amp; langganan</Link>. Satu key = satu booth = satu komputer.</>],
               ["Pasangkan", "Di layar Setup, isi URL server dan key tadi. Aplikasi memperbarui dirinya sendiri setelah ini."],
-              ["Pilih kamera & printer", "Atur paket, frame, dan pembayaran — booth siap dipakai."],
+              ["Pilih kamera & printer", <>Atur kamera (<Link href="/portal/kamera" className="font-semibold text-accent hover:underline">daftar kamera yang didukung</Link>), paket, frame, dan pembayaran — booth siap dipakai.</>],
             ].map(([t, b], i) => (
               <li key={i} className="flex gap-4">
                 <span className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-[var(--ink)] font-display text-[13px] text-white">{i + 1}</span>
