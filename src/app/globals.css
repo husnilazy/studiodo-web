@@ -580,6 +580,7 @@ a:hover .m-logo .m-spark { animation: m-twinkle 1.1s ease-in-out 1; }
 .m-do .m-glow { animation: m-do-flash 8s infinite; }
 .m-do .m-eyes { animation: m-do-blink 8s infinite; }
 .m-do .m-photo { transform-box: fill-box; transform-origin: center; animation: m-do-photo 8s infinite both; }
+.m-do .m-slot { animation: m-do-slot 8s infinite; }
 .m-do .m-share { transform-box: fill-box; transform-origin: center; animation: m-do-share 8s infinite both; }
 .m-do .m-cap { opacity: 0; }
 .m-do .m-cap-1 { animation: m-cap-1 8s infinite; }
@@ -588,12 +589,13 @@ a:hover .m-logo .m-spark { animation: m-twinkle 1.1s ease-in-out 1; }
 @keyframes m-do-flash { 0%, 10% { opacity: 0.3; transform: scale(1); } 14% { opacity: 1; transform: scale(2.2); } 22%, 100% { opacity: 0.3; transform: scale(1); } }
 @keyframes m-do-blink { 0%, 12%, 20%, 100% { transform: scaleY(1); } 15% { transform: scaleY(0.1); } }
 @keyframes m-do-photo {
-  0%, 30% { transform: translateY(46px); opacity: 0; }
+  0%, 30% { transform: translate(84px, 4px) scale(0.2); opacity: 0; }
   34% { opacity: 1; }
-  52%, 66% { transform: translateY(0); opacity: 1; }
-  86% { transform: translate(70px, -150px) scale(0.45) rotate(14deg); opacity: 0; }
-  100% { transform: translateY(46px); opacity: 0; }
+  52%, 66% { transform: translate(0, 0) scale(1); opacity: 1; }
+  86% { transform: translate(150px, -190px) scale(0.4) rotate(16deg); opacity: 0; }
+  100% { transform: translate(84px, 4px) scale(0.2); opacity: 0; }
 }
+@keyframes m-do-slot { 0%, 28%, 54%, 100% { opacity: 0.25; } 32%, 36%, 42%, 46%, 50% { opacity: 1; } 34%, 40%, 44%, 48% { opacity: 0.5; } }
 @keyframes m-do-share { 0%, 66% { opacity: 0; transform: scale(0.3); } 76% { opacity: 1; transform: scale(1.15); } 90%, 100% { opacity: 0; transform: scale(1.4) translate(10px, -14px); } }
 @keyframes m-cap-1 { 0%, 3% { opacity: 0; transform: translateY(6px); } 8%, 28% { opacity: 1; transform: none; } 33%, 100% { opacity: 0; transform: translateY(-6px); } }
 @keyframes m-cap-2 { 0%, 33% { opacity: 0; transform: translateY(6px); } 38%, 60% { opacity: 1; transform: none; } 65%, 100% { opacity: 0; transform: translateY(-6px); } }
