@@ -126,9 +126,9 @@ export function HeroVisual(p: Props) {
       </div>
 
       {/* Floating cards */}
-      <div data-parallax="-0.1" className="absolute left-0 top-[120px] hidden sm:block">
+      <div data-parallax="-0.1" className="absolute -left-4 top-[110px] hidden sm:block">
         <div className="float-b">
-          <div className={`glass relative flex items-center gap-3.5 rounded-[22px]! px-5 py-4 transition-all duration-500 ${paid ? "scale-100 opacity-100" : "scale-95 opacity-70"}`}>
+          <div className={`glass hero-float relative flex items-center gap-3.5 rounded-[22px]! px-5 py-4 transition-all duration-500 ${paid ? "scale-100 opacity-100" : "scale-95 opacity-70"}`}>
             <div className="relative flex h-11 w-11 items-center justify-center rounded-[14px] bg-gradient-to-br from-accent to-accent-soft text-sm font-semibold text-white">
               Rp
               {phase === 1 && <span className="ping-ring absolute inset-0 rounded-[14px] bg-accent" />}
@@ -146,9 +146,9 @@ export function HeroVisual(p: Props) {
         </div>
       </div>
 
-      <div data-parallax="0.14" className="absolute right-0 top-[330px] hidden w-[200px] sm:block">
+      <div data-parallax="0.14" className="absolute -right-2 top-[340px] hidden w-[200px] sm:block">
         <div className="float-c">
-          <div className="glass rounded-[22px]! px-5 py-4">
+          <div className="glass hero-float rounded-[22px]! px-5 py-4">
             <div className="flex items-center gap-2 text-xs text-muted">
               <span className="relative flex h-2 w-2"><span className="ping-ring absolute inset-0 rounded-full bg-[#22c58b]" /><span className="relative h-2 w-2 rounded-full bg-[#22c58b]" /></span>
               {p.boothLabel}
@@ -163,7 +163,7 @@ export function HeroVisual(p: Props) {
 
       <div data-parallax="-0.06" className="absolute bottom-7 left-4 hidden sm:block">
         <div className="float-a">
-          <div className={`glass flex items-center gap-3 rounded-[22px]! px-[18px] py-3.5 transition-all duration-500 ${phase === 6 ? "translate-y-0 opacity-100" : "translate-y-2 opacity-60"}`}>
+          <div className={`glass hero-float flex items-center gap-3 rounded-[22px]! px-[18px] py-3.5 transition-all duration-500 ${phase === 6 ? "translate-y-0 opacity-100" : "translate-y-2 opacity-60"}`}>
             <span className={`h-2.5 w-2.5 rounded-full ${phase === 6 ? "bg-[#22c58b]" : "bg-muted/50"}`} />
             <span className="text-sm font-semibold">{p.galleryLabel}</span>
             <Icon name="cloud" className="h-4 w-4 text-accent" />

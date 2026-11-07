@@ -44,7 +44,9 @@ export function Navbar() {
             Masuk
           </Link>
           <Link href="/daftar" className="btn btn-primary whitespace-nowrap px-4 py-2.5 text-[13px] sm:px-5 sm:py-3 sm:text-sm md:px-6">
-            Coba Gratis
+            {/* On the narrowest phones the long label pushed the button out of the pill. */}
+            <span className="min-[420px]:hidden">Daftar</span>
+            <span className="hidden min-[420px]:inline">Coba Gratis</span>
           </Link>
         </div>
       </div>

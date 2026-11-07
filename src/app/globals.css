@@ -99,6 +99,9 @@ html {
       0 10px 40px rgba(0, 0, 0, 0.35),
       inset 0 1px 0 rgba(255, 255, 255, 0.07);
   }
+  /* The hero's floating cards sit on top of the kiosk screen: they need a near-solid surface, or the screen shows through the text. */
+  .glass.hero-float { background: rgba(255, 255, 255, 0.94); }
+  :root[data-theme="dark"] .glass.hero-float { background: rgba(20, 24, 42, 0.94); }
   :root[data-theme="dark"] .glass-dark {
     background: linear-gradient(135deg, rgba(110, 110, 255, 0.3), rgba(110, 110, 255, 0.12));
     border-color: rgba(160, 160, 255, 0.28);
