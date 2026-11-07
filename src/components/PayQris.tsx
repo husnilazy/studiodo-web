@@ -2,22 +2,51 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
-import { checkPayAction, type PayStatus } from "@/app/bayar/[orderId]/actions";
+import { useEffect, useState, useTransition } from "react";
+import { checkPayAction, chooseMethodAction, otherMethodAction, type PayStatus } from "@/app/bayar/[orderId]/actions";
 
-export type PayData = { orderId: string; plan: string; boothCount: number; periodDays: number; amount: number; status: PayStatus; dueAt: string; paymentMethod: string | null; qr: string | null };
+type Method = { id: string; label: string; hint: string; kind: "qris" | "va" | "bill" | "store" };
+type Instruction = { method: string; expiresAt: string | null; qr?: string | null; bank?: string; vaNumber?: string; billerCode?: string; billKey?: string; paymentCode?: string; store?: string };
+export type PayData = { orderId: string; plan: string; boothCount: number; periodDays: number; amount: number; status: PayStatus; dueAt: string; methods: Method[]; instruction: Instruction | null };
 
 const rupiah = (n: number) => `Rp ${n.toLocaleString("id-ID")}`;
 const pad = (n: number) => String(n).padStart(2, "0");
+const GROUPS: { title: string; kinds: Method["kind"][] }[] = [
+  { title: "QRIS", kinds: ["qris"] },
+  { title: "Transfer bank (Virtual Account)", kinds: ["va", "bill"] },
+  { title: "Bayar di toko", kinds: ["store"] },
+];
 
-/** STUDIODO's own QRIS payment card: the amount, the QR, a countdown and live status (polls the API, which asks Midtrans). */
-export function PayQris({ data, token }: { data: PayData; token: string }) {
+function CopyField({ label, value }: { label: string; value: string }) {
+  const [done, setDone] = useState(false);
+  return (
+    <div className="flex items-center justify-between gap-3 rounded-2xl bg-foreground/[0.05] px-4 py-3">
+      <div className="min-w-0">
+        <div className="text-[12px] text-muted">{label}</div>
+        <div className="truncate font-display text-[20px] font-semibold tabular-nums tracking-wide">{value}</div>
+      </div>
+      <button type="button" onClick={() => { void navigator.clipboard?.writeText(value).then(() => { setDone(true); setTimeout(() => setDone(false), 1800); }); }} className="shrink-0 rounded-full border border-foreground/15 px-3.5 py-1.5 text-[12.5px] font-semibold hover:bg-foreground/[0.06]">
+        {done ? "Tersalin" : "Salin"}
+      </button>
+    </div>
+  );
+}
+
+/** STUDIODO's own payment card: pick any method, see what to do (QR / VA number / store code) with a countdown and live status. */
+export function PayQris({ data: initial, token }: { data: PayData; token: string }) {
   const router = useRouter();
-  const [status, setStatus] = useState<PayStatus>(data.status);
-  const [left, setLeft] = useState(() => Math.max(0, new Date(data.dueAt).getTime() - Date.now()));
+  const [data, setData] = useState(initial);
+  const [status, setStatus] = useState<PayStatus>(initial.status);
+  const [choosing, setChoosing] = useState(!initial.instruction);
+  const [error, setError] = useState<string | null>(null);
+  const [busy, setBusy] = useState<string | null>(null);
+  const [, start] = useTransition();
+  const [left, setLeft] = useState(() => Math.max(0, new Date(initial.dueAt).getTime() - Date.now()));
+  const ins = data.instruction;
+  const waiting = status === "pending" && !!ins && !choosing;
 
   useEffect(() => {
-    if (status !== "pending") return;
+    if (status !== "pending" || !ins) return;
     const tick = setInterval(() => setLeft(Math.max(0, new Date(data.dueAt).getTime() - Date.now())), 1000);
     let stop = false;
     const poll = async () => {
@@ -27,7 +56,7 @@ export function PayQris({ data, token }: { data: PayData; token: string }) {
     void poll();
     const t = setInterval(poll, 4000);
     return () => { stop = true; clearInterval(tick); clearInterval(t); };
-  }, [status, data.orderId, data.dueAt, token]);
+  }, [status, ins, data.orderId, data.dueAt, token]);
 
   useEffect(() => {
     if (status !== "paid") return;
@@ -35,8 +64,31 @@ export function PayQris({ data, token }: { data: PayData; token: string }) {
     return () => clearTimeout(t);
   }, [status, data.orderId, router]);
 
-  const expired = status === "expired" || (status === "pending" && left <= 0);
+  const choose = (id: string) => {
+    setError(null);
+    setBusy(id);
+    start(async () => {
+      const r = await chooseMethodAction(data.orderId, token, id);
+      setBusy(null);
+      if (!r.ok) { setError(r.error); return; }
+      setData(r.data);
+      setStatus(r.data.status);
+      setChoosing(false);
+    });
+  };
+  const other = () => {
+    setError(null);
+    setBusy("other");
+    start(async () => {
+      const r = await otherMethodAction(data.orderId, token);
+      if (!r.ok) { setBusy(null); setError(r.error); return; }
+      window.location.assign(r.url);
+    });
+  };
+
+  const expired = status === "expired" || (status === "pending" && left <= 0 && !!ins);
   const h = Math.floor(left / 3_600_000), m = Math.floor((left % 3_600_000) / 60_000), s = Math.floor((left % 60_000) / 1000);
+  const label = ins ? data.methods.find((x) => x.id === ins.method)?.label ?? "Pembayaran" : "";
 
   return (
     <div className="glass overflow-hidden p-0">
@@ -59,22 +111,70 @@ export function PayQris({ data, token }: { data: PayData; token: string }) {
           <p className="text-[14px] text-muted">Buat pembayaran baru dari halaman booth dan langganan.</p>
           <Link href="/portal/booth" className="btn btn-primary mt-2 px-7 py-3 text-[15px]">Buat pembayaran baru</Link>
         </div>
+      ) : choosing || !ins ? (
+        <div className="grid gap-5 border-t border-foreground/10 px-7 py-6">
+          <h1 className="font-display text-[18px] tracking-tight">Pilih cara bayar</h1>
+          {GROUPS.map((g) => {
+            const list = data.methods.filter((x) => g.kinds.includes(x.kind));
+            if (list.length === 0) return null;
+            return (
+              <div key={g.title} className="grid gap-2">
+                <div className="text-[12px] font-semibold uppercase tracking-[0.12em] text-muted">{g.title}</div>
+                {list.map((x) => (
+                  <button key={x.id} type="button" disabled={busy !== null} onClick={() => choose(x.id)} className="flex items-center justify-between gap-3 rounded-2xl border border-foreground/10 bg-foreground/[0.03] px-4 py-3 text-left transition hover:border-accent hover:bg-foreground/[0.06] disabled:opacity-60">
+                    <span className="min-w-0">
+                      <span className="block text-[15px] font-semibold">{x.label}</span>
+                      <span className="block text-[12.5px] leading-snug text-muted">{x.hint}</span>
+                    </span>
+                    <span aria-hidden="true" className="shrink-0 text-muted">{busy === x.id ? "…" : "›"}</span>
+                  </button>
+                ))}
+              </div>
+            );
+          })}
+          <button type="button" disabled={busy !== null} onClick={other} className="rounded-2xl border border-dashed border-foreground/20 px-4 py-3 text-left text-[14px] hover:border-accent disabled:opacity-60">
+            <span className="block font-semibold">Kartu kredit/debit dan metode lain</span>
+            <span className="block text-[12.5px] text-muted">Dibuka di halaman pembayaran aman Midtrans.</span>
+          </button>
+          {error && <p role="alert" className="rounded-2xl bg-[#ffe3e3] px-4 py-3 text-sm text-[#a12626]">{error}</p>}
+          {ins && <button type="button" onClick={() => setChoosing(false)} className="justify-self-center text-[13px] font-semibold text-accent underline underline-offset-4">Kembali ke {label}</button>}
+        </div>
       ) : (
-        <div className="grid justify-items-center gap-4 border-t border-foreground/10 px-7 py-6">
-          {data.qr ? (
-            <div className="rounded-3xl bg-white p-4 shadow-sm">
-              {/* eslint-disable-next-line @next/next/no-img-element -- QR drawn by the API as an SVG data URL */}
-              <img src={data.qr} alt="Kode QRIS untuk membayar" width={248} height={248} className="h-[248px] w-[248px]" />
+        <div className="grid gap-4 border-t border-foreground/10 px-7 py-6">
+          <div className="text-center text-[13px] font-semibold text-muted">{label}</div>
+          {ins.method === "qris" ? (
+            <div className="grid justify-items-center gap-3">
+              {ins.qr ? (
+                <div className="rounded-3xl bg-white p-4 shadow-sm">
+                  {/* eslint-disable-next-line @next/next/no-img-element -- QR drawn by the API as an SVG data URL */}
+                  <img src={ins.qr} alt="Kode QRIS untuk membayar" width={248} height={248} className="h-[248px] w-[248px]" />
+                </div>
+              ) : null}
+              <p className="text-center text-[14px] leading-relaxed text-muted">Buka aplikasi e-wallet atau m-banking apa pun, pilih <strong className="text-foreground">Scan QRIS</strong>, lalu pindai kode di atas.</p>
+              {ins.qr && <a href={ins.qr} download={`QRIS-${data.orderId}.svg`} className="text-[13px] font-semibold text-accent underline underline-offset-4">Unduh kode QR</a>}
             </div>
-          ) : (
-            <p className="rounded-2xl bg-[#fff3d6] px-4 py-3 text-sm text-[#7a5a00]">Kode QRIS tidak tersedia. Hubungi admin STUDIODO.</p>
-          )}
-          <p className="text-center text-[14px] leading-relaxed text-muted">Buka aplikasi e-wallet atau m-banking apa pun, pilih <strong className="text-foreground">Scan QRIS</strong>, lalu pindai kode di atas.</p>
-          <div className="flex items-center gap-2 rounded-full bg-foreground/[0.06] px-4 py-2 text-[13px]" role="status">
+          ) : ins.method === "mandiri" ? (
+            <div className="grid gap-2.5">
+              <CopyField label="Kode perusahaan (biller)" value={ins.billerCode ?? ""} />
+              <CopyField label="Kode pembayaran" value={ins.billKey ?? ""} />
+              <p className="text-[13.5px] leading-relaxed text-muted">Di ATM Mandiri atau Livin&apos; by Mandiri: Bayar → Multipayment, lalu masukkan kedua kode di atas.</p>
+            </div>
+          ) : ins.vaNumber ? (
+            <div className="grid gap-2.5">
+              <CopyField label={`Nomor Virtual Account ${(ins.bank ?? "").toUpperCase()}`} value={ins.vaNumber} />
+              <p className="text-[13.5px] leading-relaxed text-muted">Transfer tepat <strong className="text-foreground">{rupiah(data.amount)}</strong> ke nomor di atas lewat ATM, mobile banking, atau internet banking. Nama tujuan akan tampil sesuai akun pembayaran.</p>
+            </div>
+          ) : ins.paymentCode ? (
+            <div className="grid gap-2.5">
+              <CopyField label={`Kode pembayaran ${ins.store === "indomaret" ? "Indomaret" : "Alfamart"}`} value={ins.paymentCode} />
+              <p className="text-[13.5px] leading-relaxed text-muted">Sebutkan kode ini di kasir dan bayar tunai {rupiah(data.amount)}. Biaya layanan toko bisa berlaku.</p>
+            </div>
+          ) : null}
+          <div className="mx-auto flex items-center gap-2 rounded-full bg-foreground/[0.06] px-4 py-2 text-[13px]" role="status">
             <span className="h-2 w-2 animate-pulse rounded-full bg-[#f5a623]" aria-hidden="true" />
             Menunggu pembayaran · sisa <span className="font-semibold tabular-nums">{pad(h)}:{pad(m)}:{pad(s)}</span>
           </div>
-          {data.qr && <a href={data.qr} download={`QRIS-${data.orderId}.svg`} className="text-[13px] font-semibold text-accent underline underline-offset-4">Unduh kode QR</a>}
+          {waiting && <button type="button" onClick={() => { setError(null); setChoosing(true); }} className="justify-self-center text-[13px] font-semibold text-accent underline underline-offset-4">Ganti cara bayar</button>}
         </div>
       )}
 
