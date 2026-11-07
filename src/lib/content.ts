@@ -11,6 +11,10 @@ export type HeroData = {
   boothLabel?: string; boothValue?: string; galleryLabel?: string;
 };
 export type TrustData = { caption: string; logos: { name: string; image?: string }[] };
+export type IntegrationsData = {
+  eyebrow: string; title: string; subtitle?: string; footnote?: string;
+  items: { group?: string; name: string; note?: string; image?: string }[];
+};
 export type FeaturesData = { eyebrow: string; title: string; items: { icon?: string; title: string; body: string }[] };
 export type HowData = { eyebrow: string; title: string; steps: { icon?: string; title: string; body: string }[] };
 export type TemplatesData = { eyebrow: string; title: string; tags: Bullet[] };
@@ -29,7 +33,7 @@ export type FaqData = { eyebrow: string; title: string; items: { q: string; a: s
 export type CtaData = { title: string; body: string; primaryCta: string; secondaryCta: string };
 export type SiteData = { logoUrl?: string; logoDarkUrl?: string; faviconUrl?: string; tagline: string; whatsappNumber: string; supportEmail: string };
 
-export type SectionKey = "hero" | "trust" | "features" | "howItWorks" | "templates" | "pricing" | "community" | "testimonials" | "faq" | "cta";
+export type SectionKey = "hero" | "trust" | "integrations" | "features" | "howItWorks" | "templates" | "pricing" | "community" | "testimonials" | "faq" | "cta";
 export type SiteContent = { site: SiteData; sections: { key: string; data: Record<string, unknown> }[] };
 
 

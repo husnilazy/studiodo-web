@@ -4,6 +4,7 @@ import { Hero } from "@/components/Hero";
 import { Footer } from "@/components/Footer";
 import { Trust } from "@/components/sections/Trust";
 import { Features } from "@/components/sections/Features";
+import { Integrations } from "@/components/sections/Integrations";
 import { HowItWorks } from "@/components/sections/HowItWorks";
 import { Templates } from "@/components/sections/Templates";
 import { Pricing } from "@/components/sections/Pricing";
@@ -31,6 +32,7 @@ type Renderer = (data: any, site: SiteData, stats: PlatformStats | null) => Reac
 const registry: Record<string, Renderer> = {
   hero: (d, _s, stats) => <Hero data={d} stats={stats} />,
   trust: (d) => <Trust data={d} />,
+  integrations: (d) => <Integrations data={d} />,
   features: (d) => <Features data={d} />,
   howItWorks: (d) => <HowItWorks data={d} />,
   templates: (d) => <Templates data={d} />,
