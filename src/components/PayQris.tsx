@@ -47,7 +47,7 @@ export function PayQris({ data: initial, token }: { data: PayData; token: string
   const [left, setLeft] = useState(() => Math.max(0, new Date(initial.dueAt).getTime() - Date.now()));
   const ins = data.instruction;
   // Tabs follow what is actually available (a method Midtrans refuses as "not activated" drops out).
-  const tabs = [...TABS.filter((t) => data.methods.some((m) => t.kinds.includes(m.kind))), { id: "card", title: "Kartu", kinds: [] as Method["kind"][] }];
+  const tabs = [...TABS.filter((t) => data.methods.some((m) => t.kinds.includes(m.kind))), { id: "card", title: "Lainnya", kinds: [] as Method["kind"][] }];
   const tab = tabs.some((t) => t.id === pick) ? pick : tabs[0].id;
   const shown = data.methods.filter((m) => (TABS.find((t) => t.id === tab)?.kinds ?? []).includes(m.kind));
   const waiting = status === "pending" && !!ins && !choosing;
@@ -132,8 +132,8 @@ export function PayQris({ data: initial, token }: { data: PayData; token: string
           </div>
           {tab === "card" ? (
             <button type="button" disabled={busy !== null} onClick={other} className="rounded-2xl border border-foreground/10 bg-foreground/[0.03] px-4 py-3.5 text-left transition hover:border-accent disabled:opacity-60">
-              <span className="block text-[15px] font-semibold">{busy === "other" ? "Membuka…" : "Kartu kredit/debit dan lainnya"}</span>
-              <span className="block text-[12.5px] leading-snug text-muted">Dibuka di halaman pembayaran aman Midtrans.</span>
+              <span className="block text-[15px] font-semibold">{busy === "other" ? "Membuka…" : "QRIS, GoPay, kartu, dan lainnya"}</span>
+              <span className="block text-[12.5px] leading-snug text-muted">Semua metode yang aktif di akun, termasuk QRIS GoPay dan kartu kredit/debit. Dibuka di halaman pembayaran aman Midtrans.</span>
             </button>
           ) : (
             <div className={`grid gap-2 ${shown.length > 1 ? "grid-cols-2" : ""}`}>
