@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Icon } from "./Icon";
 import { MascotHead } from "./brand/Mascot";
+import { BoothScene, MiniShot } from "./brand/BoothScene";
 
 // The hero's kiosk illustration, brought to life: it loops through a real booth session — a QRIS payment
 // arrives, a 3-2-1 countdown runs, the shutter flashes, the photo lands in the strip and the gallery is ready.
@@ -87,7 +88,7 @@ export function HeroVisual(p: Props) {
           <div className="glass rounded-[30px]! p-3 sm:p-3.5">
             <div className="flex aspect-[16/10] gap-2.5 sm:gap-3">
               <div className="relative flex flex-1 items-end overflow-hidden rounded-[20px]">
-                <div className={`absolute inset-0 bg-gradient-to-br ${main.gradient}`} />
+                {main.src ? <div className={`absolute inset-0 bg-gradient-to-br ${main.gradient}`} /> : <BoothScene phase={phase} shot={shot} />}
                 {main.src && (
                   // eslint-disable-next-line @next/next/no-img-element -- admin-uploaded photo of unknown size, served by the API
                   <img key={main.src} src={main.src} alt="" className="absolute inset-0 h-full w-full object-cover" />
@@ -104,7 +105,7 @@ export function HeroVisual(p: Props) {
                   {phase === 6 ? "Tersimpan" : "LIVE"}
                 </div>
                 {counting && (
-                  <div key={phase} className="pop-in absolute inset-0 flex items-center justify-center font-display text-[88px] font-semibold leading-none text-white drop-shadow-[0_6px_24px_rgba(0,0,0,0.35)] sm:text-[110px]">
+                  <div key={phase} className="pop-in absolute right-4 top-4 grid h-12 w-12 place-items-center rounded-full bg-black/45 font-display text-[28px] font-semibold leading-none text-white backdrop-blur-sm sm:h-14 sm:w-14 sm:text-[32px]">
                     {5 - phase}
                   </div>
                 )}
@@ -116,6 +117,7 @@ export function HeroVisual(p: Props) {
                   const ph = photoAt(shot - back);
                   return (
                     <div key={i} className={`relative flex-1 overflow-hidden rounded-2xl bg-gradient-to-br ${ph.src ? GRADIENTS[0] : THUMB_GRADIENTS[i]}`}>
+                      {!ph.src && <MiniShot i={shot - back + 30} />}
                       {ph.src ? (
                         // eslint-disable-next-line @next/next/no-img-element -- admin-uploaded photo, served by the API
                         <img src={ph.src} alt="" loading="lazy" className="absolute inset-0 h-full w-full object-cover" />

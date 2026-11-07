@@ -617,3 +617,53 @@ a:hover .m-word-do { animation: m-word-hop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1
   .m-do .m-cap-1 { opacity: 1; }
   .m-do .m-share { opacity: 0; }
 }
+
+
+/* ---- Hero booth scene: two friends whose poses follow the kiosk session (data-pose on the svg) ---- */
+.bs .bs-arm { transform-origin: 0 0; transform: rotate(12deg); transition: transform 0.55s cubic-bezier(0.34, 1.56, 0.64, 1); }
+.bs .bs-head { transform-origin: 0px 150px; transition: transform 0.45s ease; }
+.bs .bs-eyes { transform-origin: 0px 114px; transition: transform 0.12s ease; }
+.bs .bs-peace { opacity: 0; transition: opacity 0.25s; }
+.bs .bs-smile-b, .bs .bs-hearts { opacity: 0; transition: opacity 0.3s; }
+.bs .bs-smile-s { transition: opacity 0.3s; }
+.bs .bs-spark { transform-box: fill-box; transform-origin: center; animation: m-twinkle 2.8s ease-in-out infinite; }
+.bs .bs-spark-2 { animation-delay: 0.9s; }
+.bs .bs-spark-3 { animation-delay: 1.7s; }
+.bs .bs-person { transition: transform 0.4s ease; }
+
+/* idle: friend A waves at the camera */
+.bs[data-pose="wave"] .bs-a .bs-arm-r { animation: bs-wave 0.85s ease-in-out infinite; }
+.bs[data-pose="wave"] .bs-a .bs-head { transform: rotate(-4deg); }
+.bs[data-pose="wave"] .bs-b .bs-head { transform: rotate(3deg); }
+@keyframes bs-wave { 0%, 100% { transform: rotate(138deg); } 50% { transform: rotate(168deg); } }
+
+/* payment received: both cheer with their arms up */
+.bs[data-pose="cheer"] .bs-arm { transform: rotate(158deg); }
+.bs[data-pose="cheer"] .bs-smile-b { opacity: 1; }
+.bs[data-pose="cheer"] .bs-smile-s { opacity: 0; }
+.bs[data-pose="cheer"] .bs-person { transform: translateY(-6px); }
+
+/* countdown and flash: get ready, inner hands up with a peace sign, eyes shut at the flash */
+.bs[data-pose="ready"] .bs-a .bs-arm-r, .bs[data-pose="flash"] .bs-a .bs-arm-r,
+.bs[data-pose="ready"] .bs-b .bs-arm-l, .bs[data-pose="flash"] .bs-b .bs-arm-l { transform: rotate(150deg); }
+.bs[data-pose="ready"] .bs-a .bs-arm-r .bs-peace, .bs[data-pose="flash"] .bs-a .bs-arm-r .bs-peace,
+.bs[data-pose="ready"] .bs-b .bs-arm-l .bs-peace, .bs[data-pose="flash"] .bs-b .bs-arm-l .bs-peace { opacity: 1; }
+.bs[data-pose="ready"] .bs-smile-b, .bs[data-pose="flash"] .bs-smile-b { opacity: 1; }
+.bs[data-pose="ready"] .bs-smile-s, .bs[data-pose="flash"] .bs-smile-s { opacity: 0; }
+.bs[data-pose="ready"] .bs-a .bs-head, .bs[data-pose="flash"] .bs-a .bs-head { transform: rotate(5deg); }
+.bs[data-pose="ready"] .bs-b .bs-head, .bs[data-pose="flash"] .bs-b .bs-head { transform: rotate(-5deg); }
+.bs[data-pose="flash"] .bs-eyes { transform: scaleY(0.12); }
+
+/* photo ready: all four hands up with peace signs, hearts float */
+.bs[data-pose="pose"] .bs-arm { transform: rotate(152deg); }
+.bs[data-pose="pose"] .bs-peace { opacity: 1; }
+.bs[data-pose="pose"] .bs-smile-b { opacity: 1; }
+.bs[data-pose="pose"] .bs-smile-s { opacity: 0; }
+.bs[data-pose="pose"] .bs-a .bs-head { transform: rotate(6deg); }
+.bs[data-pose="pose"] .bs-b .bs-head { transform: rotate(-6deg); }
+.bs[data-pose="pose"] .bs-hearts { opacity: 1; animation: bs-hearts 2.4s ease-in-out infinite; }
+@keyframes bs-hearts { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+
+@media (prefers-reduced-motion: reduce) {
+  .bs *, .bs { animation: none !important; transition: none !important; }
+}
