@@ -1,14 +1,14 @@
-import { useId } from "react";
+import { useId, type ReactNode } from "react";
 
 // The STUDIODO mascot: a little camera-robot. A glossy dark screen for a face (two happy arcs), a flash lamp and a shutter button on top,
 // strap lugs on the sides, a soft white body. Brand idea "STUDIO..DO": the studio is the place, the mascot is the DO. It captures
 // (flash), prints (a polaroid comes out of its belly) and shares (sparkles fly). Pure SVG + CSS (see "Mascot" in globals.css), so it stays
 // crisp at any size and costs no image requests. Every animation is switched off by prefers-reduced-motion.
 
-const SPARKLE = "M0 -12 L3.2 -3.2 L12 0 L3.2 3.2 L0 12 L-3.2 3.2 L-12 0 L-3.2 -3.2 Z";
-const RIM = "#cfc9f3";
+export const SPARKLE = "M0 -12 L3.2 -3.2 L12 0 L3.2 3.2 L0 12 L-3.2 3.2 L-12 0 L-3.2 -3.2 Z";
+export const RIM = "#cfc9f3";
 
-function Defs({ id }: { id: string }) {
+export function Defs({ id }: { id: string }) {
   return (
     <defs>
       {/* soft 3D body: bright top-left, lavender shade bottom-right */}
@@ -25,6 +25,7 @@ function Defs({ id }: { id: string }) {
         <stop offset="0" stopColor="#ffe6ad" />
         <stop offset="1" stopColor="#ffb040" />
       </linearGradient>
+      <clipPath id={`${id}-clip`}><rect x="60" y="78" width="120" height="108" rx="40" /></clipPath>
       <radialGradient id={`${id}-glow`}>
         <stop offset="0" stopColor="#ffd37a" stopOpacity="0.95" />
         <stop offset="1" stopColor="#ffd37a" stopOpacity="0" />
@@ -34,7 +35,7 @@ function Defs({ id }: { id: string }) {
 }
 
 /** The head, drawn in a 240x240 box. `flashKey` > 0 restarts one camera-flash burst each time it changes. */
-function Head({ id, flashKey = 0 }: { id: string; flashKey?: number }) {
+export function Head({ id, flashKey = 0, screen, sceneOn = false }: { id: string; flashKey?: number; screen?: ReactNode; sceneOn?: boolean }) {
   return (
     <g transform="rotate(-6 120 130)">
       {/* shutter button (top right): reads as "camera" at a glance */}
@@ -60,12 +61,14 @@ function Head({ id, flashKey = 0 }: { id: string; flashKey?: number }) {
       {/* screen with a light bezel and a glossy streak */}
       <rect x="55" y="73" width="130" height="118" rx="44" fill="#e9e6fa" />
       <rect x="60" y="78" width="120" height="108" rx="40" fill={`url(#${id}-screen)`} />
+      {/* the screen can show something else (the camera view) instead of the face: it fades in and out with the session */}
+      {screen && <g clipPath={`url(#${id}-clip)`} className="rb-scene" style={{ opacity: sceneOn ? 1 : 0 }}>{screen}</g>}
       <path d="M76 98 q28 -24 68 -21 l-6 13 q-32 -3 -56 14 z" fill="#fff" opacity="0.08" />
-      <g className="m-eyes">
+      <g className="m-eyes" style={screen ? { opacity: sceneOn ? 0 : 1, transition: "opacity 0.3s" } : undefined}>
         <path d="M84 142 q12 -22 24 0" fill="none" stroke="#fff" strokeWidth="9" strokeLinecap="round" />
         <path d="M132 142 q12 -22 24 0" fill="none" stroke="#fff" strokeWidth="9" strokeLinecap="round" />
       </g>
-      <path className="m-spark" d={SPARKLE} transform="translate(160 102) scale(0.9)" fill="#fff" opacity="0.9" />
+      <path className="m-spark" d={SPARKLE} transform="translate(160 102) scale(0.9)" fill="#fff" style={screen ? { opacity: sceneOn ? 0 : 0.9, transition: "opacity 0.3s" } : undefined} />
     </g>
   );
 }

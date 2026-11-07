@@ -1,4 +1,5 @@
 import { useId } from "react";
+import { Defs, Head } from "./Mascot";
 
 // The picture inside the hero's kiosk screen: two friends in front of a photo backdrop who follow the booth session.
 // phase: 0 idle (one waves at the camera) · 1 payment received (both cheer) · 2/3/4 countdown (get ready, peace sign) · 5 flash (eyes shut)
@@ -14,7 +15,8 @@ const POSE = ["wave", "cheer", "ready", "ready", "ready", "flash", "pose"] as co
 
 function Person({ x, skin, hair, shirt, hairStyle, side }: { x: number; skin: string; hair: string; shirt: string; hairStyle: number; side: "a" | "b" }) {
   return (
-    <g transform={`translate(${x} 0)`} className={`bs-person bs-${side}`}>
+    // The position lives on the outer group and the CSS pose motion on the inner one: a CSS transform would replace the SVG attribute.
+    <g transform={`translate(${x} 0)`}><g className={`bs-person bs-${side}`}>
       {/* arms behind the torso edges; each is a bent stroke starting at the shoulder, rotated by CSS */}
       <g transform="translate(-34 168)"><g className="bs-arm bs-arm-l">
         <path d="M0 0 q5 22 1 44" fill="none" stroke={shirt} strokeWidth="17" strokeLinecap="round" />
@@ -46,18 +48,21 @@ function Person({ x, skin, hair, shirt, hairStyle, side }: { x: number; skin: st
         <path className="bs-smile-s" d="M-8 128 q8 6 16 0" fill="none" stroke="#1b1424" strokeWidth="3" strokeLinecap="round" />
         <path className="bs-smile-b" d="M-11 126 q11 14 22 0 z" fill="#8a2b3c" stroke="#1b1424" strokeWidth="2.4" strokeLinejoin="round" />
       </g>
-    </g>
+    </g></g>
   );
 }
 
-export function BoothScene({ phase, shot, className = "" }: { phase: number; shot: number; className?: string }) {
+export function BoothScene({ phase, shot, className = "", robot = false, flashKey = 0, nested }: { phase: number; shot: number; className?: string; robot?: boolean; flashKey?: number; nested?: { x: number; y: number; w: number; h: number } }) {
   const id = useId().replace(/:/g, "");
   const n = Math.abs(shot);
   const a = { skin: SKIN[n % 4], hair: HAIR[(n + 1) % 4], shirt: SHIRT[n % 6], hairStyle: n % 3 };
   const b = { skin: SKIN[(n + 2) % 4], hair: HAIR[(n + 3) % 4], shirt: SHIRT[(n + 3) % 6], hairStyle: (n + 1) % 3 };
   const pose = POSE[phase] ?? "wave";
   return (
-    <svg viewBox="0 0 340 300" preserveAspectRatio="xMidYMax slice" className={`bs absolute inset-0 h-full w-full ${className}`} data-pose={pose} aria-hidden="true">
+    <svg
+      viewBox="0 0 340 300" preserveAspectRatio="xMidYMax slice" data-pose={pose} aria-hidden="true"
+      {...(nested ? { x: nested.x, y: nested.y, width: nested.w, height: nested.h, className: "bs" } : { className: `bs absolute inset-0 h-full w-full ${className}` })}
+    >
       <defs>
         <linearGradient id={`${id}-bg`} x1="0" y1="0" x2="1" y2="1">
           <stop offset="0" stopColor="#ffd9e8" />
@@ -72,6 +77,15 @@ export function BoothScene({ phase, shot, className = "" }: { phase: number; sho
       <path className="bs-spark" d={SPARKLE} transform="translate(300 40)" fill="#fff" />
       <path className="bs-spark bs-spark-2" d={SPARKLE} transform="translate(38 150) scale(0.7)" fill="#fff" />
       <path className="bs-spark bs-spark-3" d={SPARKLE} transform="translate(170 36) scale(0.6)" fill="#fff" />
+      {/* the robot photographer: slides to and fro behind the friends, settles in the middle for the shot and flashes with the camera */}
+      {robot && (
+        <g className="bs-robot">
+          <g transform="translate(112 6) scale(0.5)">
+            <Defs id={`${id}r`} />
+            <g className="m-float"><Head id={`${id}r`} flashKey={flashKey} /></g>
+          </g>
+        </g>
+      )}
       <g transform="translate(0 4) scale(0.9) translate(18 8)">
         <Person x={108} {...a} side="a" />
         <Person x={232} {...b} side="b" />

@@ -1,9 +1,10 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { Icon } from "./Icon";
 import { MascotHead } from "./brand/Mascot";
 import { BoothScene, MiniShot } from "./brand/BoothScene";
+import { RobotBooth } from "./brand/RobotBooth";
 
 // The hero's kiosk illustration, brought to life: it loops through a real booth session — a QRIS payment
 // arrives, a 3-2-1 countdown runs, the shutter flashes, the photo lands in the strip and the gallery is ready.
@@ -37,6 +38,14 @@ export function HeroVisual(p: Props) {
   const [phase, setPhase] = useState(0);
   const [shot, setShot] = useState(0); // index of the photo currently on the big screen
   const [running, setRunning] = useState(true);
+  // Experiment: ?coba=1 shows a switch between the hero layouts; ?hero=robot | photographer | monitor picks one.
+  // useSyncExternalStore keeps server and first client render identical (empty query) and then reads the real URL.
+  const search = useSyncExternalStore(() => () => {}, () => window.location.search, () => "");
+  const [picked, setPicked] = useState<"monitor" | "photographer" | "robot" | null>(null);
+  const q = new URLSearchParams(search);
+  const fromUrl = q.get("hero");
+  const variant = picked ?? (fromUrl === "robot" || fromUrl === "photographer" || fromUrl === "monitor" ? fromUrl : "monitor");
+  const showSwitch = q.get("coba") === "1";
   const [flashes, setFlashes] = useState(0); // bumps on every shutter flash: the mascot's lamp flashes with the kiosk screen
   const root = useRef<HTMLDivElement>(null);
   const n = Math.max(p.images.length, GRADIENTS.length);
@@ -75,6 +84,13 @@ export function HeroVisual(p: Props) {
 
   return (
     <div ref={root} className="relative mx-auto h-[400px] w-full max-w-[600px] sm:h-[470px]" aria-hidden="true">
+      {variant === "robot" && (
+        <div className="absolute inset-x-0 top-0 mx-auto h-full w-full max-w-[420px]" data-parallax="0.04">
+          <div className="float-a h-full"><RobotBooth phase={phase} shot={shot} flashKey={flashes} /></div>
+        </div>
+      )}
+
+      {variant !== "robot" && (<>
       {/* The mascot peeks over the top edge of the monitor (it is drawn first, so the monitor covers its lower half) and flashes with every shot. */}
       <div className="pointer-events-none absolute right-[12%] top-[-26px] z-0 hidden w-[124px] sm:top-[-30px] sm:block">
         <MascotHead flashKey={flashes} />
@@ -88,7 +104,7 @@ export function HeroVisual(p: Props) {
           <div className="glass rounded-[30px]! p-3 sm:p-3.5">
             <div className="flex aspect-[16/10] gap-2.5 sm:gap-3">
               <div className="relative flex flex-1 items-end overflow-hidden rounded-[20px]">
-                {main.src ? <div className={`absolute inset-0 bg-gradient-to-br ${main.gradient}`} /> : <BoothScene phase={phase} shot={shot} />}
+                {main.src ? <div className={`absolute inset-0 bg-gradient-to-br ${main.gradient}`} /> : <BoothScene phase={phase} shot={shot} robot={variant === "photographer"} flashKey={flashes} />}
                 {main.src && (
                   // eslint-disable-next-line @next/next/no-img-element -- admin-uploaded photo of unknown size, served by the API
                   <img key={main.src} src={main.src} alt="" className="absolute inset-0 h-full w-full object-cover" />
@@ -139,6 +155,8 @@ export function HeroVisual(p: Props) {
        </div>
       </div>
 
+      </>)}
+
       {/* Floating cards */}
       <div data-parallax="-0.1" className="absolute -left-6 -top-1.5 hidden sm:block">
         <div className="float-b">
@@ -184,6 +202,13 @@ export function HeroVisual(p: Props) {
           </div>
         </div>
       </div>
+      {showSwitch && (
+        <div className="absolute -bottom-9 left-1/2 z-20 flex -translate-x-1/2 gap-1.5 rounded-full bg-foreground/90 p-1 text-[12px] font-semibold text-on-foreground" aria-hidden="false">
+          {([["monitor", "Monitor"], ["photographer", "Robot memotret"], ["robot", "Robot = photobooth"]] as const).map(([v, label]) => (
+            <button key={v} type="button" onClick={() => setPicked(v)} className={`rounded-full px-3 py-1.5 transition ${variant === v ? "bg-accent text-white" : "opacity-70 hover:opacity-100"}`}>{label}</button>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
