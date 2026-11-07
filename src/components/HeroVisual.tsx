@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { Icon } from "./Icon";
+import { MascotHead } from "./brand/Mascot";
 
 // The hero's kiosk illustration, brought to life: it loops through a real booth session — a QRIS payment
 // arrives, a 3-2-1 countdown runs, the shutter flashes, the photo lands in the strip and the gallery is ready.
@@ -35,6 +36,7 @@ export function HeroVisual(p: Props) {
   const [phase, setPhase] = useState(0);
   const [shot, setShot] = useState(0); // index of the photo currently on the big screen
   const [running, setRunning] = useState(true);
+  const [flashes, setFlashes] = useState(0); // bumps on every shutter flash: the mascot's lamp flashes with the kiosk screen
   const root = useRef<HTMLDivElement>(null);
   const n = Math.max(p.images.length, GRADIENTS.length);
 
@@ -56,7 +58,7 @@ export function HeroVisual(p: Props) {
   useEffect(() => {
     if (!running) return;
     const t = window.setTimeout(() => {
-      if (phase === 5) setShot((s) => (s + 1) % n); // the new photo appears the moment the flash peaks
+      if (phase === 5) { setShot((s) => (s + 1) % n); setFlashes((f) => f + 1); } // the new photo appears the moment the flash peaks
       setPhase((ph) => (ph + 1) % DURATIONS.length);
     }, DURATIONS[phase]);
     return () => window.clearTimeout(t);
@@ -72,6 +74,11 @@ export function HeroVisual(p: Props) {
 
   return (
     <div ref={root} className="relative mx-auto h-[640px] w-full max-w-[600px] sm:h-[660px]" aria-hidden="true">
+      {/* The mascot peeks over the top edge of the kiosk screen (it is drawn first, so the screen covers its lower half) and flashes with every shot. */}
+      <div className="pointer-events-none absolute left-[calc(50%+28px)] top-[-58px] z-0 hidden w-[132px] sm:block lg:left-[330px]">
+        <MascotHead flashKey={flashes} />
+      </div>
+
       {/* Phone / kiosk screen */}
       {/* Centering uses Tailwind's `translate`, which the inline parallax `translate` would overwrite — so they live on separate elements. */}
       <div className="absolute left-1/2 top-2.5 -translate-x-1/2 lg:left-[150px] lg:translate-x-0">

@@ -1,4 +1,5 @@
 import { assetUrl, getSite } from "@/lib/content";
+import { Logomark, Wordmark } from "@/components/brand/Mascot";
 
 type LogoProps = { src?: string | null; darkSrc?: string | null };
 
@@ -23,9 +24,9 @@ export function Logo({ src, darkSrc }: LogoProps) {
     return <img src={(src || darkSrc) as string} alt="STUDIODO" className={cls} />;
   }
   return (
-    <span className="flex items-center gap-2.5">
-      <span className="h-[26px] w-[26px] rounded-full bg-gradient-to-br from-accent to-accent-soft" />
-      <span className="font-display text-xl font-semibold tracking-[0.02em]">STUDIODO</span>
+    <span className="flex items-center gap-2" aria-label="STUDIODO">
+      <Logomark size={36} />
+      <Wordmark className="text-[26px] leading-none" />
     </span>
   );
 }
