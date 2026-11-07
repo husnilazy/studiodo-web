@@ -11,7 +11,7 @@ const smallBtn = "btn glass rounded-full! px-4 py-2 text-[13px] text-muted trans
 
 function Notice({ tone, children }: { tone: "ok" | "error" | "info"; children: React.ReactNode }) {
   const cls = tone === "ok" ? "bg-[#dff7ec] text-[#0f6b45]" : tone === "error" ? "bg-[#ffe3e3] text-[#a12626]" : "bg-[#eef0ff] text-[#3b3fa8]";
-  return <p role={tone === "error" ? "alert" : "status"} className={`rounded-2xl px-4 py-3 text-sm ${cls}`}>{children}</p>;
+  return <div role={tone === "error" ? "alert" : "status"} className={`rounded-2xl px-4 py-3 text-sm ${cls}`}>{children}</div>;
 }
 
 function Copy({ label, value }: { label: string; value: string }) {
@@ -39,7 +39,9 @@ export function PaymentSettingsForm({ config }: { config: PaymentConfig }) {
   const [pending, start] = useTransition();
   const [message, setMessage] = useState<{ tone: "ok" | "error" | "info"; text: string } | null>(null);
 
-  const platform = config.qrisSettlement === "platform";
+  const [settlement, setSettlement] = useState<"direct" | "platform">(config.qrisSettlement);
+  const platform = settlement === "platform";
+  const terms = config.platform;
   const xenditReady = config.hasSecretKey && config.hasWebhookToken;
   const dokuReady = Boolean(config.dokuClientId) && config.hasDokuSecret;
 
@@ -55,6 +57,16 @@ export function PaymentSettingsForm({ config }: { config: PaymentConfig }) {
     });
   };
 
+  const chooseSettlement = (next: "direct" | "platform") => {
+    if (next === settlement) return;
+    setMessage(null);
+    start(async () => {
+      const r = await savePaymentAction({ qrisSettlement: next });
+      if (r.ok) { setSettlement(next); setMessage({ tone: "ok", text: next === "platform" ? "QRIS kini diterima lewat akun STUDIODO." : "QRIS kini diterima di akun gateway Anda sendiri." }); }
+      else setMessage({ tone: "error", text: r.error });
+    });
+  };
+
   const test = () => {
     setMessage(null);
     start(async () => {
@@ -65,10 +77,39 @@ export function PaymentSettingsForm({ config }: { config: PaymentConfig }) {
 
   return (
     <div className="grid max-w-[760px] gap-6">
-      {platform && (
-        <Notice tone="info">Akun Anda memakai penampungan QRIS oleh STUDIODO: pembayaran pelanggan masuk ke akun STUDIODO dan saldonya dapat ditarik di menu <strong>Saldo QRIS</strong>. Kunci di bawah tidak diperlukan.</Notice>
-      )}
+      <section className="glass grid gap-5 p-7">
+        <h2 className="font-display text-xl tracking-tight">Siapa yang menerima uang QRIS?</h2>
+        <p className="-mt-3 text-[14px] text-muted">Pilih ke mana uang pembayaran QRIS dari kiosk masuk. Hanya satu yang aktif.</p>
+        <div role="radiogroup" aria-label="Penerima uang QRIS" className="grid gap-3 sm:grid-cols-2">
+          {([
+            { id: "platform", name: "Akun STUDIODO (default)", desc: "Tanpa perlu akun Xendit/DOKU sendiri. Uang QRIS masuk ke akun STUDIODO dan menjadi saldo Anda di menu Saldo QRIS, lalu Anda tarik ke rekening." },
+            { id: "direct", name: "Akun gateway saya sendiri", desc: "Pakai Xendit atau DOKU milik Anda. Uang langsung masuk ke akun gateway Anda; STUDIODO tidak menahan dana." },
+          ] as const).map((o) => {
+            const unavailable = o.id === "platform" && !platform && terms?.ready === false;
+            return (
+              <button key={o.id} type="button" role="radio" aria-checked={settlement === o.id} disabled={pending || unavailable} onClick={() => chooseSettlement(o.id)}
+                className={`rounded-[20px] border p-4 text-left transition disabled:cursor-not-allowed disabled:opacity-60 ${settlement === o.id ? "border-accent bg-accent/[0.06] ring-2 ring-accent/30" : "border-foreground/10 bg-panel/50 hover:border-foreground/25"}`}>
+                <div className="flex items-center justify-between font-semibold">{o.name}{settlement === o.id && <span className="rounded-full bg-accent px-2 py-0.5 text-[10px] font-semibold uppercase text-white">Aktif</span>}</div>
+                <div className="mt-1 text-[12.5px] leading-relaxed text-muted">{o.desc}</div>
+                {unavailable && <div className="mt-2 text-[12px] text-[#a15c00]">Belum tersedia saat ini. Hubungi STUDIODO.</div>}
+              </button>
+            );
+          })}
+        </div>
+        {platform && (
+          <Notice tone="info">
+            <strong>QRIS kiosk Anda masuk ke akun STUDIODO.</strong>
+            <ul className="mt-2 list-disc space-y-1 pl-5">
+              <li>Setiap pembayaran QRIS yang berhasil otomatis menjadi saldo Anda{terms ? ` (setelah dipotong biaya ${terms.feePercent}%)` : ""}.</li>
+              {terms && <li>Dana ditahan {terms.holdDays} hari sebelum bisa ditarik; penarikan minimal Rp {terms.minWithdrawal.toLocaleString("id-ID")}.</li>}
+              <li>Lihat saldo dan ajukan penarikan di menu <strong>Saldo QRIS</strong>.</li>
+              <li>Akun Xendit/DOKU milik Anda <strong>tidak dipakai</strong> selama pilihan ini aktif. Tunai dan voucher tidak terpengaruh.</li>
+            </ul>
+          </Notice>
+        )}
+      </section>
 
+      {!platform && (
       <section className="glass grid gap-5 p-7">
         <h2 className="font-display text-xl tracking-tight">Gateway pembayaran kiosk</h2>
         <p className="-mt-3 text-[14px] text-muted">Pilih gateway yang menerima pembayaran QRIS dari pelanggan booth Anda. Uang langsung masuk ke akun gateway Anda sendiri.</p>
@@ -113,6 +154,7 @@ export function PaymentSettingsForm({ config }: { config: PaymentConfig }) {
           </div>
         )}
       </section>
+      )}
 
       <section className="glass grid gap-4 p-7">
         <h2 className="font-display text-xl tracking-tight">Metode bayar di kiosk</h2>

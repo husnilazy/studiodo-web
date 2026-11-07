@@ -5,6 +5,7 @@ import { portalCall } from "@/lib/portal";
 import type { ActionResult } from "@/lib/portalTypes";
 
 export type PaymentInput = {
+  qrisSettlement?: "direct" | "platform";
   paymentProvider?: "xendit" | "doku";
   secretKey?: string;
   webhookToken?: string;
@@ -22,6 +23,7 @@ const short = (v: unknown, max: number) => (typeof v === "string" ? v.trim().sli
 /** Saves the tenant's own kiosk payment settings. Secrets are write-only: the API never sends them back. */
 export async function savePaymentAction(input: PaymentInput): Promise<ActionResult> {
   const body: PaymentInput = {};
+  if (input.qrisSettlement === "direct" || input.qrisSettlement === "platform") body.qrisSettlement = input.qrisSettlement;
   if (input.paymentProvider === "xendit" || input.paymentProvider === "doku") body.paymentProvider = input.paymentProvider;
   const secretKey = short(input.secretKey, 300);
   const webhookToken = short(input.webhookToken, 300);

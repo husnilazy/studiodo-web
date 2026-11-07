@@ -2,7 +2,9 @@ import Link from "next/link";
 import { Icon } from "@/components/Icon";
 import { CountUp } from "@/components/dash/CountUp";
 import { PageHeader } from "@/components/dash/PageHeader";
-import { getSummary } from "@/lib/portal";
+import { ReadinessCard } from "@/components/dash/ReadinessCard";
+import { getSummary, portalCall } from "@/lib/portal";
+import type { ReadinessReport } from "@/lib/portalTypes";
 import { daysUntil, formatDate, formatDateTime, formatRupiah } from "@/lib/format";
 
 export const dynamic = "force-dynamic";
@@ -97,7 +99,7 @@ const QUICK = [
 ];
 
 export default async function PortalHome() {
-  const s = await getSummary();
+  const [s, readiness] = await Promise.all([getSummary(), portalCall<ReadinessReport>("GET", "/api/config/readiness")]);
   const lic = s.licenses;
   const totalKeys = s.kiosks.length;
   const onlineKiosks = s.kiosks.filter((k) => k.online).length;
@@ -131,6 +133,8 @@ export default async function PortalHome() {
         intro={s.email ? `Masuk sebagai ${s.email}` : undefined}
         actions={<Link href="/portal/booth" className="btn btn-primary inline-flex items-center gap-2 px-6 py-3 text-[14px]"><Icon name="monitor" className="h-4 w-4" />Kelola booth &amp; langganan</Link>}
       />
+
+      {readiness.ok && <ReadinessCard report={readiness.data} />}
 
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4 lg:gap-5">
         <div className="glass-dark dash-card-hover relative overflow-hidden rounded-[26px] p-6">

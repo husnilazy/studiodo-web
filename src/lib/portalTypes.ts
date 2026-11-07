@@ -75,6 +75,8 @@ export type PaymentConfig = {
   cashPaymentEnabled: boolean;
   qrisEnabled: boolean;
   qrisSettlement: "direct" | "platform";
+  /** Terms of "terima lewat STUDIODO" (absent on an API build older than that choice). */
+  platform?: { ready: boolean; feePercent: number; holdDays: number; minWithdrawal: number; flatFee: number };
   paymentProvider: "xendit" | "doku";
   dokuClientId: string;
   hasDokuSecret: boolean;
@@ -184,4 +186,14 @@ export type LiveData = {
   summary: { booths: number; online: number; inSession: number; waitingPayment: number; offline: number; locked: number; sessionsToday: number; paidToday: number; revenueToday: number };
   booths: LiveBooth[];
   recent: { id: string; at: string; booth: string; packageName: string | null; amount: number; paymentStatus: string; done: boolean; hasContact: boolean }[];
+};
+
+export type ReadinessCheck = { id: string; title: string; status: "ok" | "warn" | "error"; message: string; action?: { label: string; target: string } };
+export type ReadinessReport = { checks: ReadinessCheck[]; ready: boolean; done: number; total: number };
+
+export type BoothDetail = {
+  booth: { id: string; label: string | null };
+  overrides: Record<string, string>;
+  packageOverrides: Record<string, { price?: number; active?: boolean }>;
+  packages: { id: string; name: string; price: number; active: boolean; photoCount: number }[];
 };

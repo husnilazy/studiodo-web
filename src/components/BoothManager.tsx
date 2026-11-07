@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useMemo, useRef, useState, useTransition } from "react";
 import { Spinner } from "@/components/Spinner";
 import type { PublicPlan } from "@/lib/api";
@@ -90,6 +91,7 @@ function BoothCard({ booth, selected, onToggle }: { booth: BoothView; selected: 
       </label>
 
       <div className="flex flex-wrap gap-2">
+        <Link href={`/portal/booth/${booth.id}`} className={`${smallBtn} !text-accent`} title="Harga paket dan tampilan khusus untuk booth ini">Pengaturan booth</Link>
         <button type="button" disabled={pending} className={smallBtn} onClick={() => (key ? setKey(null) : run(async () => { const r = await revealKeyAction(booth.id); if (r.ok) setKey(r.data); return r; }))}>
           {key ? "Sembunyikan key" : "Lihat key"}
         </button>
