@@ -44,7 +44,7 @@ export function HeroVisual(p: Props) {
   const [picked, setPicked] = useState<"monitor" | "photographer" | "robot" | null>(null);
   const q = new URLSearchParams(search);
   const fromUrl = q.get("hero");
-  const variant = picked ?? (fromUrl === "robot" || fromUrl === "photographer" || fromUrl === "monitor" ? fromUrl : "monitor");
+  const variant = picked ?? (fromUrl === "robot" || fromUrl === "photographer" || fromUrl === "monitor" ? fromUrl : "photographer");
   const showSwitch = q.get("coba") === "1";
   const [flashes, setFlashes] = useState(0); // bumps on every shutter flash: the mascot's lamp flashes with the kiosk screen
   const root = useRef<HTMLDivElement>(null);
@@ -92,9 +92,11 @@ export function HeroVisual(p: Props) {
 
       {variant !== "robot" && (<>
       {/* The mascot peeks over the top edge of the monitor (it is drawn first, so the monitor covers its lower half) and flashes with every shot. */}
-      <div className="pointer-events-none absolute right-[12%] top-[-26px] z-0 hidden w-[124px] sm:top-[-30px] sm:block">
-        <MascotHead flashKey={flashes} />
-      </div>
+      {variant === "monitor" && (
+        <div className="pointer-events-none absolute right-[12%] top-[-26px] z-0 hidden w-[124px] sm:top-[-30px] sm:block">
+          <MascotHead flashKey={flashes} />
+        </div>
+      )}
 
       {/* A landscape kiosk monitor, like the real booth: the camera view on the left, the photo strip and start button on the right. */}
       {/* Centering uses Tailwind's `translate`, which the inline parallax `translate` would overwrite, so they live on separate elements. */}
@@ -178,7 +180,7 @@ export function HeroVisual(p: Props) {
         </div>
       </div>
 
-      <div data-parallax="0.14" className="absolute -right-3 bottom-1 hidden w-[190px] sm:block">
+      <div data-parallax="0.14" className="absolute -right-3 -bottom-5 hidden w-[190px] sm:block">
         <div className="float-c">
           <div className="glass hero-float rounded-[20px]! px-4 py-3.5">
             <div className="flex items-center gap-2 text-xs text-muted">
