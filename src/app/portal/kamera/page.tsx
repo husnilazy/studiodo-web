@@ -36,12 +36,12 @@ const ROUTES: { name: string; status: Status; tagline: string; points: string[] 
     ],
   },
   {
-    name: "Canon EOS — bridge native",
-    status: "beta",
+    name: "Canon EOS — SDK langsung (EDSDK)",
+    status: "ready",
     tagline: "Tanpa digiCamControl: kiosk bicara langsung ke kamera lewat Canon EDSDK.",
     points: [
       "Fungsinya sama dengan jalur digiCamControl, tapi satu aplikasi lebih sedikit di PC booth.",
-      "Masih dalam pengujian di kamera asli — belum disarankan untuk booth yang sedang beroperasi.",
+      "Sudah teruji di kamera Canon asli.",
       "Diaktifkan bila diminta tim STUDIODO; tidak bisa jalan bersamaan dengan digiCamControl atau EOS Utility.",
     ],
   },
@@ -69,7 +69,7 @@ const ROUTES: { name: string; status: Status; tagline: string; points: string[] 
 const BRANDS: [string, string, string, Status][] = [
   ["Webcam USB / mode webcam", "Foto video (resolusi webcam)", "Otomatis (browser)", "ready"],
   ["Canon EOS", "Foto penuh · live view · atur ISO/shutter/aperture/WB", "digiCamControl", "ready"],
-  ["Canon EOS", "Sama seperti di atas", "Bridge native (EDSDK)", "beta"],
+  ["Canon EOS", "Sama seperti di atas", "SDK langsung (EDSDK)", "ready"],
   ["Sony Alpha (model baru)", "Foto penuh · live view · atur eksposur", "Bridge native (Sony SDK)", "beta"],
   ["Sony Alpha (model lama, mis. A6600)", "Hanya lewat mode webcam", "Webcam USB", "ready"],
   ["Nikon", "Hanya lewat mode webcam", "Webcam USB", "soon"],

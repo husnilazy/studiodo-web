@@ -75,7 +75,7 @@ export const FEATURE_GROUPS: FeatureGroup[] = [
     title: "Kamera & Cetak",
     tint: "from-[#bfd8ff] to-[#eaf2ff]",
     items: [
-      "Webcam atau DSLR / mirrorless (digiCamControl, SDK Canon dan Sony beta)",
+      "Webcam atau DSLR / mirrorless (Canon lewat SDK langsung, atau digiCamControl)",
       "Atur ISO, shutter, aperture, white balance dari dashboard",
       "Live view saat sesi berjalan",
       "Printer apa saja yang punya driver Windows",
