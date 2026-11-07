@@ -164,3 +164,18 @@ export function Wordmark({ className = "" }: { className?: string }) {
     </span>
   );
 }
+
+/** Big animated "studiodo / Photobooth Apps" lockup: the letters ripple in a wave, "do" glows, the sparkle twinkles and a light sweeps the tagline. */
+export function WordmarkLoop({ className = "" }: { className?: string }) {
+  const letters = "studio".split("");
+  return (
+    <div className={`wl flex select-none flex-col items-center gap-2 ${className}`} role="img" aria-label="STUDIODO Photobooth Apps">
+      <div aria-hidden="true" className="flex items-start font-display text-[56px] font-semibold lowercase leading-none tracking-[-0.04em]">
+        {letters.map((c, i) => <span key={i} className="wl-l" style={{ animationDelay: `${i * 0.12}s` }}>{c}</span>)}
+        {["d", "o"].map((c, i) => <span key={c} className="wl-l wl-do" style={{ animationDelay: `${(6 + i) * 0.12}s` }}>{c}</span>)}
+        <svg viewBox="-14 -14 28 28" className="wl-spark -ml-0.5 -mt-1 h-[0.42em] w-[0.42em] text-accent"><path d={SPARKLE} fill="currentColor" /></svg>
+      </div>
+      <div aria-hidden="true" className="wl-tag font-display text-[13px] font-medium uppercase tracking-[0.32em] text-muted">Photobooth Apps</div>
+    </div>
+  );
+}
