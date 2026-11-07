@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { SignupForm } from "@/components/SignupForm";
+import { InstantSignupForm } from "@/components/InstantSignupForm";
+import { fetchSignupConfig } from "@/lib/api";
 
 export const metadata: Metadata = {
   title: "Daftar",
@@ -11,6 +13,11 @@ export const metadata: Metadata = {
 export default async function DaftarPage({ searchParams }: PageProps<"/daftar">) {
   const sp = await searchParams;
   const plan = typeof sp.paket === "string" ? sp.paket.slice(0, 60) : undefined;
+  const periode = typeof sp.periode === "string" ? sp.periode : undefined;
+  const aksi = typeof sp.aksi === "string" ? sp.aksi : undefined;
+  // A STUDIODO admin chooses (Admin Pusat -> Pengaturan): instant accounts, or the review form.
+  const config = await fetchSignupConfig();
+  const instant = config.mode === "instant";
 
   return (
     <div className="relative flex flex-1 flex-col overflow-clip">
@@ -21,13 +28,15 @@ export default async function DaftarPage({ searchParams }: PageProps<"/daftar">)
         <div className="mb-10 flex flex-col gap-4">
           <div className="eyebrow">Daftar</div>
           <h1 className="font-display text-4xl font-normal leading-[1.08] tracking-[-0.035em] md:text-5xl">
-            Mulai trial gratis 7 hari.
+            {instant ? `Buat akun, mulai ${config.trialDays} hari gratis.` : "Mulai trial gratis 7 hari."}
           </h1>
           <p className="text-[17px] leading-relaxed text-muted">
-            Isi data singkat berikut. Tim kami meninjau pengajuan lalu mengaktifkan akun tenant Anda.
+            {instant
+              ? "Isi data singkat berikut. Akun dan key booth langsung aktif, tanpa menunggu persetujuan."
+              : "Isi data singkat berikut. Tim kami meninjau pengajuan lalu mengaktifkan akun tenant Anda."}
           </p>
         </div>
-        <SignupForm plan={plan} />
+        {instant ? <InstantSignupForm plan={plan} periode={periode} aksi={aksi} trialDays={config.trialDays} /> : <SignupForm plan={plan} />}
       </main>
       <Footer />
     </div>

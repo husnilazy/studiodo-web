@@ -7,7 +7,11 @@ import type { KioskKeyRow, VolumeTier } from "@/lib/portalTypes";
 
 export const dynamic = "force-dynamic";
 
-export default async function BoothPage() {
+export default async function BoothPage({ searchParams }: PageProps<"/portal/booth">) {
+  const sp = await searchParams;
+  const startOnPay = sp.bayar === "1";
+  const initialPlan = typeof sp.plan === "string" ? sp.plan.slice(0, 60).toLowerCase() : undefined;
+  const initialInterval = sp.periode === "tahunan" ? ("yearly" as const) : sp.periode === "bulanan" ? ("monthly" as const) : undefined;
   const [summary, keys, plans, pricing, content] = await Promise.all([
     getSummary(),
     portalFetch<KioskKeyRow[]>("/api/kiosk-keys"),
@@ -36,6 +40,9 @@ export default async function BoothPage() {
         tenantDiscountPercent={pricing.tenantPercent}
         canPay={summary.onlinePaymentEnabled}
         contactHref={wa}
+        startOnPay={startOnPay}
+        initialPlan={initialPlan}
+        initialInterval={initialInterval}
       />
     </div>
   );

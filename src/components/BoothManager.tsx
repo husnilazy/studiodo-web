@@ -114,8 +114,7 @@ function BoothCard({ booth, selected, onToggle }: { booth: BoothView; selected: 
 }
 
 export function BoothManager({
-  booths, plans, currentPlanSlug, tiers, tenantDiscountPercent, canPay, contactHref,
-}: {
+  booths, plans, currentPlanSlug, tiers, tenantDiscountPercent, canPay, contactHref, startOnPay, initialPlan, initialInterval }: {
   booths: BoothView[];
   plans: PublicPlan[];
   currentPlanSlug: string;
@@ -123,16 +122,20 @@ export function BoothManager({
   tenantDiscountPercent: number;
   canPay: boolean;
   contactHref: string | null;
+  /** Coming from "Pilih Paket" right after sign-up: open the pay tab with this plan / period already chosen. */
+  startOnPay?: boolean;
+  initialPlan?: string;
+  initialInterval?: Interval;
 }) {
   const paidPlans = useMemo(() => plans.filter((p) => Number(p.price) > 0), [plans]);
-  const [planSlug, setPlanSlug] = useState(() => (paidPlans.find((p) => p.slug === currentPlanSlug) ?? paidPlans.find((p) => p.featured) ?? paidPlans[0])?.slug ?? "");
+  const [planSlug, setPlanSlug] = useState(() => (paidPlans.find((p) => p.slug === initialPlan) ?? paidPlans.find((p) => p.slug === currentPlanSlug) ?? paidPlans.find((p) => p.featured) ?? paidPlans[0])?.slug ?? "");
   const plan = paidPlans.find((p) => p.slug === planSlug);
   const options = plan ? planOptions(plan) : null;
   const both = Boolean(options?.monthly && options?.yearly && plan?.billingInterval !== "yearly");
-  const [wanted, setWanted] = useState<Interval>("monthly");
+  const [wanted, setWanted] = useState<Interval>(initialInterval ?? "monthly");
   const interval: Interval = options ? pickInterval(options, wanted).interval : "monthly";
 
-  const [selected, setSelected] = useState<string[]>(() => booths.filter(needsAttention).map((b) => b.id));
+  const [selected, setSelected] = useState<string[]>(() => { const need = booths.filter(needsAttention).map((b) => b.id); return need.length > 0 || !startOnPay ? need : booths.map((b) => b.id); });
   const [newBooths, setNewBooths] = useState(0);
   const [quote, setQuote] = useState<BoothQuote | null>(null);
   const [quoteError, setQuoteError] = useState<string | null>(null);
@@ -176,7 +179,7 @@ export function BoothManager({
     });
   };
 
-  const [tab, setTab] = useState<"booth" | "langganan">("booth");
+  const [tab, setTab] = useState<"booth" | "langganan">(startOnPay ? "langganan" : "booth");
   const sorted = [...booths].sort((a, b) => Number(b.online) - Number(a.online) || new Date(b.lastUsedAt ?? 0).getTime() - new Date(a.lastUsedAt ?? 0).getTime());
 
   return (

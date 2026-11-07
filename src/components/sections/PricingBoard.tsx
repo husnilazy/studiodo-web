@@ -140,7 +140,7 @@ export function PricingBoard({ plans, volume, tiers = [] }: { plans: PublicPlan[
                 ))}
               </ul>
               <Link
-                href={`/daftar?paket=${encodeURIComponent(plan.slug)}&periode=${shown === "yearly" ? "tahunan" : "bulanan"}`}
+                href={`/daftar?paket=${encodeURIComponent(plan.slug)}&periode=${shown === "yearly" ? "tahunan" : "bulanan"}&aksi=${featured ? "trial" : "bayar"}`}
                 className={`btn py-[15px] text-center ${featured ? "bg-white text-[#0b1020]" : "border border-foreground/20 text-foreground"}`}
               >
                 {featured ? "Coba Gratis 7 Hari" : "Pilih Paket"}

@@ -43,6 +43,21 @@ export async function fetchPublicPlans(): Promise<PublicPlan[] | null> {
   }
 }
 
+export type SignupConfig = { mode: "application" | "instant"; trialDays: number };
+
+/** How the "Daftar" page works right now (set by a STUDIODO admin). Falls back to the review form when the API is unreachable or older. */
+export async function fetchSignupConfig(): Promise<SignupConfig> {
+  const fallback: SignupConfig = { mode: "application", trialDays: 7 };
+  try {
+    const res = await fetch(`${API_URL}/api/public/signup-config`, { next: { revalidate: 30 } });
+    if (!res.ok) return fallback;
+    const d = (await res.json()) as Partial<SignupConfig>;
+    return { mode: d.mode === "instant" ? "instant" : "application", trialDays: Number(d.trialDays) > 0 ? Number(d.trialDays) : 7 };
+  } catch {
+    return fallback;
+  }
+}
+
 export type VolumeTier = { minBooths: number; percent: number };
 
 /** The "buy more booths, pay less" tiers a STUDIODO admin set. Empty when none (or the API is unreachable). */
