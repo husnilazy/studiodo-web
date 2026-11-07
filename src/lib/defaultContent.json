@@ -264,7 +264,7 @@
         "items": [
           {
             "q": "Perangkat apa yang dibutuhkan?",
-            "a": "Aplikasi kiosk berjalan di PC atau laptop Windows 10/11 (64-bit). Untuk kamera, Anda bisa memakai webcam atau kamera DSLR/mirrorless lewat digiCamControl. Untuk cetak, cukup printer yang punya driver Windows. Layar sentuh disarankan untuk pengalaman kiosk yang nyaman."
+            "a": "Aplikasi kiosk berjalan di PC atau laptop Windows 10/11 (64-bit). Untuk kamera, Anda bisa memakai webcam, atau kamera Canon EOS dan DSLR/mirrorless lain: lewat digiCamControl (jalur yang sudah teruji) atau lewat bridge SDK langsung Canon dan Sony (beta, diaktifkan oleh tim STUDIODO). Untuk cetak, cukup printer yang punya driver Windows. Layar sentuh disarankan untuk pengalaman kiosk yang nyaman."
           },
           {
             "q": "Apakah bisa dipakai tanpa internet?",

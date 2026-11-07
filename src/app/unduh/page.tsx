@@ -66,7 +66,7 @@ const faqs = [
   ["Apakah aplikasi memperbarui dirinya sendiri?", "Ya. Setiap kiosk memeriksa versi baru secara berkala. Anda bisa mematikan pembaruan otomatis per kunci kiosk, misalnya untuk menahan satu booth di versi tertentu saat event besar."],
   ["Berapa komputer yang bisa saya pasang?", "Sebanyak booth yang Anda langgani: satu key = satu booth = satu komputer, masing-masing dengan masa aktifnya sendiri. Ganti komputer cukup dengan Reset device di dashboard."],
   ["Bagaimana cara mencoba dulu?", "Minta key trial ke tim STUDIODO, lalu tempel di layar Setup saat pertama kali membuka aplikasi. Saat masa trial habis, kiosk terkunci otomatis dan Anda diminta berlangganan di dashboard — semua pengaturan dan data tetap aman."],
-  ["Apakah perlu SDK Canon?", "Tidak. Kamera DSLR/mirrorless dikendalikan lewat digiCamControl, aplikasi gratis yang menjembatani kamera ke STUDIODO."],
+  ["Apakah perlu SDK Canon?", "Tidak perlu dipasang sendiri. Jalur yang sudah teruji memakai digiCamControl (gratis). Untuk Canon dan Sony tersedia juga bridge SDK langsung yang masih beta; aktifkan lewat tim STUDIODO."],
   ["Apakah ada versi Mac atau tablet?", "Belum. Saat ini aplikasi kiosk hanya untuk Windows 10 dan 11 (64-bit)."],
 ];
 
@@ -244,7 +244,7 @@ export default async function UnduhPage() {
               <IconTile name="camera" tint="from-[#ffd3e4] to-[#fff0f6]" />
               <h2 id="dslr" className="font-display text-2xl tracking-tight md:text-3xl">Memakai kamera DSLR atau mirrorless?</h2>
               <p className="text-[15px] leading-relaxed text-muted">
-                STUDIODO berbicara dengan <strong className="font-semibold text-foreground">digiCamControl</strong>, aplikasi gratis yang mengendalikan kamera dari komputer. Tidak perlu SDK Canon. Live view menyala otomatis saat sesi foto dimulai dan mati setelahnya, jadi kamera tidak cepat panas.
+                Jalur yang sudah teruji memakai <strong className="font-semibold text-foreground">digiCamControl</strong>, aplikasi gratis yang mengendalikan kamera dari komputer. STUDIODO juga punya bridge SDK langsung untuk Canon (EDSDK) dan Sony yang masih beta, tanpa digiCamControl. Live view menyala otomatis saat sesi foto dimulai dan mati setelahnya, jadi kamera tidak cepat panas.
               </p>
               <Link href="/blog/menghubungkan-kamera-webcam-dan-dslr" className="self-start text-[15px] font-semibold text-accent underline underline-offset-4">Panduan menghubungkan kamera</Link>
             </div>
