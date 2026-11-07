@@ -11,11 +11,13 @@ export type PayData = { orderId: string; plan: string; boothCount: number; perio
 
 const rupiah = (n: number) => `Rp ${n.toLocaleString("id-ID")}`;
 const pad = (n: number) => String(n).padStart(2, "0");
-const GROUPS: { title: string; kinds: Method["kind"][] }[] = [
-  { title: "QRIS", kinds: ["qris"] },
-  { title: "Transfer bank (Virtual Account)", kinds: ["va", "bill"] },
-  { title: "Bayar di toko", kinds: ["store"] },
+const TABS: { id: string; title: string; kinds: Method["kind"][] }[] = [
+  { id: "qris", title: "QRIS", kinds: ["qris"] },
+  { id: "bank", title: "Bank", kinds: ["va", "bill"] },
+  { id: "store", title: "Toko", kinds: ["store"] },
 ];
+const short = (m: Method) => m.label.replace(" Virtual Account", "").replace(" Niaga", "");
+const tabHint = (m: Method) => (m.kind === "va" ? "Virtual Account" : m.kind === "bill" ? "Kode bayar" : "Bayar tunai");
 
 function CopyField({ label, value }: { label: string; value: string }) {
   const [done, setDone] = useState(false);
@@ -40,9 +42,14 @@ export function PayQris({ data: initial, token }: { data: PayData; token: string
   const [choosing, setChoosing] = useState(!initial.instruction);
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState<string | null>(null);
+  const [pick, setTab] = useState("");
   const [, start] = useTransition();
   const [left, setLeft] = useState(() => Math.max(0, new Date(initial.dueAt).getTime() - Date.now()));
   const ins = data.instruction;
+  // Tabs follow what is actually available (a method Midtrans refuses as "not activated" drops out).
+  const tabs = [...TABS.filter((t) => data.methods.some((m) => t.kinds.includes(m.kind))), { id: "card", title: "Kartu", kinds: [] as Method["kind"][] }];
+  const tab = tabs.some((t) => t.id === pick) ? pick : tabs[0].id;
+  const shown = data.methods.filter((m) => (TABS.find((t) => t.id === tab)?.kinds ?? []).includes(m.kind));
   const waiting = status === "pending" && !!ins && !choosing;
 
   useEffect(() => {
@@ -70,7 +77,11 @@ export function PayQris({ data: initial, token }: { data: PayData; token: string
     start(async () => {
       const r = await chooseMethodAction(data.orderId, token, id);
       setBusy(null);
-      if (!r.ok) { setError(r.error); return; }
+      if (!r.ok) {
+        setError(r.error);
+        if (r.error.includes("belum tersedia")) setData((d) => ({ ...d, methods: d.methods.filter((m) => m.id !== id) }));
+        return;
+      }
       setData(r.data);
       setStatus(r.data.status);
       setChoosing(false);
@@ -112,30 +123,28 @@ export function PayQris({ data: initial, token }: { data: PayData; token: string
           <Link href="/portal/booth" className="btn btn-primary mt-2 px-7 py-3 text-[15px]">Buat pembayaran baru</Link>
         </div>
       ) : choosing || !ins ? (
-        <div className="grid gap-5 border-t border-foreground/10 px-7 py-6">
-          <h1 className="font-display text-[18px] tracking-tight">Pilih cara bayar</h1>
-          {GROUPS.map((g) => {
-            const list = data.methods.filter((x) => g.kinds.includes(x.kind));
-            if (list.length === 0) return null;
-            return (
-              <div key={g.title} className="grid gap-2">
-                <div className="text-[12px] font-semibold uppercase tracking-[0.12em] text-muted">{g.title}</div>
-                {list.map((x) => (
-                  <button key={x.id} type="button" disabled={busy !== null} onClick={() => choose(x.id)} className="flex items-center justify-between gap-3 rounded-2xl border border-foreground/10 bg-foreground/[0.03] px-4 py-3 text-left transition hover:border-accent hover:bg-foreground/[0.06] disabled:opacity-60">
-                    <span className="min-w-0">
-                      <span className="block text-[15px] font-semibold">{x.label}</span>
-                      <span className="block text-[12.5px] leading-snug text-muted">{x.hint}</span>
-                    </span>
-                    <span aria-hidden="true" className="shrink-0 text-muted">{busy === x.id ? "…" : "›"}</span>
-                  </button>
-                ))}
-              </div>
-            );
-          })}
-          <button type="button" disabled={busy !== null} onClick={other} className="rounded-2xl border border-dashed border-foreground/20 px-4 py-3 text-left text-[14px] hover:border-accent disabled:opacity-60">
-            <span className="block font-semibold">Kartu kredit/debit dan metode lain</span>
-            <span className="block text-[12.5px] text-muted">Dibuka di halaman pembayaran aman Midtrans.</span>
-          </button>
+        <div className="grid gap-4 border-t border-foreground/10 px-6 py-5">
+          <h1 className="font-display text-[17px] tracking-tight">Pilih cara bayar</h1>
+          <div role="tablist" className="grid grid-flow-col auto-cols-fr gap-1 rounded-2xl bg-foreground/[0.06] p-1">
+            {tabs.map((t) => (
+              <button key={t.id} type="button" role="tab" aria-selected={tab === t.id} onClick={() => { setTab(t.id); setError(null); }} className={`rounded-xl px-2 py-2 text-[13px] font-semibold transition ${tab === t.id ? "bg-panel text-foreground shadow-sm" : "text-muted hover:text-foreground"}`}>{t.title}</button>
+            ))}
+          </div>
+          {tab === "card" ? (
+            <button type="button" disabled={busy !== null} onClick={other} className="rounded-2xl border border-foreground/10 bg-foreground/[0.03] px-4 py-3.5 text-left transition hover:border-accent disabled:opacity-60">
+              <span className="block text-[15px] font-semibold">{busy === "other" ? "Membuka…" : "Kartu kredit/debit dan lainnya"}</span>
+              <span className="block text-[12.5px] leading-snug text-muted">Dibuka di halaman pembayaran aman Midtrans.</span>
+            </button>
+          ) : (
+            <div className={`grid gap-2 ${shown.length > 1 ? "grid-cols-2" : ""}`}>
+              {shown.map((x) => (
+                <button key={x.id} type="button" disabled={busy !== null} onClick={() => choose(x.id)} className="rounded-2xl border border-foreground/10 bg-foreground/[0.03] px-4 py-3 text-left transition hover:border-accent hover:bg-foreground/[0.06] disabled:opacity-60">
+                  <span className="block text-[15px] font-semibold">{busy === x.id ? "Memproses…" : short(x)}</span>
+                  <span className="block text-[12px] leading-snug text-muted">{shown.length > 1 ? tabHint(x) : x.hint}</span>
+                </button>
+              ))}
+            </div>
+          )}
           {error && <p role="alert" className="rounded-2xl bg-[#ffe3e3] px-4 py-3 text-sm text-[#a12626]">{error}</p>}
           {ins && <button type="button" onClick={() => setChoosing(false)} className="justify-self-center text-[13px] font-semibold text-accent underline underline-offset-4">Kembali ke {label}</button>}
         </div>
