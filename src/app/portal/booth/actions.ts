@@ -36,6 +36,8 @@ export async function startCheckoutAction(input: CheckoutInput): Promise<ActionR
   // Only ever follow a payment gateway's hosted page (Midtrans or Xendit) — never redirect to an arbitrary URL the API returned.
   let target: URL;
   try { target = new URL(url); } catch { return { ok: false, error: "Alamat pembayaran tidak valid." }; }
+  // STUDIODO's own payment page (QRIS) lives on this site: follow only its path, never a host the API returned.
+  if (/^\/bayar\/SDO-[A-Z0-9-]{4,40}$/.test(target.pathname)) redirect(`${target.pathname}${target.search}`);
   if (target.protocol !== "https:" || !/(^|\.)(midtrans\.com|xendit\.co)$/.test(target.hostname)) return { ok: false, error: "Alamat pembayaran tidak valid." };
   redirect(url);
 }
