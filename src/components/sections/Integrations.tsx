@@ -26,11 +26,11 @@ function Badge({ name, image }: { name: string; image?: string }) {
   const src = uploaded || builtin?.src;
   // Logos sit straight on the card (white on dark), no pill behind them; the built-in ones are white PNGs.
   return (
-    <span className="inline-flex h-10 min-w-[84px] shrink-0 items-center whitespace-nowrap text-foreground">
+    <span className="inline-flex h-12 shrink-0 items-center whitespace-nowrap text-foreground">
       {src ? (
         <span className="inline-flex items-center gap-2">
           {/* eslint-disable-next-line @next/next/no-img-element -- logo of unknown size */}
-          <img src={src} alt={name} className={`${uploaded || !builtin?.text ? (builtin?.big && !uploaded ? "h-10 w-auto max-w-[120px]" : "h-7 w-auto max-w-[120px]") : "h-7 w-7"} object-contain ${uploaded ? "" : "invert dark:invert-0"}`} />
+          <img src={src} alt={name} className={`${uploaded || !builtin?.text ? (builtin?.big && !uploaded ? "h-12 w-auto max-w-[120px]" : "h-7 w-auto max-w-[120px]") : "h-7 w-7"} object-contain ${uploaded ? "" : "invert dark:invert-0"}`} />
           {!uploaded && builtin?.text && <span className="font-display text-[19px] font-semibold tracking-tight">{builtin.text}</span>}
         </span>
       ) : (
@@ -85,9 +85,9 @@ export function Integrations({ data }: { data: IntegrationsData }) {
                 </div>
                 <ul className="grid gap-3 sm:grid-cols-2">
                   {list.map((i) => (
-                    <li key={`${i.name}-${i.note}`} className="flex items-start gap-3">
+                    <li key={`${i.name}-${i.note}`} className="flex flex-col gap-1 rounded-2xl bg-foreground/[0.04] px-4 py-3">
                       <Badge name={i.name} image={i.image} />
-                      {i.note && <span className="pt-1 text-[13px] leading-snug text-muted">{i.note}</span>}
+                      {i.note && <span className="text-[13px] leading-snug text-muted">{i.note}</span>}
                     </li>
                   ))}
                 </ul>
