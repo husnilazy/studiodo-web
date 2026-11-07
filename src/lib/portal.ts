@@ -86,6 +86,7 @@ export async function portalCall<T = unknown>(method: "GET" | "POST" | "PATCH" |
   const token = await getToken();
   if (!token) redirect("/masuk?sesi=habis");
   let res: Response;
+  const startedAt = Date.now();
   try {
     res = await fetch(`${API_URL}${path}`, {
       method,
@@ -97,6 +98,9 @@ export async function portalCall<T = unknown>(method: "GET" | "POST" | "PATCH" |
   } catch {
     return { ok: false, error: "Tidak dapat terhubung ke server STUDIODO. Coba lagi.", status: 0 };
   }
+  const took = Date.now() - startedAt;
+  // Shows up in Vercel runtime logs: tells API slowness apart from page-render slowness when a menu feels laggy.
+  if (took > 700) console.warn(`[portal] ${method} ${path.split("?")[0]} ${took}ms (HTTP ${res.status})`);
   if (res.status === 401) redirect("/masuk?sesi=habis");
   const text = await res.text();
   let parsed: unknown;
