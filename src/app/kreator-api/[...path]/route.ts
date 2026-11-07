@@ -12,6 +12,8 @@ async function forward(req: Request, ctx: { params: Promise<{ path: string[] }> 
   if (!ALLOWED.test(path)) return NextResponse.json({ error: "Tidak ditemukan" }, { status: 404 });
   const token = await getCreatorToken();
   if (!token) return NextResponse.json({ error: "Sesi berakhir. Muat ulang halaman dan masuk lagi." }, { status: 401 });
+  // Only JSON bodies: a cross-site <form> cannot send this content type (CSRF guard for a cookie-authenticated bridge, on top of SameSite=Lax).
+  if (req.method !== "DELETE" && !req.headers.get("content-type")?.includes("application/json")) return NextResponse.json({ error: "Bad request" }, { status: 415 });
 
   const hasBody = req.method !== "DELETE";
   let res: Response;

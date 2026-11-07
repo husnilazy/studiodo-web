@@ -19,7 +19,7 @@ type Drag =
 const clamp = (v: number, lo: number, hi: number) => Math.max(lo, Math.min(hi, v));
 
 async function call<T>(path: string, method: string, body?: unknown): Promise<T> {
-  const res = await fetch(`/kreator-api/${path}`, { method, body: body === undefined ? undefined : JSON.stringify(body) });
+  const res = await fetch(`/kreator-api/${path}`, { method, headers: { "Content-Type": "application/json" }, body: body === undefined ? undefined : JSON.stringify(body) });
   const data = (await res.json().catch(() => ({}))) as T & { error?: string };
   if (!res.ok) throw new Error(data.error ?? `Gagal (HTTP ${res.status})`);
   return data;
