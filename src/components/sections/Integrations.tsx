@@ -11,13 +11,26 @@ const GROUPS: { key: string; title: string; hint: string }[] = [
   { key: "cetak", title: "Cetak", hint: "Pakai printer yang sudah ada" },
 ];
 
+// Logos shipped with the site for the services we integrate with (shown to identify them, not as a partnership claim). An uploaded
+// logo (CMS) always wins over these; names without an entry fall back to a text wordmark.
+const BUILTIN: Record<string, { src: string; text?: string }> = {
+  "canon eos": { src: "/brand/partners/canon.svg" },
+  doku: { src: "/brand/partners/doku.svg" },
+  midtrans: { src: "/brand/partners/midtrans.svg" },
+  xendit: { src: "/brand/partners/xendit-mark.svg", text: "xendit" },
+};
+
 function Badge({ name, image }: { name: string; image?: string }) {
-  const src = assetUrl(image);
+  const builtin = BUILTIN[name.trim().toLowerCase()];
+  const src = assetUrl(image) || builtin?.src;
   return (
     <span className="inline-flex h-10 min-w-[84px] shrink-0 items-center justify-center whitespace-nowrap rounded-xl border border-foreground/10 bg-white px-3.5 text-[#0b1020] shadow-sm">
       {src ? (
         // eslint-disable-next-line @next/next/no-img-element -- admin-uploaded logo of unknown size, served by the API
-        <img src={src} alt={name} className="h-5 w-auto max-w-[110px] object-contain" />
+        <span className="inline-flex items-center gap-1.5">
+          <img src={src} alt={name} className={assetUrl(image) || !builtin?.text ? "h-6 w-auto max-w-[110px] object-contain" : "h-6 w-6 object-contain"} />
+          {!assetUrl(image) && builtin?.text && <span className="font-display text-[15px] font-semibold tracking-tight">{builtin.text}</span>}
+        </span>
       ) : (
         <span className="font-display text-[15px] font-semibold tracking-tight">{name}</span>
       )}
