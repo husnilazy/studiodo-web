@@ -13,26 +13,28 @@ const GROUPS: { key: string; title: string; hint: string }[] = [
 
 // Logos shipped with the site for the services we integrate with (shown to identify them, not as a partnership claim). An uploaded
 // logo (CMS) always wins over these; names without an entry fall back to a text wordmark.
-const BUILTIN: Record<string, { src: string; text?: string }> = {
-  "canon eos": { src: "/brand/partners/canon.svg" },
-  doku: { src: "/brand/partners/doku.svg" },
-  midtrans: { src: "/brand/partners/midtrans.svg" },
-  xendit: { src: "/brand/partners/xendit-mark.svg", text: "xendit" },
+const BUILTIN: Record<string, { src: string; text?: string; big?: boolean }> = {
+  "canon eos": { src: "/brand/partners/canon.png" },
+  doku: { src: "/brand/partners/doku.png", big: true },
+  midtrans: { src: "/brand/partners/midtrans.png" },
+  xendit: { src: "/brand/partners/xendit-mark.png", text: "xendit" },
 };
 
 function Badge({ name, image }: { name: string; image?: string }) {
   const builtin = BUILTIN[name.trim().toLowerCase()];
-  const src = assetUrl(image) || builtin?.src;
+  const uploaded = assetUrl(image);
+  const src = uploaded || builtin?.src;
+  // Logos sit straight on the card (white on dark), no pill behind them; the built-in ones are white PNGs.
   return (
-    <span className="inline-flex h-10 min-w-[84px] shrink-0 items-center justify-center whitespace-nowrap rounded-xl border border-foreground/10 bg-white px-3.5 text-[#0b1020] shadow-sm">
+    <span className="inline-flex h-10 min-w-[84px] shrink-0 items-center whitespace-nowrap text-foreground">
       {src ? (
-        // eslint-disable-next-line @next/next/no-img-element -- admin-uploaded logo of unknown size, served by the API
-        <span className="inline-flex items-center gap-1.5">
-          <img src={src} alt={name} className={assetUrl(image) || !builtin?.text ? "h-6 w-auto max-w-[110px] object-contain" : "h-6 w-6 object-contain"} />
-          {!assetUrl(image) && builtin?.text && <span className="font-display text-[15px] font-semibold tracking-tight">{builtin.text}</span>}
+        <span className="inline-flex items-center gap-2">
+          {/* eslint-disable-next-line @next/next/no-img-element -- logo of unknown size */}
+          <img src={src} alt={name} className={`${uploaded || !builtin?.text ? (builtin?.big && !uploaded ? "h-10 w-auto max-w-[120px]" : "h-7 w-auto max-w-[120px]") : "h-7 w-7"} object-contain ${uploaded ? "" : "invert dark:invert-0"}`} />
+          {!uploaded && builtin?.text && <span className="font-display text-[19px] font-semibold tracking-tight">{builtin.text}</span>}
         </span>
       ) : (
-        <span className="font-display text-[15px] font-semibold tracking-tight">{name}</span>
+        <span className="font-display text-[17px] font-semibold tracking-tight">{name}</span>
       )}
     </span>
   );
