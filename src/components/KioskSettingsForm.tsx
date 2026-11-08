@@ -136,7 +136,7 @@ export function KioskSettingsForm({ tenant, printing }: { tenant: TenantConfig; 
       <Section title="Sesi foto & cetak">
         <div className="grid gap-4 sm:grid-cols-4">
           <label className="grid gap-2 text-sm font-medium">Hitung mundur (detik)<input type="number" min={1} max={10} value={kiosk.countdownSeconds} onChange={(e) => setK("countdownSeconds", Number(e.target.value))} className={field} /></label>
-          <label className="grid gap-2 text-sm font-medium">Batas waktu sesi (menit)<input type="number" min={1} max={60} value={kiosk.sessionTimerMinutes} onChange={(e) => setK("sessionTimerMinutes", Number(e.target.value))} className={field} /></label>
+          <label className="grid gap-2 text-sm font-medium">Batas waktu sesi (menit) <span className="font-normal text-muted">(dihitung sejak pembayaran berhasil sampai selesai edit foto)</span><input type="number" min={1} max={60} value={kiosk.sessionTimerMinutes} onChange={(e) => setK("sessionTimerMinutes", Number(e.target.value))} className={field} /></label>
           <label className="grid gap-2 text-sm font-medium">Foto maks / sesi<input type="number" min={1} max={20} value={kiosk.maxPhotosPerSession} onChange={(e) => setK("maxPhotosPerSession", Number(e.target.value))} className={field} /></label>
           <label className="grid gap-2 text-sm font-medium">Salinan cetak<input type="number" min={1} max={10} value={kiosk.printCopies} onChange={(e) => setK("printCopies", Number(e.target.value))} className={field} /></label>
         </div>
