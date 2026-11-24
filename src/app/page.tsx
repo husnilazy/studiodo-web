@@ -23,6 +23,7 @@ import { Hardware } from "@/components/landing/Hardware";
 import { FEATURE_COUNT } from "@/components/landing/featureData";
 import { getSiteContent, type SiteData } from "@/lib/content";
 import { fetchStats, type PlatformStats } from "@/lib/stats";
+import defaults from "@/lib/defaultContent.json";
 
 // Section registry: the CMS decides which of these render and in what order;
 // each renderer just receives that section's data. An unknown key (e.g. a section
@@ -67,6 +68,9 @@ const extras = (stats: PlatformStats | null): Record<string, ReactNode> => ({
 export default async function Home() {
   const [{ site, sections }, stats] = await Promise.all([getSiteContent(), fetchStats()]);
   const after = extras(stats);
+  // The live CMS currently has no "hero" section, which hid the whole top of the page (and the playable booth with it).
+  // Without one the built-in hero is shown, so the page always opens with the headline and the booth.
+  const fallbackHero = sections.some((s) => s.key === "hero") ? null : (defaults.sections.find((s) => s.key === "hero")?.data ?? null);
   return (
     <div className="relative flex flex-1 flex-col overflow-clip">
       <div data-parallax="0.10" className="blob left-[55%] -top-20 h-[620px] w-[620px] bg-[#bfc6ff] opacity-75" />
@@ -79,6 +83,7 @@ export default async function Home() {
       <div data-parallax="-0.08" className="blob left-[48%] top-[5600px] h-[640px] w-[640px] bg-[#bfc6ff] opacity-70" />
       <Navbar />
       <main id="konten" className="flex-1">
+        {fallbackHero && <Hero data={fallbackHero as never} stats={stats} />}
         {sections.map((s) => {
           const render = registry[s.key];
           return render ? (
