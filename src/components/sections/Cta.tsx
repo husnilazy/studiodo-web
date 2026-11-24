@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Icon } from "../Icon";
 import { Orb } from "../Decor";
 import { WordmarkLoop } from "../brand/Mascot";
+import { Figure } from "../brand/Figure";
 import { whatsappLink, type CtaData, type SiteData } from "@/lib/content";
 
 export function Cta({ data, site }: { data: CtaData; site: SiteData }) {
@@ -15,6 +16,10 @@ export function Cta({ data, site }: { data: CtaData; site: SiteData }) {
         <div className="flex max-w-[640px] flex-col gap-4">
           <h2 className="font-display text-4xl font-normal leading-[1.04] tracking-[-0.035em] md:text-[56px]">{data.title}</h2>
           <p className="text-[17px] leading-relaxed text-muted">{data.body}</p>
+        </div>
+        <div className="pointer-events-none absolute -top-24 right-6 hidden gap-1 md:flex lg:right-[340px]">
+          <Figure expr="senang" pose="wave" hair="curly" skin={2} color={1} jacket="#ff6b5a" className="w-[100px]" />
+          <Figure expr="senang" pose="up" hair="hijab" skin={3} color={3} scarf="#7a6bff" className="w-[100px]" delay={0.7} />
         </div>
         <div className="flex w-full flex-col gap-3 lg:w-[280px]">
           <WordmarkLoop className="mb-3 hidden sm:flex" />

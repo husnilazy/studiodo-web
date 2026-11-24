@@ -1,5 +1,6 @@
 import { SectionHeading } from "../SectionHeading";
 import { Icon } from "../Icon";
+import { Figure } from "../brand/Figure";
 
 const ROWS: { before: string; after: string }[] = [
   { before: "Nunggu transfer, cek mutasi satu per satu", after: "QRIS otomatis — kiosk lanjut sendiri begitu lunas" },
@@ -18,8 +19,16 @@ export function Contrast() {
       <SectionHeading eyebrow="Kenapa STUDIODO" title="Semua yang dulu ribet, sekarang jalan sendiri." />
       <div className="mx-auto grid w-full max-w-[980px] gap-3">
         <div className="hidden grid-cols-2 gap-6 px-6 text-[13px] font-semibold uppercase tracking-widest text-muted md:grid">
-          <span>Biasanya</span>
-          <span className="text-accent">Di STUDIODO</span>
+          <div className="flex items-end gap-3">
+            <Figure expr="khawatir" pose="chin" hair="curly" skin={2} color={2} bob={false} className="w-[84px]" />
+            <Figure expr="bingung" pose="down" hair="short" skin={1} color={0} glasses bob={false} className="w-[84px]" delay={0.6} />
+            <span className="pb-3">Biasanya</span>
+          </div>
+          <div className="flex items-end gap-3 text-accent">
+            <Figure expr="senang" pose="up" hair="hijab" skin={3} color={3} scarf="#7a6bff" className="w-[84px]" />
+            <Figure expr="lega" pose="wave" hair="long" skin={1} color={1} jacket="#ff6b5a" className="w-[84px]" delay={0.8} />
+            <span className="pb-3">Di STUDIODO</span>
+          </div>
         </div>
         {ROWS.map((r, i) => (
           <div key={r.before} data-reveal="up" data-delay={String(i * 70)} className="glass lift grid gap-3 p-5 md:grid-cols-2 md:gap-6 md:px-6 md:py-5">
