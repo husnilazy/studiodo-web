@@ -242,28 +242,28 @@ export function BoothDemo({ hero = false }: { hero?: boolean }) {
           <div className={`bd-bob hidden w-[100px] shrink-0 ${hero ? "" : "xl:block"}`} dangerouslySetInnerHTML={{ __html: figureSvg({ ...CAST_L, pose }) }} />
 
           <div className={`flex w-full flex-col items-center ${hero ? "max-w-[460px]" : "max-w-[580px]"}`}>
-            {/* camera head: the lenses light up with the multi-camera mode, the lamp flashes on every shot */}
-            <div className="relative z-10 -mb-3 flex items-center justify-center gap-4 rounded-[26px] bg-gradient-to-b from-[#3b3566] to-[#1d1a38] px-6 py-3 shadow-[0_10px_30px_rgba(40,30,110,0.35)]">
-              <span key={flash} className={`h-6 w-9 rounded-xl bg-gradient-to-b from-[#ffe6ad] to-[#ffb040] ${flash ? "bd-flash" : ""}`} aria-hidden="true" />
-              <span className="relative flex h-11 w-11 items-center justify-center rounded-full bg-[#0c0b1c] ring-4 ring-[#5b5588]" aria-label="Kamera 1">
-                <span className="h-5 w-5 rounded-full bg-gradient-to-br from-[#6c63ff] to-[#1b1b30]" />
-                {busy && angleNow === 1 && <span className="absolute -right-1 -top-1 h-3 w-3 animate-pulse rounded-full bg-[#ff5a6e]" />}
-              </span>
-              <span className={`relative flex h-9 w-9 items-center justify-center rounded-full ring-4 transition ${multi === "off" ? "bg-[#12112a] opacity-30 ring-[#3a3566]" : "bg-[#0c0b1c] ring-[#8a7bff]"}`} aria-label="Kamera 2">
-                <span className="h-4 w-4 rounded-full bg-gradient-to-br from-[#ff6b9d] to-[#1b1b30]" />
-                {busy && angleNow === 2 && multi !== "off" && <span className="absolute -right-1 -top-1 h-3 w-3 animate-pulse rounded-full bg-[#ff5a6e]" />}
-              </span>
-            </div>
-
-            {/* screen: its shape follows the chosen orientation */}
-            <div className="relative w-full rounded-[34px] bg-gradient-to-b from-[#2b2750] to-[#14122b] p-3.5 shadow-[0_24px_60px_rgba(40,30,110,0.32)]">
-              <div className="mx-auto overflow-hidden rounded-[22px] bg-[#0c0b1c] transition-all duration-500" style={{ width: portrait ? "88%" : "100%", aspectRatio: portrait ? "3 / 4" : "4 / 3" }}>
+            {/* ONE minimal box: a long LED strip on top (the camera lenses sit in its middle), the screen, a printer slot below */}
+            <div className="relative z-10 rounded-[30px] bg-gradient-to-b from-[#2b2750] to-[#14122b] px-3 pb-3 pt-3 shadow-[0_28px_70px_rgba(40,30,110,0.38)] transition-[width] duration-500" style={{ width: portrait ? "78%" : "100%" }}>
+              <div key={flash} className={`mb-3 flex h-7 items-center gap-3 rounded-full px-1 ${flash ? "bd-flash" : ""}`}>
+                <span className="bd-led h-2 flex-1 rounded-full" aria-hidden="true" />
+                <span className="relative flex h-6 w-6 items-center justify-center rounded-full bg-[#0c0b1c] ring-2 ring-[#5b5588]" aria-label="Kamera 1">
+                  <span className="h-2.5 w-2.5 rounded-full bg-gradient-to-br from-[#6c63ff] to-[#1b1b30]" />
+                  {busy && angleNow === 1 && <span className="absolute -right-0.5 -top-0.5 h-2 w-2 animate-pulse rounded-full bg-[#ff5a6e]" />}
+                </span>
+                <span className={`relative flex h-5 w-5 items-center justify-center rounded-full ring-2 transition ${multi === "off" ? "bg-[#12112a] opacity-30 ring-[#3a3566]" : "bg-[#0c0b1c] ring-[#8a7bff]"}`} aria-label="Kamera 2">
+                  <span className="h-2 w-2 rounded-full bg-gradient-to-br from-[#ff6b9d] to-[#1b1b30]" />
+                  {busy && angleNow === 2 && multi !== "off" && <span className="absolute -right-0.5 -top-0.5 h-2 w-2 animate-pulse rounded-full bg-[#ff5a6e]" />}
+                </span>
+                <span className="bd-led h-2 flex-1 rounded-full" aria-hidden="true" />
+              </div>
+              <div className="w-full overflow-hidden rounded-[20px] bg-[#0c0b1c]" style={{ aspectRatio: portrait ? "3 / 4" : "4 / 3" }}>
                 <div className="relative h-full w-full">
                   {(step === "ready" || step === "shoot") && (
                     <>
                       {camOn ? (
-                        <video ref={setVideo} autoPlay muted playsInline className="h-full w-full object-cover"
-                          style={{ transform: `scaleX(-1)${angleNow === 2 && step === "shoot" ? " scale(1.7)" : ""}`, transformOrigin: "62% 40%", transition: "transform .4s" }} />
+                        <div className="h-full w-full overflow-hidden" style={{ transform: angleNow === 2 && step === "shoot" ? "scale(1.7)" : "none", transformOrigin: "62% 40%", transition: "transform .4s" }}>
+                          <video ref={setVideo} autoPlay muted playsInline className="h-full w-full object-cover" style={{ transform: "scaleX(-1)" }} />
+                        </div>
                       ) : (
                         <div key={`${step}-${sceneIdx}-${angleNow}`} className="bd-pop h-full w-full" dangerouslySetInnerHTML={{ __html: fit(sceneSvg(base + sceneIdx, angleNow)) }} />
                       )}
@@ -310,23 +310,19 @@ export function BoothDemo({ hero = false }: { hero?: boolean }) {
                   )}
                 </div>
               </div>
-              <div className="mx-auto mt-3 h-1.5 w-16 rounded-full bg-white/15" />
+              <div className="mt-3 flex items-center gap-3 px-1">
+                <span className="rounded-md bg-white/10 px-2.5 py-1 text-[10px] font-bold tracking-widest text-white/80">QRIS</span>
+                <span className="h-2 flex-1 rounded-full bg-black/60" />
+                <span className="text-[10px] font-semibold text-white/55">{portrait ? "PORTRAIT" : "LANDSCAPE"}</span>
+              </div>
             </div>
 
-            {/* base: QRIS plate and the printer slot, the strip slides out when the shots are done */}
-            <div className="relative -mt-2 flex w-[88%] flex-col items-center rounded-b-[30px] bg-gradient-to-b from-[#26224a] to-[#171432] px-5 pb-5 pt-6">
-              <div className="flex w-full items-center justify-between gap-3">
-                <span className="rounded-lg bg-white/10 px-3 py-1.5 text-[10px] font-bold tracking-widest text-white/80">QRIS</span>
-                <div className="relative h-3 flex-1 rounded-full bg-black/60" />
-                <span className="text-[10px] font-semibold text-white/60">{portrait ? "PORTRAIT" : "LANDSCAPE"}</span>
-              </div>
-              <div className="relative mt-3 h-[110px] w-[70%] overflow-hidden">
-                {step === "result" && out && (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img key={out.length} src={out} alt="" aria-hidden="true" className="bd-strip absolute inset-x-0 top-0 mx-auto w-[56%] rounded-md shadow-xl" style={{ width: portrait ? "36%" : "62%" }} />
-                )}
-                <div className="absolute inset-x-0 top-0 h-2 rounded-full bg-black/70" />
-              </div>
+            {/* the printed strip slides out from under the box */}
+            <div className="relative -mt-4 h-[110px] overflow-hidden transition-[width] duration-500" style={{ width: portrait ? "50%" : "70%" }}>
+              {step === "result" && out && (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img key={out.length} src={out} alt="" aria-hidden="true" className="bd-strip absolute inset-x-0 top-0 mx-auto rounded-md shadow-xl" style={{ width: portrait ? "46%" : "80%" }} />
+              )}
             </div>
           </div>
 

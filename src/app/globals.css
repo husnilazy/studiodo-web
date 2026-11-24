@@ -692,10 +692,12 @@ a:hover .m-word-do { animation: m-word-hop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1
 @keyframes bd-flash { 0% { box-shadow: 0 0 0 0 rgba(255, 214, 120, 0.95); } 100% { box-shadow: 0 0 0 38px rgba(255, 214, 120, 0); } }
 @keyframes bd-strip { from { transform: translateY(-105%); } to { transform: translateY(6px); } }
 @keyframes bd-pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+@keyframes bd-led { to { background-position: 200% 0; } }
+.bd-led { background: linear-gradient(90deg, #ff6b9d, #ffd23f, #3ddc97, #6c63ff, #ff6b9d); background-size: 200% 100%; animation: bd-led 5s linear infinite; box-shadow: 0 0 14px rgba(150, 130, 255, 0.75), 0 0 36px rgba(255, 107, 157, 0.35); }
 .bd-bob { animation: bd-bob 3.6s ease-in-out infinite; }
 .bd-pop { animation: bd-pop 0.28s ease-out both; }
 .bd-shutter { animation: bd-shutter 0.45s ease-out both; }
 .bd-flash { animation: bd-flash 0.6s ease-out both; }
 .bd-strip { animation: bd-strip 1.6s cubic-bezier(0.2, 0.8, 0.2, 1) both; }
 .bd-pulse { animation: bd-pulse 1.8s ease-in-out infinite; }
-@media (prefers-reduced-motion: reduce) { .bd-bob, .bd-pop, .bd-shutter, .bd-flash, .bd-strip, .bd-pulse { animation: none !important; } }
+@media (prefers-reduced-motion: reduce) { .bd-bob, .bd-pop, .bd-shutter, .bd-flash, .bd-strip, .bd-pulse, .bd-led { animation: none !important; } }
