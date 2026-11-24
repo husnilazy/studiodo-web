@@ -196,13 +196,13 @@ export function BoothDemo({ hero = false }: { hero?: boolean }) {
   );
 
   return (
-    <section ref={ref} id="coba" className={hero ? "relative flex w-full flex-col gap-4" : "relative z-10 mx-auto flex w-full max-w-[1312px] flex-col gap-12 px-4 py-20 md:px-16"}>
+    <section ref={ref} id="coba" className={hero ? "relative flex w-full flex-col gap-5" : "relative z-10 mx-auto flex w-full max-w-[1312px] flex-col gap-12 px-4 py-20 md:px-16"}>
       {!hero && <SectionHeading eyebrow="Coba sendiri" title="Rasakan jadi pengunjung booth, langsung dari sini." />}
       {!hero && <p data-reveal="up" className="mx-auto -mt-6 max-w-[620px] text-center text-[16px] leading-relaxed text-muted">
         Pilih orientasi dan frame, lalu foto lewat kamera HP atau webcam Anda. Kalau kamera tidak tersambung, karakter kami yang berpose dan jepret sendiri. Foto diproses di browser Anda dan tidak diunggah.
       </p>}
 
-      <div className={hero ? "flex flex-col gap-5" : "grid items-center gap-10 lg:grid-cols-[minmax(0,380px)_1fr]"}>
+      <div className={hero ? "grid items-center justify-center gap-6 md:grid-cols-[minmax(0,420px)_minmax(0,380px)] md:gap-10" : "grid items-center gap-10 lg:grid-cols-[minmax(0,380px)_1fr]"}>
         {/* ---------- controls ---------- */}
         <div data-reveal="up" className={`glass flex flex-col ${hero ? "order-2 gap-4 p-4" : "gap-6 p-6 md:p-7"}`}>
           <div>
@@ -238,10 +238,10 @@ export function BoothDemo({ hero = false }: { hero?: boolean }) {
         </div>
 
         {/* ---------- the booth ---------- */}
-        <div data-reveal="up" data-delay="120" className={`relative mx-auto flex w-full items-end justify-center gap-2 sm:gap-4 ${hero ? "order-1 max-w-[520px]" : "max-w-[820px]"}`}>
+        <div data-reveal="up" data-delay="120" className={`relative mx-auto flex w-full items-end justify-center gap-2 sm:gap-4 ${hero ? "order-1 max-w-[420px]" : "max-w-[820px]"}`}>
           <div className={`bd-bob hidden w-[100px] shrink-0 ${hero ? "" : "xl:block"}`} dangerouslySetInnerHTML={{ __html: figureSvg({ ...CAST_L, pose }) }} />
 
-          <div className={`flex w-full flex-col items-center ${hero ? "max-w-[460px]" : "max-w-[580px]"}`}>
+          <div className={`flex w-full flex-col items-center ${hero ? "max-w-[420px]" : "max-w-[580px]"}`}>
             {/* ONE minimal box: a long LED strip on top (the camera lenses sit in its middle), the screen, a printer slot below */}
             <div className="relative z-10 rounded-[30px] bg-gradient-to-b from-[#2b2750] to-[#14122b] px-3 pb-3 pt-3 shadow-[0_28px_70px_rgba(40,30,110,0.38)] transition-[width] duration-500" style={{ width: portrait ? "78%" : "100%" }}>
               <div key={flash} className={`mb-3 flex h-7 items-center gap-3 rounded-full px-1 ${flash ? "bd-flash" : ""}`}>
