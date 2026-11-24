@@ -75,6 +75,7 @@ export function BoothDemo({ hero = false }: { hero?: boolean }) {
   const [pick, setPick] = useState<1 | 2>(1);
   const [out, setOut] = useState("");
   const [err, setErr] = useState("");
+  const [nudge, setNudge] = useState(true); // the invitation bubble stays until the visitor touches anything
   const video = useRef<HTMLVideoElement | null>(null);
   const run = useRef(0);
   const touched = useRef(false);
@@ -174,8 +175,8 @@ export function BoothDemo({ hero = false }: { hero?: boolean }) {
 
   useEffect(() => () => { run.current++; }, []);
 
-  const touch = () => { touched.current = true; };
-  const useMyCamera = async () => { touch(); reset(); await cam.start(); };
+  const touch = () => { touched.current = true; setNudge(false); };
+  const openCamera = async () => { touch(); reset(); await cam.start(); };
 
   const portrait = orient === "portrait";
   const sceneIdx = shots.length;
@@ -225,7 +226,7 @@ export function BoothDemo({ hero = false }: { hero?: boolean }) {
           {hero ? <details className="group rounded-2xl bg-panel/50 px-4 py-3 ring-1 ring-black/5 dark:ring-white/10"><summary className="cursor-pointer text-[13px] font-semibold text-muted">Opsi lanjutan: multi kamera dan hasil cetak</summary><div className="mt-4 flex flex-col gap-5">{advanced}</div></details> : advanced}
           <div className="flex flex-col gap-2.5 border-t border-black/5 pt-5 dark:border-white/10">
             <div className="flex items-center gap-3">
-              <button type="button" onClick={camOn ? () => { touch(); cam.stop(); reset(); } : useMyCamera} disabled={busy || cam.status === "asking"} className="btn btn-primary px-5 py-3 text-sm disabled:opacity-60">
+              <button type="button" onClick={camOn ? () => { touch(); cam.stop(); reset(); } : openCamera} disabled={busy || cam.status === "asking"} className="btn btn-primary px-5 py-3 text-sm disabled:opacity-60">
                 {cam.status === "asking" ? "Menunggu izin…" : camOn ? "Matikan kamera saya" : "Pakai kamera saya"}
               </button>
               <span className={`flex items-center gap-2 text-[12px] font-semibold ${camOn ? "text-[#12a06f]" : "text-muted"}`}>
@@ -240,6 +241,15 @@ export function BoothDemo({ hero = false }: { hero?: boolean }) {
         {/* ---------- the booth ---------- */}
         <div data-reveal="up" data-delay="120" className={`relative mx-auto flex w-full items-end justify-center gap-2 sm:gap-4 ${hero ? "order-1 max-w-[420px]" : "max-w-[820px]"}`}>
           <div className={`bd-bob hidden w-[100px] shrink-0 ${hero ? "" : "xl:block"}`} dangerouslySetInnerHTML={{ __html: figureSvg({ ...CAST_L, pose }) }} />
+
+          {nudge && (step === "ready" || step === "result") && (
+            <div className="pointer-events-none absolute -top-[74px] left-1/2 z-20 -translate-x-1/2"><button type="button" onClick={() => { if (step === "ready") { touch(); void start(); } else { void openCamera(); } }}
+              className="bd-bob pointer-events-auto relative flex w-[250px] max-w-[80vw] items-start gap-2 rounded-2xl bg-white px-4 py-3 text-left text-[13px] font-semibold leading-snug text-[#15171f] shadow-[0_12px_32px_rgba(40,30,110,0.28)] ring-1 ring-black/5">
+              <Icon name="camera" className="mt-0.5 h-4 w-4 shrink-0 text-accent" />
+              <span>{step === "ready" ? "Cobain langsung! Foto di booth ini, gratis tanpa daftar." : "Itu tadi karakter kami. Sekarang giliran Anda: tap untuk pakai kamera!"}</span>
+              <span className="absolute -bottom-1.5 left-1/2 -ml-2 h-3.5 w-3.5 rotate-45 bg-white ring-1 ring-black/5 [clip-path:polygon(100%_0,100%_100%,0_100%)]" aria-hidden="true" />
+            </button></div>
+          )}
 
           <div className={`flex w-full flex-col items-center ${hero ? "max-w-[420px]" : "max-w-[580px]"}`}>
             {/* ONE minimal box: a long LED strip on top (the camera lenses sit in its middle), the screen, a printer slot below */}
