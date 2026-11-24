@@ -59,7 +59,7 @@ function Seg<T extends string>({ value, onChange, options, disabled }: { value: 
   );
 }
 
-export function BoothDemo() {
+export function BoothDemo({ hero = false }: { hero?: boolean }) {
   const { ref, visible } = useInView<HTMLElement>(0.3);
   const cam = useCamera();
   const [orient, setOrient] = useState<Orient>("portrait");
@@ -181,20 +181,34 @@ export function BoothDemo() {
   const sceneIdx = shots.length;
   const pose = step === "shoot" ? "hold" : step === "result" ? "up" : "wave";
 
-  return (
-    <section ref={ref} id="coba" className="relative z-10 mx-auto flex w-full max-w-[1312px] flex-col gap-12 px-4 py-20 md:px-16">
-      <SectionHeading eyebrow="Coba sendiri" title="Rasakan jadi pengunjung booth, langsung dari sini." />
-      <p data-reveal="up" className="mx-auto -mt-6 max-w-[620px] text-center text-[16px] leading-relaxed text-muted">
-        Pilih orientasi dan frame, lalu foto lewat kamera HP atau webcam Anda. Kalau kamera tidak tersambung, karakter kami yang berpose dan jepret sendiri. Foto diproses di browser Anda dan tidak diunggah.
-      </p>
+  const advanced = (
+    <>
+          <div>
+            <div className="mb-2.5 text-[12px] font-bold uppercase tracking-[0.14em] text-muted">3 · Multi kamera</div>
+            <Seg value={multi} disabled={busy} onChange={(v) => { touch(); setMulti(v); }} options={[{ v: "off", label: "Satu kamera" }, { v: "alternate", label: "Bergantian", sub: "Foto 2 dari Sudut 2" }, { v: "dual", label: "Dua sudut", sub: "Pilih sudut di hasil" }]} />
+            {multi !== "off" && camOn && <p className="mt-2 text-[12px] text-muted">Browser hanya membuka satu kamera, jadi Sudut 2 di sini berupa potongan lebih dekat. Di booth asli ini kamera kedua yang terpisah.</p>}
+          </div>
+          <div>
+            <div className="mb-2.5 text-[12px] font-bold uppercase tracking-[0.14em] text-muted">4 · Hasil cetak</div>
+            <Seg value={mirror ? "m" : "a"} onChange={(v) => { touch(); setMirror(v === "m"); }} options={[{ v: "m", label: "Cermin", sub: "Sama seperti layar" }, { v: "a", label: "Asli", sub: "Seperti dilihat orang" }]} />
+          </div>
+    </>
+  );
 
-      <div className="grid items-center gap-10 lg:grid-cols-[minmax(0,380px)_1fr]">
+  return (
+    <section ref={ref} id="coba" className={hero ? "relative flex w-full flex-col gap-4" : "relative z-10 mx-auto flex w-full max-w-[1312px] flex-col gap-12 px-4 py-20 md:px-16"}>
+      {!hero && <SectionHeading eyebrow="Coba sendiri" title="Rasakan jadi pengunjung booth, langsung dari sini." />}
+      {!hero && <p data-reveal="up" className="mx-auto -mt-6 max-w-[620px] text-center text-[16px] leading-relaxed text-muted">
+        Pilih orientasi dan frame, lalu foto lewat kamera HP atau webcam Anda. Kalau kamera tidak tersambung, karakter kami yang berpose dan jepret sendiri. Foto diproses di browser Anda dan tidak diunggah.
+      </p>}
+
+      <div className={hero ? "flex flex-col gap-5" : "grid items-center gap-10 lg:grid-cols-[minmax(0,380px)_1fr]"}>
         {/* ---------- controls ---------- */}
-        <div data-reveal="up" className="glass flex flex-col gap-6 p-6 md:p-7">
+        <div data-reveal="up" className={`glass flex flex-col ${hero ? "order-2 gap-4 p-4" : "gap-6 p-6 md:p-7"}`}>
           <div>
             <div className="mb-2.5 text-[12px] font-bold uppercase tracking-[0.14em] text-muted">1 · Orientasi layar</div>
             <Seg value={orient} disabled={busy} onChange={(v) => { touch(); setOrient(v); }} options={[{ v: "portrait", label: "Portrait", sub: "Layar tegak" }, { v: "landscape", label: "Landscape", sub: "Layar lebar" }]} />
-            <p className="mt-2 text-[12px] text-muted">Layar, frame, dan hasil cetak ikut menyesuaikan otomatis, bahkan setelah foto jadi.</p>
+            <p className={`mt-2 text-[12px] text-muted ${hero ? "hidden" : ""}`}>Layar, frame, dan hasil cetak ikut menyesuaikan otomatis, bahkan setelah foto jadi.</p>
           </div>
           <div>
             <div className="mb-2.5 text-[12px] font-bold uppercase tracking-[0.14em] text-muted">2 · Frame</div>
@@ -208,15 +222,7 @@ export function BoothDemo() {
               ))}
             </div>
           </div>
-          <div>
-            <div className="mb-2.5 text-[12px] font-bold uppercase tracking-[0.14em] text-muted">3 · Multi kamera</div>
-            <Seg value={multi} disabled={busy} onChange={(v) => { touch(); setMulti(v); }} options={[{ v: "off", label: "Satu kamera" }, { v: "alternate", label: "Bergantian", sub: "Foto 2 dari Sudut 2" }, { v: "dual", label: "Dua sudut", sub: "Pilih sudut di hasil" }]} />
-            {multi !== "off" && camOn && <p className="mt-2 text-[12px] text-muted">Browser hanya membuka satu kamera, jadi Sudut 2 di sini berupa potongan lebih dekat. Di booth asli ini kamera kedua yang terpisah.</p>}
-          </div>
-          <div>
-            <div className="mb-2.5 text-[12px] font-bold uppercase tracking-[0.14em] text-muted">4 · Hasil cetak</div>
-            <Seg value={mirror ? "m" : "a"} onChange={(v) => { touch(); setMirror(v === "m"); }} options={[{ v: "m", label: "Cermin", sub: "Sama seperti layar" }, { v: "a", label: "Asli", sub: "Seperti dilihat orang" }]} />
-          </div>
+          {hero ? <details className="group rounded-2xl bg-panel/50 px-4 py-3 ring-1 ring-black/5 dark:ring-white/10"><summary className="cursor-pointer text-[13px] font-semibold text-muted">Opsi lanjutan: multi kamera dan hasil cetak</summary><div className="mt-4 flex flex-col gap-5">{advanced}</div></details> : advanced}
           <div className="flex flex-col gap-2.5 border-t border-black/5 pt-5 dark:border-white/10">
             <div className="flex items-center gap-3">
               <button type="button" onClick={camOn ? () => { touch(); cam.stop(); reset(); } : useMyCamera} disabled={busy || cam.status === "asking"} className="btn btn-primary px-5 py-3 text-sm disabled:opacity-60">
@@ -232,10 +238,10 @@ export function BoothDemo() {
         </div>
 
         {/* ---------- the booth ---------- */}
-        <div data-reveal="up" data-delay="120" className="relative mx-auto flex w-full max-w-[820px] items-end justify-center gap-2 sm:gap-4">
-          <div className="bd-bob hidden w-[100px] shrink-0 xl:block" dangerouslySetInnerHTML={{ __html: figureSvg({ ...CAST_L, pose }) }} />
+        <div data-reveal="up" data-delay="120" className={`relative mx-auto flex w-full items-end justify-center gap-2 sm:gap-4 ${hero ? "order-1 max-w-[520px]" : "max-w-[820px]"}`}>
+          <div className={`bd-bob hidden w-[100px] shrink-0 ${hero ? "" : "xl:block"}`} dangerouslySetInnerHTML={{ __html: figureSvg({ ...CAST_L, pose }) }} />
 
-          <div className="flex w-full max-w-[580px] flex-col items-center">
+          <div className={`flex w-full flex-col items-center ${hero ? "max-w-[460px]" : "max-w-[580px]"}`}>
             {/* camera head: the lenses light up with the multi-camera mode, the lamp flashes on every shot */}
             <div className="relative z-10 -mb-3 flex items-center justify-center gap-4 rounded-[26px] bg-gradient-to-b from-[#3b3566] to-[#1d1a38] px-6 py-3 shadow-[0_10px_30px_rgba(40,30,110,0.35)]">
               <span key={flash} className={`h-6 w-9 rounded-xl bg-gradient-to-b from-[#ffe6ad] to-[#ffb040] ${flash ? "bd-flash" : ""}`} aria-hidden="true" />
@@ -324,7 +330,7 @@ export function BoothDemo() {
             </div>
           </div>
 
-          <div className="bd-bob hidden w-[100px] shrink-0 xl:block" style={{ animationDelay: "-1.4s" }} dangerouslySetInnerHTML={{ __html: figureSvg({ ...CAST_R, pose: step === "result" ? "wave" : step === "shoot" ? "chin" : "down" }) }} />
+          <div className={`bd-bob hidden w-[100px] shrink-0 ${hero ? "" : "xl:block"}`} style={{ animationDelay: "-1.4s" }} dangerouslySetInnerHTML={{ __html: figureSvg({ ...CAST_R, pose: step === "result" ? "wave" : step === "shoot" ? "chin" : "down" }) }} />
         </div>
       </div>
 

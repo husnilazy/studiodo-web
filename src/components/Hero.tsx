@@ -1,17 +1,12 @@
 import Link from "next/link";
 import { Icon } from "./Icon";
-import { HeroVisual } from "./HeroVisual";
-import { assetUrl, type HeroData } from "@/lib/content";
+import { BoothDemo } from "./landing/boothDemo/BoothDemo";
+import type { HeroData } from "@/lib/content";
 import type { PlatformStats } from "@/lib/stats";
 
-export function Hero({ data, stats }: { data: HeroData; stats: PlatformStats | null }) {
-  const images = (data.visualImages ?? []).map((v) => assetUrl(v.image)).filter((u): u is string => !!u);
-  // Floating "booths" card: an admin-typed value wins; otherwise show the real count of kiosks that reported in
-  // during the last 30 days. Without either (API down) a neutral label is shown rather than an invented number.
-  const liveKiosks = stats && stats.kiosks > 0 ? stats.kiosks : null;
-  const boothValue = data.boothValue?.trim() || (liveKiosks ? `${liveKiosks} kiosk` : "Multi-kiosk");
-  const boothPercent = stats && stats.kiosks > 0 ? Math.max(8, Math.round((stats.kiosksOnline / stats.kiosks) * 100)) : 68;
-
+// The hero's right side is the playable booth (BoothDemo): visitors can take a photo before reading anything else.
+// `stats` stays in the signature (the page passes it) for the stats strip below.
+export function Hero({ data }: { data: HeroData; stats: PlatformStats | null }) {
   return (
     <section id="top" className="relative z-10 mx-auto flex w-full max-w-[1312px] flex-col items-center gap-10 px-4 pb-16 pt-10 md:px-16 md:pt-14 lg:flex-row lg:justify-between lg:gap-14 lg:pb-24 lg:pt-20">
       <div className="flex max-w-[640px] flex-col gap-7">
@@ -49,18 +44,8 @@ export function Hero({ data, stats }: { data: HeroData; stats: PlatformStats | n
         </ul>
       </div>
 
-      <div data-reveal="scale" data-delay="200" className="w-full max-w-[600px]">
-        <HeroVisual
-          images={images}
-          cameraLabel={data.cameraLabel || "Preview kamera"}
-          startButton={data.startButton || "Mulai Foto"}
-          paymentLabel={data.paymentLabel || "Pembayaran QRIS masuk"}
-          paymentValue={data.paymentValue || "Rp 35.000"}
-          boothLabel={data.boothLabel || "Booth aktif hari ini"}
-          boothValue={boothValue}
-          boothPercent={boothPercent}
-          galleryLabel={data.galleryLabel || "Galeri siap dibagikan"}
-        />
+      <div className="w-full max-w-[560px] lg:max-w-[520px]">
+        <BoothDemo hero />
       </div>
     </section>
   );
